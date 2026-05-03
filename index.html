@@ -3,57 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch | Pro Edition</title>
+    <title>LangMatch | Pro Developer</title>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <style>
         :root {
             --bs-blue: #0084ff; --bs-yellow: #ffcc00; --bs-green: #4cd137;
-            --bg: #f5f6fa; --sidebar-w: 70px;
+            --bg: #1a1a1d; --card-dark: #2c2c2e;
         }
-        body { font-family: 'Arial Black', sans-serif; margin: 0; background: var(--bg); overflow: hidden; }
+        body { font-family: 'Arial Black', sans-serif; margin: 0; background: var(--bg); color: white; overflow: hidden; }
         
-        /* EKRAN YÖNETİMİ */
-        .screen { display: none; height: 100vh; width: 100vw; position: relative; }
-        .active { display: flex; flex-direction: column; }
+        .screen { display: none; height: 100vh; width: 100vw; position: relative; flex-direction: column; }
+        .active { display: flex; }
+
+        /* ÜST BAR (SOLDA PROFİL, YANINDA COİN) */
+        .top-bar { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.3); border-bottom: 2px solid #333; }
+        .mini-profile { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--bs-blue); cursor: pointer; background: #555; overflow: hidden; }
+        .mini-profile img { width: 100%; height: 100%; object-fit: cover; }
+        .coin-display { margin-left: 15px; background: #3a3a3c; padding: 5px 15px; border-radius: 20px; border: 2px solid var(--bs-yellow); color: var(--bs-yellow); font-size: 14px; }
 
         /* KAYIT EKRANI */
-        .auth-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 80%; max-width: 350px; margin: auto; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 3px solid #eee; border-radius: 10px; font-weight: bold; box-sizing: border-box; }
+        .auth-card { background: var(--card-dark); padding: 25px; border-radius: 30px; border: 5px solid #000; text-align: center; width: 85%; max-width: 380px; margin: auto; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 12px; background: #3a3a3c; color: white; font-weight: bold; box-sizing: border-box; }
+        
+        .gender-grid { display: flex; gap: 10px; margin: 15px 0; }
+        .g-btn { flex: 1; padding: 12px; border-radius: 12px; background: #3a3a3c; cursor: pointer; border: 3px solid transparent; transition: 0.2s; }
+        .g-btn.selected { border-color: var(--bs-blue); background: #48484a; }
 
-        /* ANA DASHBOARD */
-        #screenDashboard { flex-direction: row; }
-        .sidebar { width: var(--sidebar-w); background: #2f3640; display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 25px; }
-        .side-btn { font-size: 28px; cursor: pointer; transition: 0.2s; }
-        .side-btn:hover { transform: scale(1.2); }
+        /* ANA MENÜ (WEPLAY STİLİ IZGARA) */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; flex: 1; overflow-y: auto; }
+        .menu-item { border-radius: 25px; border: 4px solid #000; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 6px 0 #000; }
+        .menu-item:active { transform: translateY(4px); box-shadow: none; }
+        
+        .item-global { grid-column: span 2; background: #ff4757; height: 120px; }
+        .item-start { background: var(--bs-green); height: 160px; }
+        .item-shop { background: var(--bs-yellow); color: #000; height: 160px; }
+        .item-rank { grid-column: span 2; background: var(--bs-blue); height: 100px; }
 
-        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .start-btn { 
-            background: var(--bs-yellow); border: 5px solid #000; padding: 20px 50px; 
-            border-radius: 15px; font-size: 24px; color: #000; cursor: pointer; box-shadow: 0 8px 0 #c7a000;
-        }
-        .start-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #c7a000; }
+        /* VİDEO EKRANI */
+        .video-container { flex: 1; display: flex; flex-direction: column; background: #000; }
+        .vid-box { height: 50%; width: 100%; object-fit: cover; border-bottom: 2px solid #333; }
+        .match-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 
-        /* BRAWL STARS STİLİ DÜKKAN */
-        .shop-container { 
-            flex: 1; padding: 20px; display: flex; gap: 20px; overflow-x: auto; 
-            background: linear-gradient(to bottom, #1e90ff, #0055ff); align-items: center;
-        }
-        .shop-item { 
-            min-width: 150px; height: 200px; background: white; border-radius: 15px; 
-            border: 4px solid #000; position: relative; text-align: center; flex-shrink: 0;
-        }
-        .shop-item-header { background: #ff4757; color: white; padding: 5px; font-size: 12px; border-bottom: 3px solid #000; }
-        .price-tag { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: var(--bs-yellow); padding: 5px 15px; border-radius: 20px; border: 2px solid #000; font-size: 12px; }
+        /* PROFİL PANELİ (POP-UP) */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-active { display: flex; }
 
-        /* PROFİL EKRANI */
-        .profile-card { background: white; width: 90%; max-width: 400px; margin: auto; border-radius: 25px; padding: 30px; border: 5px solid #2f3640; text-align: center; }
-        .p-img-wrap { width: 120px; height: 120px; border-radius: 50%; border: 6px solid var(--bs-blue); margin: 0 auto 20px; overflow: hidden; background: #eee; cursor: pointer; }
-        #p-img-preview { width: 100%; height: 100%; object-fit: cover; }
-
-        /* VİDEO CHAT (EKRANA SIĞDIRILMIŞ) */
-        .video-wrapper { flex: 1; display: flex; flex-direction: column; background: #000; }
-        .vid-box { height: 50%; width: 100%; object-fit: cover; border: 2px solid #333; }
-        .vid-controls { position: absolute; bottom: 20px; display: flex; gap: 15px; width: 100%; justify-content: center; }
+        .btn-action { background: var(--bs-yellow); border: 4px solid #000; padding: 15px 30px; border-radius: 15px; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -62,131 +57,153 @@
     <div class="auth-card">
         <h2 style="color: var(--bs-blue)">LANGMATCH</h2>
         <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <input type="password" id="regPass" placeholder="Şifre">
-        <input type="email" id="regEmail" placeholder="E-posta">
-        <button class="start-btn" style="font-size: 16px; padding: 15px;" onclick="doRegister()">KAYDOL</button>
+        <div class="gender-grid">
+            <div class="g-btn" id="mBtn" onclick="selectGender('male')">♂️ ERKEK</div>
+            <div class="g-btn" id="fBtn" onclick="selectGender('female')">♀️ KIZ</div>
+        </div>
+        <button class="btn-action" style="width: 100%;" onclick="doRegister()">KAYDOL</button>
     </div>
 </div>
 
 <div id="screenDashboard" class="screen">
-    <div class="sidebar">
-        <div class="side-btn" onclick="showScreen('screenShop')">🛒</div>
-        <div class="side-btn" onclick="showScreen('screenProfile')">👤</div>
-        <div style="color: gold; font-size: 12px;">💰 <span id="uCoins">500</span></div>
+    <div class="top-bar">
+        <div class="mini-profile" onclick="toggleProfile()">
+            <img id="p-img-mini" src="https://via.placeholder.com/50">
+        </div>
+        <div class="coin-display">💰 <span id="uCoins">500</span></div>
     </div>
-    <div class="main-content">
-        <div id="displayBadge" style="background: #eee; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px;">Developer</div>
-        <button class="start-btn" onclick="showScreen('screenGender')">SAVAŞA BAŞLA!</button>
+
+    <div class="menu-grid">
+        <div class="menu-item item-global" onclick="alert('Global Chat yakında!')">💬 GLOBAL CHAT</div>
+        <div class="menu-item item-start" onclick="showScreen('screenMatchOptions')">📹 START<br>MATCHING</div>
+        <div class="menu-item item-shop" onclick="showScreen('screenShop')">🛒 SHOP</div>
+        <div class="menu-item item-rank" onclick="alert('Sıralama Listesi!')">🏆 RANKING</div>
     </div>
 </div>
 
-<div id="screenShop" class="screen">
-    <div style="padding: 20px; color: white; background: #0055ff; display: flex; justify-content: space-between;">
-        <span>MAĞAZA</span>
-        <span onclick="showScreen('screenDashboard')" style="cursor:pointer">❌</span>
-    </div>
-    <div class="shop-container">
-        <div class="shop-item">
-            <div class="shop-item-header">GÜNLÜK FIRSAT</div>
-            <div style="font-size: 50px; margin-top: 20px;">🖼️</div>
-            <p>Mavi Çerçeve</p>
-            <div class="price-tag">200 💰</div>
-        </div>
-        <div class="shop-item">
-            <div class="shop-item-header">ÖZEL TEKLİF</div>
-            <div style="font-size: 50px; margin-top: 20px;">⚡</div>
-            <p>XP Takviyesi</p>
-            <div class="price-tag">100 💰</div>
-        </div>
-        <div class="shop-item" style="background: #dfe6e9;">
-            <div class="shop-item-header">YAKINDA</div>
-            <div style="font-size: 50px; margin-top: 20px; opacity: 0.3;">🔒</div>
-        </div>
-    </div>
-</div>
-
-<div id="screenProfile" class="screen">
-    <div class="profile-card">
-        <span onclick="showScreen('screenDashboard')" style="float: right; cursor:pointer">❌</span>
-        <div class="p-img-wrap" onclick="document.getElementById('imgInput').click()">
-            <img id="p-img-preview" src="" alt="Resim Seç">
-        </div>
-        <input type="file" id="imgInput" style="display:none" onchange="previewImage(this)">
-        <h2 id="p-name-display">Kullanıcı Adı</h2>
-        <p id="p-email-display" style="color: #636e72;"></p>
-        <div style="background: #f1f2f6; padding: 15px; border-radius: 15px; text-align: left;">
-            <b>Rütbe:</b> Rookie (0-200) <br>
-            <b>Dil:</b> English (Learning)
-        </div>
-    </div>
-</div>
-
-<div id="screenGender" class="screen" style="justify-content: center; align-items: center; background: rgba(0,0,0,0.8);">
+<div id="screenMatchOptions" class="screen" style="justify-content: center; align-items: center; background: rgba(0,0,0,0.8);">
     <div class="auth-card">
-        <h3>Eşleşme Tercihi</h3>
-        <button class="start-btn" style="background: #ff4757; width: 100%; margin-bottom: 10px;" onclick="startCall()">KADIN</button>
-        <button class="start-btn" style="background: #1e90ff; width: 100%;" onclick="startCall()">ERKEK</button>
-        <p onclick="showScreen('screenDashboard')" style="color: blue; cursor:pointer; margin-top: 15px;">Vazgeç</p>
+        <h3>Kimi Arıyorsun?</h3>
+        <button class="btn-action" style="background: #ff4757; width:100%;" onclick="startAutoMatch('female')">KIZLARLA EŞLEŞ</button>
+        <button class="btn-action" style="background: #1e90ff; width:100%;" onclick="startAutoMatch('male')">ERKEKLERLE EŞLEŞ</button>
+        <p onclick="showScreen('screenDashboard')" style="cursor:pointer; margin-top: 15px; font-size: 14px;">Geri Dön</p>
     </div>
 </div>
 
 <div id="screenVideo" class="screen">
-    <div class="video-wrapper">
+    <div id="matchLoading" class="match-overlay">
+        <div style="font-size: 40px; animation: spin 1s linear infinite;">🌀</div>
+        <h2 id="statusText">EŞLEŞİLİYOR...</h2>
+        <button class="btn-action" style="background:red;" onclick="location.reload()">İPTAL</button>
+    </div>
+    <div class="video-container">
         <video id="remoteVideo" class="vid-box" autoplay playsinline></video>
         <video id="localVideo" class="vid-box" autoplay muted playsinline></video>
     </div>
-    <div class="vid-controls">
-        <button class="start-btn" style="background:red; padding: 10px 20px;" onclick="location.reload()">KAPAT</button>
+</div>
+
+<div id="screenShop" class="screen" style="background: #0055ff;">
+    <div style="padding: 20px; display: flex; justify-content: space-between;">
+        <h2>MAĞAZA</h2>
+        <button onclick="showScreen('screenDashboard')" style="background:none; border:none; color:white; font-size:30px;">×</button>
+    </div>
+    <div style="display: flex; gap: 20px; padding: 20px; overflow-x: auto;">
+        <div style="min-width: 150px; height: 200px; background: white; border-radius: 20px; border: 4px solid #000; color: #000; text-align: center;">
+            <p>Gold Frame</p>
+            <div style="font-size: 40px;">🖼️</div>
+            <div class="btn-action" style="padding: 5px 15px;">200 💰</div>
+        </div>
+    </div>
+</div>
+
+<div id="profileModal" class="modal">
+    <div class="auth-card" style="position: relative;">
+        <span onclick="toggleProfile()" style="position: absolute; right: 20px; top: 10px; cursor: pointer; font-size: 24px;">×</span>
+        <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bs-blue); margin: auto; overflow: hidden;">
+            <img id="p-img-big" src="https://via.placeholder.com/100" style="width:100%; height:100%; object-fit: cover;">
+        </div>
+        <h2 id="p-name-display">Dev</h2>
+        <button class="btn-action" onclick="document.getElementById('fileInput').click()">RESİM YÜKLE</button>
+        <input type="file" id="fileInput" style="display:none" onchange="uploadImg(this)">
     </div>
 </div>
 
 <script>
-    let userData = { name: "", email: "", coins: 500 };
+    let myGender = '';
+    let peer;
+    let localStream;
+
+    function selectGender(g) {
+        myGender = g;
+        document.getElementById('mBtn').classList.toggle('selected', g === 'male');
+        document.getElementById('fBtn').classList.toggle('selected', g === 'female');
+    }
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
 
+    function toggleProfile() {
+        document.getElementById('profileModal').classList.toggle('modal-active');
+    }
+
     function doRegister() {
-        userData.name = document.getElementById('regName').value;
-        userData.email = document.getElementById('regEmail').value;
-        if(!userData.name || !userData.email) return alert("Bilgileri doldur!");
-        
-        document.getElementById('p-name-display').innerText = userData.name;
-        document.getElementById('p-email-display').innerText = userData.email;
+        const name = document.getElementById('regName').value;
+        if(!name || !myGender) return alert("İsim ve Cinsiyet Seç!");
+        document.getElementById('p-name-display').innerText = name;
         showScreen('screenDashboard');
     }
 
-    function previewImage(input) {
+    function uploadImg(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('p-img-preview').src = e.target.result;
+            let r = new FileReader();
+            r.onload = e => {
+                document.getElementById('p-img-mini').src = e.target.result;
+                document.getElementById('p-img-big').src = e.target.result;
             }
-            reader.readAsDataURL(input.files[0]);
+            r.readAsDataURL(input.files[0]);
         }
     }
 
-    async function startCall() {
+    async function startAutoMatch(targetGender) {
         showScreen('screenVideo');
-        const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-        document.getElementById('localVideo').srcObject = stream;
-        
-        const peer = new Peer();
+        localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        document.getElementById('localVideo').srcObject = localStream;
+
+        // EŞLEŞME MANTIĞI: Akşam iki cihazda aynı anda basıldığında
+        // Biri langmatch-test-X0 diğeri langmatch-test-X1 olarak açılır.
+        let randomSlot = Math.floor(Math.random() * 2);
+        peer = new Peer('langmatch-2026-' + myGender + randomSlot);
+
         peer.on('open', (id) => {
-            let target = prompt("Eşleşmek için karşı tarafın ID'sini gir (Test için):");
-            if(target) {
-                const call = peer.call(target, stream);
-                call.on('stream', rs => document.getElementById('remoteVideo').srcObject = rs);
-            }
+            console.log("Benim ID: " + id);
+            setTimeout(() => {
+                // Diğer slotu aramaya başla
+                let otherSlot = randomSlot === 0 ? 1 : 0;
+                let otherId = 'langmatch-2026-' + targetGender + otherSlot;
+                const call = peer.call(otherId, localStream);
+                if(call) handleStream(call);
+            }, 3000);
         });
+
         peer.on('call', call => {
-            call.answer(stream);
-            call.on('stream', rs => document.getElementById('remoteVideo').srcObject = rs);
+            call.answer(localStream);
+            handleStream(call);
+        });
+    }
+
+    function handleStream(call) {
+        call.on('stream', rs => {
+            document.getElementById('remoteVideo').srcObject = rs;
+            document.getElementById('matchLoading').style.display = 'none';
         });
     }
 </script>
+
+<style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
 
 </body>
 </html>
