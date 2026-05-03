@@ -6,118 +6,106 @@
     <title>Nexus Connect | Arena</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00d2ff; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: rgba(20, 30, 45, 0.98); }
+        :root { --neon: #00d2ff; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: rgba(15, 25, 35, 0.98); }
         body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #fff; height: 100vh; overflow: hidden; }
         
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; box-sizing: border-box; }
         .active-screen { display: flex !important; }
 
-        /* GRID MENÜ */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 95%; max-width: 500px; padding: 10px; margin-top: 60px; }
-        .menu-card { background: var(--panel); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
-        .menu-card:hover { border-color: var(--neon); background: rgba(0, 210, 255, 0.1); transform: scale(1.02); }
+        /* MERKEZİ GRID SİSTEMİ */
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 95%; max-width: 500px; margin-top: 60px; }
         
-        .card-large { grid-column: span 2; border-left: 4px solid var(--gold); }
-        .card-match { grid-column: span 2; border: 2px solid var(--neon); background: linear-gradient(135deg, #0a1520, #1a2a3a); height: 90px; justify-content: center; }
-
-        /* --- ÖZEL BATTLE PASS BUTONU (RESİMLİ) --- */
-        .bp-card-image {
-            grid-column: span 1;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');
-            background-size: cover;
-            background-position: center;
-            border: 1px solid var(--gold) !important;
-            height: 140px; /* Diğerlerinden biraz daha uzun durması için */
-            justify-content: flex-end; /* Yazıları alta yasla */
-            padding-bottom: 10px;
+        /* GÖRSEL TABANLI BUTONLAR */
+        .menu-card { 
+            background-size: cover; background-position: center; border: 1px solid #333; 
+            border-radius: 15px; height: 110px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: flex-end; padding-bottom: 10px;
+            cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+            text-shadow: 2px 2px 4px #000;
         }
-        .bp-card-image h4 { margin: 0; color: var(--gold); text-shadow: 2px 2px #000; font-family: 'Orbitron'; font-size: 14px; }
-        .bp-bar-mini { width: 80%; height: 6px; background: rgba(0,0,0,0.8); border-radius: 3px; margin-top: 5px; border: 1px solid var(--gold); overflow: hidden; }
-        .bp-bar-fill { width: 45%; height: 100%; background: var(--gold); box-shadow: 0 0 5px var(--gold); }
+        .menu-card:hover { border-color: var(--neon); transform: scale(1.02); }
+        .menu-card h4 { margin: 0; font-family: 'Orbitron'; font-size: 13px; }
 
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 85%; max-width: 400px; border-radius: 20px; padding: 25px; position: relative; animation: popIn 0.3s ease; }
+        /* ÖZEL KARTLARIN RESİM ALANLARI (BURALARA RESİM EKLEYEBİLİRSİN) */
+        #btnShop { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('BURAYA_DUKKAN_RESMI_GELECEK'); grid-column: span 2; height: 100px; }
+        #btnMatch { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('BURAYA_MATCH_RESMI_GELECEK'); grid-column: span 2; height: 130px; border: 1px solid var(--neon); }
+        #btnWords { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BURAYA_TELAFFUZ_RESMI_GELECEK'); }
+        #btnBP { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg'); }
+        #btnDaily { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BURAYA_SORU_RESMI_GELECEK'); }
+        #btnProfile { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BURAYA_PROFIL_RESMI_GELECEK'); }
+
+        /* MODAL SİSTEMİ */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; position: relative; text-align: center; }
         
-        .btn-main { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 15px; border-radius: 12px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #0a0f15; display: none; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+        /* XP BAR */
+        .xp-container { width: 100%; height: 8px; background: #222; border-radius: 5px; margin: 10px 0; border: 1px solid #444; }
+        .xp-fill { height: 100%; background: var(--neon); width: 0%; transition: 0.5s; box-shadow: 0 0 10px var(--neon); }
+
+        .btn-action { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 12px; border-radius: 10px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
-        <div class="auth-card" style="width:85%; max-width:380px; background:rgba(10,20,30,0.95); padding:30px; border-radius:20px; border:1px solid var(--neon); text-align:center;">
-            <h2 style="font-family:'Orbitron'; color: var(--neon); margin-bottom: 20px;">NEXUS CONNECT</h2>
-            <input type="email" id="uEmail" placeholder="📧 E-posta" style="width:100%; padding:12px; margin:8px 0; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
-            <input type="password" id="uPass" placeholder="🔒 Şifre" style="width:100%; padding:12px; margin:8px 0; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
-            <button class="btn-main" onclick="handleAuth()">[ GİRİŞ YAP ]</button>
+        <div style="background:rgba(10,20,30,0.9); padding:40px; border-radius:25px; border:2px solid var(--neon); width:80%; max-width:350px; text-align:center;">
+            <h1 style="font-family:'Orbitron'; margin-bottom:30px;">NEXUS</h1>
+            <input type="email" id="uEmail" placeholder="E-posta" style="width:100%; padding:12px; margin-bottom:10px; background:#000; border:1px solid #333; color:#fff; border-radius:10px;">
+            <input type="password" id="uPass" placeholder="Şifre" style="width:100%; padding:12px; margin-bottom:20px; background:#000; border:1px solid #333; color:#fff; border-radius:10px;">
+            <button class="btn-action" onclick="handleAuth()">BAŞLA</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
-        <div style="width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; background: var(--bg); z-index: 10;">
-            <div><h3 id="pNameDisp" style="margin:0">Savaşçı</h3><span style="color:var(--gold); font-size: 13px;">Developer Rank</span></div>
-            <div style="text-align:right; color:var(--gold);">💰 <span id="pCoins">1500</span></div>
+        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:rgba(0,0,0,0.5); box-sizing:border-box;">
+            <div><b id="dispName">...</b><br><small style="color:var(--neon)">LVL <span id="dispLvl">1</span></small></div>
+            <div style="text-align:right">💰 <span id="dispCoins">0</span></div>
         </div>
 
         <div class="grid-container">
-            <div class="menu-card card-large" onclick="openModal('modalShop')">
-                <div style="display:flex; align-items:center; gap:15px; width:100%;">
-                    <span style="font-size:30px;">🛒</span>
-                    <div style="text-align:left"><h4>DÜKKAN</h4><small>Özel Teklifler</small></div>
-                </div>
-            </div>
-
-            <div class="menu-card card-match" onclick="alert('Eşleşme Aranıyor...')">
-                <h3 style="margin:0; letter-spacing:2px;">[ MATCHMAKING BAŞLAT ]</h3>
-            </div>
-
-            <div class="menu-card" onclick="alert('Telaffuz Odası...')">
-                <span style="font-size:24px;">🗣️</span>
-                <h4 style="margin:5px 0;">TELAFFUZ</h4>
-                <small>XP Kazan</small>
-            </div>
-
-            <div class="menu-card bp-card-image" onclick="openModal('modalBP')">
-                <h4>BATTLE PASS</h4>
-                <div class="bp-bar-mini"><div class="bp-bar-fill"></div></div>
-            </div>
-
-            <div class="menu-card" onclick="openModal('modalDaily')">
-                <span style="font-size:24px;">❓</span>
-                <h4 style="margin:5px 0;">GÜNLÜK SORU</h4>
-                <small>Ödül Al</small>
-            </div>
-
-            <div class="menu-card" onclick="switchTab('scrProfile')">
-                <span style="font-size:24px;">⚙️</span>
-                <h4 style="margin:5px 0;">PROFİLİM</h4>
-                <small>Ayarlar</small>
-            </div>
+            <div id="btnShop" class="menu-card" onclick="openModal('modalShop')"><h4>DÜKKAN</h4></div>
+            <div id="btnMatch" class="menu-card" onclick="alert('Eşleşme aranıyor...')"><h4>MATCHMAKING</h4></div>
+            <div id="btnWords" class="menu-card" onclick="openModal('modalWords')"><h4>TELAFFUZ</h4></div>
+            <div id="btnBP" class="menu-card" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
+            <div id="btnDaily" class="menu-card" onclick="openModal('modalDaily')"><h4>GÜNLÜK SORU</h4></div>
+            <div id="btnProfile" class="menu-card" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
         </div>
     </div>
 
-    <div id="modalBP" class="modal">
-        <div class="modal-content" style="border-color: var(--gold);">
-            <span style="position:absolute; top:15px; right:15px; cursor:pointer; color:var(--red);" onclick="closeModal()">×</span>
-            <h2 style="color:var(--gold); margin:0;">BATTLE PASS</h2>
-            <p>Sezon 1: Ejderha Çağı</p>
-            <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
-            <p>Tier 4 / 50</p>
-            <button class="btn-main" style="background:var(--gold); color:#000;">PREMIUM PASS AL (500 💰)</button>
-        </div>
-    </div>
+    <div id="modalDaily" class="modal"><div class="modal-content">
+        <h2>GÜNLÜK SORU</h2>
+        <p>100 XP ve 50 Coin kazanmak için cevapla:</p>
+        <p><b>"Success" kelimesinin anlamı nedir?</b></p>
+        <button class="btn-action" onclick="giveReward(100, 50)">Başarı</button>
+        <button class="btn-action" style="background:#444" onclick="closeModal()">Kapat</button>
+    </div></div>
 
-    <div id="navBar" class="nav-bottom">
-        <div onclick="switchTab('scrLobby')">🏠</div>
-        <div onclick="openModal('modalShop')">🛒</div>
-        <div onclick="switchTab('scrProfile')">👤</div>
+    <div id="modalBP" class="modal"><div class="modal-content">
+        <h2 style="color:var(--gold)">BATTLE PASS</h2>
+        <p>Tier: <span id="bpTier">1</span> / 50</p>
+        <div class="xp-container"><div id="bpBar" class="xp-fill"></div></div>
+        <p><small>Sıradaki Ödül: 100 Coin</small></p>
+        <button id="btnPrem" class="btn-action" style="background:var(--gold); color:#000" onclick="buyPremium()">PREMIUM PASS AÇ (500 💰)</button>
+        <button class="btn-action" style="background:#444" onclick="closeModal()">Kapat</button>
+    </div></div>
+
+    <div id="scrProfile" class="screen">
+        <div style="background:var(--panel); padding:30px; border-radius:20px; border:1px solid var(--neon); width:85%; max-width:400px; text-align:center;">
+            <div style="position:relative; width:100px; height:100px; margin: 0 auto 20px;">
+                <img id="pImg" src="https://via.placeholder.com/100" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                <img id="pFrame" src="" style="position:absolute; top:-5px; left:-5px; width:110px; height:110px; pointer-events:none;">
+            </div>
+            <input type="text" id="pImgUrl" placeholder="Profil Resmi URL" class="btn-action" style="background:#111; border:1px solid #333;" onchange="updateProfileImg()">
+            <h2 id="profName">...</h2>
+            <button class="btn-action" style="background:var(--red)" onclick="logout()">ÇIKIŞ YAP</button>
+            <button class="btn-action" style="background:#333" onclick="switchTab('scrLobby')">GERİ</button>
+        </div>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -135,27 +123,72 @@
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
+    // --- AUTH & DATA ---
     window.handleAuth = async () => {
-        const email = document.getElementById('uEmail').value;
-        const pass = document.getElementById('uPass').value;
-        try { await signInWithEmailAndPassword(auth, email, pass); } catch(e) { alert("Hata: " + e.message); }
+        const e = document.getElementById('uEmail').value;
+        const p = document.getElementById('uPass').value;
+        try {
+            await signInWithEmailAndPassword(auth, e, p).catch(async () => {
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                await set(ref(db, 'users/' + res.user.uid), {
+                    username: e.split('@')[0], coins: 0, xp: 0, lvl: 1, pImg: "", premium: false
+                });
+            });
+        } catch(err) { alert(err.message); }
     };
 
     onAuthStateChanged(auth, user => {
         if(user) {
-            document.getElementById('navBar').style.display = 'flex';
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
-                if(s.val()) {
-                    document.getElementById('pNameDisp').innerText = s.val().username;
-                    document.getElementById('pCoins').innerText = s.val().coins;
-                }
+                const d = s.val();
+                if(!d) return;
+                document.getElementById('dispName').innerText = d.username;
+                document.getElementById('profName').innerText = d.username;
+                document.getElementById('dispCoins').innerText = d.coins;
+                document.getElementById('dispLvl').innerText = d.lvl;
+                document.getElementById('pImg').src = d.pImg || "https://via.placeholder.com/100";
+                
+                // BP Mantığı: Her 100 XP bir Tier
+                const tier = Math.floor(d.xp / 100) + 1;
+                document.getElementById('bpTier').innerText = tier;
+                document.getElementById('bpBar').style.width = (d.xp % 100) + "%";
+                if(d.premium) document.getElementById('btnPrem').style.display = 'none';
             });
-        } else {
-            document.getElementById('navBar').style.display = 'none';
-            switchTab('scrAuth');
-        }
+        } else { switchTab('scrAuth'); }
     });
+
+    // --- ÖDÜL SİSTEMİ ---
+    window.giveReward = (xp, coin) => {
+        const user = auth.currentUser;
+        onValue(ref(db, 'users/' + user.uid), s => {
+            const d = s.val();
+            update(ref(db, 'users/' + user.uid), {
+                xp: d.xp + xp,
+                coins: d.coins + coin
+            });
+            alert(`${xp} XP ve ${coin} Coin kazanıldı!`);
+            closeModal();
+        }, {onlyOnce: true});
+    };
+
+    window.updateProfileImg = () => {
+        const url = document.getElementById('pImgUrl').value;
+        update(ref(db, 'users/' + auth.currentUser.uid), { pImg: url });
+    };
+
+    window.buyPremium = () => {
+        const user = auth.currentUser;
+        onValue(ref(db, 'users/' + user.uid), s => {
+            const d = s.val();
+            if(d.coins >= 500) {
+                update(ref(db, 'users/' + user.uid), { coins: d.coins - 500, premium: true });
+                alert("Premium Pass Aktif Edildi!");
+            } else { alert("Yetersiz Coin!"); }
+        }, {onlyOnce: true});
+    };
+
+    window.logout = () => signOut(auth);
 </script>
 </body>
 </html>
