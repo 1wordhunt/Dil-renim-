@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v21 | Transparan Dragon</title>
+    <title>LangMatch Pro v22 | Global Connect</title>
     <style>
-        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; }
+        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; --blue: #3498db; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow-x: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; }
         .active { display: flex !important; }
@@ -13,25 +13,29 @@
         /* --- KAYIT EKRANI --- */
         #screenAuth { justify-content: center; align-items: center; background: radial-gradient(circle, #1f2833 0%, #000 100%); }
         .auth-card { width: 85%; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid var(--accent); backdrop-filter: blur(10px); text-align: center; }
-        
-        .photo-upload { width: 90px; height: 90px; border-radius: 50%; border: 2px dashed var(--accent); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; background: #111; }
-        .photo-upload img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        
+        .photo-upload { width: 90px; height: 90px; border-radius: 50%; border: 2px dashed var(--accent); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: #111; position: relative; }
+        .photo-upload img { width: 100%; height: 100%; object-fit: cover; }
         input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
 
         /* --- GENEL UI --- */
         .top-bar { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #111; border-bottom: 1px solid #222; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .block { border-radius: 22px; height: 120px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .block { border-radius: 22px; height: 120px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.2s; position: relative; }
         .block:active { transform: scale(0.95); }
-        
-        /* --- PROFİL & EJDERHA (ŞİMDİ DAHA UYUMLU) --- */
+
+        /* --- MATCHING (OMEGLE STYLE) --- */
+        #screenMatching { background: #000; justify-content: center; align-items: center; }
+        .match-video { width: 90%; height: 60%; background: #1a1a1d; border-radius: 20px; position: relative; overflow: hidden; border: 2px solid var(--accent); }
+        .match-overlay { position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; }
+        .status-dot { width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
+
+        /* --- PROFİL & ÇERÇEVE --- */
         .avatar-wrap { position: relative; width: 160px; height: 160px; margin: 30px auto; display: flex; align-items: center; justify-content: center; }
         .u-pic { width: 100px; height: 100px; border-radius: 50%; z-index: 1; object-fit: cover; background: #222; }
         .u-frame { position: absolute; width: 160px; height: 160px; z-index: 2; pointer-events: none; }
 
         .btn-main { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
-        .buy-btn { background: var(--gold); border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -39,14 +43,12 @@
 <div id="screenAuth" class="screen active">
     <div class="auth-card">
         <h2 style="color:var(--accent)">NEXUS CORE</h2>
-        <p style="font-size: 12px; color: #888;">Profil Fotoğrafı Seç</p>
         <div class="photo-upload" onclick="document.getElementById('fileInput').click()">
+            <img id="regPreview" src="" style="display:none">
             <span id="plusIcon" style="font-size:30px">+</span>
-            <img id="regPreview" src="">
         </div>
         <input type="file" id="fileInput" hidden accept="image/*" onchange="previewFile()">
-        
-        <input type="text" id="regName" placeholder="Kullanıcı Adın">
+        <input type="text" id="regName" placeholder="Adını Yaz Kanka">
         <button class="btn-main" onclick="initApp()">BAŞLAT</button>
     </div>
 </div>
@@ -57,59 +59,80 @@
             <img id="miniPic" src="" style="width:35px; height:35px; border-radius:50%; object-fit:cover; background:#333">
             <b id="nDisplay">Developer</b>
         </div>
-        <div style="color:var(--gold); font-weight: bold;">💰 <span id="myCoins">1500</span></div>
+        <div style="color:var(--gold)">💰 <span id="myCoins">1500</span></div>
     </div>
     <div class="grid">
         <div class="block" style="grid-column: span 2; background: var(--red);">GLOBAL CHAT</div>
-        <div class="block" style="background: #2ecc71;">MATCHING</div>
-        <div class="block" style="background: #f1c40f;" onclick="openScreen('screenShop')">SHOP</div>
-        <div class="block" style="background: #3498db;">TELAFFUZ</div>
-        <div class="block" style="background: #9b59b6;">ÜYE ARA</div>
+        <div class="block" style="background: #2ecc71;" onclick="startMatching()">📹 MATCHING</div>
+        <div class="block" style="background: #f1c40f;" onclick="openScreen('screenShop')">🛒 SHOP</div>
+        <div class="block" style="background: #3498db;">🗣️ TELAFFUZ</div>
+        <div class="block" style="background: #9b59b6;">🔍 ÜYE ARA</div>
+    </div>
+</div>
+
+<div id="screenMatching" class="screen">
+    <div class="top-bar" style="position:fixed; top:0; width:100%; box-sizing:border-box">
+        <span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ AYRIL</span>
+        <div id="matchCount">🌍 12,402 Kişi Çevrimiçi</div>
+    </div>
+    <div class="match-video" id="videoBox">
+        <div id="searchingUI" style="text-align:center; padding-top:100px;">
+            <div class="status-dot"></div> <br>
+            <b>YENİ BİRİ ARANIYOR...</b><br>
+            <small style="color:#666">Dünyadan rastgele biri seçiliyor</small>
+        </div>
+        <div id="remoteUser" style="display:none; height:100%; width:100%; justify-content:center; align-items:center; flex-direction:column">
+            <img id="matchAvatar" src="" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent)">
+            <h2 id="matchName">Biri Bulundu!</h2>
+            <div style="display:flex; gap:20px;">
+                <button class="btn-main" style="width:auto; padding:10px 20px; background:red" onclick="startMatching()">PAS GEÇ</button>
+                <button class="btn-main" style="width:auto; padding:10px 20px; background:green" onclick="alert('Bağlanılıyor...')">KONUŞ</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div id="screenShop" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>MARKET</b></div>
+    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️</span> <b>MARKET</b></div>
     <div style="padding:15px;">
-        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; border: 1px solid #333;">
-            <img src="https://i.ibb.co/zHGQS8XW/1777817943470.png" style="width:65px; height: 65px; object-fit: contain;">
-            <div style="flex:1"><b>Altın Ejderha (V2)</b><br><small style="color:var(--gold)">0 Coin (Bedava)</small></div>
-            <button class="buy-btn" onclick="processBuy('dragon')">AL</button>
+        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; border:1px solid var(--gold); margin-bottom:15px;">
+            <img src="https://i.ibb.co/BKgTg3Lc/Ba-l-ks-z.png" style="width:65px;">
+            <div style="flex:1"><b>Asil Çerçeve (V3)</b><br><small style="color:var(--gold)">0 Coin</small></div>
+            <button class="btn-main" style="width:auto; padding:5px 15px;" onclick="processBuy('royal')">AL</button>
+        </div>
+        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; border:1px solid #333;">
+            <img src="https://i.ibb.co/zHGQS8XW/1777817943470.png" style="width:65px;">
+            <div style="flex:1"><b>Altın Ejderha</b><br><small>0 Coin</small></div>
+            <button class="btn-main" style="width:auto; padding:5px 15px;" onclick="processBuy('dragon')">AL</button>
         </div>
     </div>
 </div>
 
 <div id="screenProfile" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>PROFİL</b></div>
+    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️</span> <b>PROFİL</b></div>
     <div class="avatar-wrap">
         <img id="profPic" src="" class="u-pic">
         <img id="activeFrame" src="" class="u-frame" style="display:none;">
     </div>
-    <div style="text-align:center; padding:20px;">
-        <h2 id="pName" style="margin-bottom: 5px;">Developer</h2>
-        <p style="color:var(--accent); font-size:13px; margin-top: 0;">Rütbe: Çaylak Bronz</p>
-        
-        <div id="inventory" style="margin-top:20px; background:#111; padding:20px; border-radius:25px; border: 1px solid #222;">
-            <h4 style="margin-top:0;">ENVANTER</h4>
-            <p id="emptyNote" style="color:#555; font-size: 12px;">Eşyan yok kanka.</p>
+    <div style="text-align:center;">
+        <h2 id="pName">Developer</h2>
+        <div id="inventory" style="padding:20px; background:#111; margin:15px; border-radius:25px;">
+            <h4>ENVANTER</h4>
         </div>
     </div>
 </div>
 
 <script>
     let user = { name: '', photo: '', coins: 1500, inventory: [] };
-    // YENİ İÇİ BOŞALTILMIŞ LİNKİ BURAYA ÇAKTIM
-    let db = { 
-        dragon: { 
-            name: 'Altın Ejderha (V2)', 
-            img: 'https://i.ibb.co/zHGQS8XW/1777817943470.png' 
-        } 
+    let db = {
+        royal: { name: 'Asil Çerçeve', img: 'https://i.ibb.co/BKgTg3Lc/Ba-l-ks-z.png' },
+        dragon: { name: 'Altın Ejderha', img: 'https://i.ibb.co/zHGQS8XW/1777817943470.png' }
     };
 
     function previewFile() {
         const file = document.getElementById('fileInput').files[0];
         const reader = new FileReader();
-        reader.onloadend = function() {
+        reader.onloadend = () => {
             user.photo = reader.result;
             document.getElementById('regPreview').src = reader.result;
             document.getElementById('regPreview').style.display = 'block';
@@ -120,7 +143,7 @@
 
     function initApp() {
         const n = document.getElementById('regName').value;
-        if(!n) return alert("İsimsiz girilmez kanka!");
+        if(!n) return alert("İsim yaz!");
         user.name = n + " (Dev)";
         document.getElementById('nDisplay').innerText = user.name;
         document.getElementById('pName').innerText = user.name;
@@ -129,19 +152,33 @@
         openScreen('screenHome');
     }
 
+    // MATCHING LOGIC (SIMULATION)
+    function startMatching() {
+        openScreen('screenMatching');
+        document.getElementById('searchingUI').style.display = 'block';
+        document.getElementById('remoteUser').style.display = 'none';
+        
+        setTimeout(() => {
+            document.getElementById('searchingUI').style.display = 'none';
+            document.getElementById('remoteUser').style.display = 'flex';
+            document.getElementById('matchAvatar').src = 'https://i.pravatar.cc/150?u=' + Math.random();
+            document.getElementById('matchName').innerText = ["Alex", "Selin", "John", "Miki", "Fatma"][Math.floor(Math.random()*5)];
+        }, 2500);
+    }
+
     function processBuy(id) {
-        if(user.inventory.includes(id)) return alert("Zaten dükkandan aldın!");
-        user.inventory.push(id);
-        document.getElementById('emptyNote').style.display = 'none';
-        updateInventory();
-        alert("Ürün envantere eklendi, profilden aktif et!");
+        if(!user.inventory.includes(id)) {
+            user.inventory.push(id);
+            updateInventory();
+            alert("Dükkandan alındı!");
+        }
     }
 
     function updateInventory() {
         const inv = document.getElementById('inventory');
-        inv.innerHTML = '<h4 style="margin-top:0;">ENVANTER</h4>';
+        inv.innerHTML = '<h4>ENVANTER</h4>';
         user.inventory.forEach(itemId => {
-            inv.innerHTML += `<button class="btn-main" style="margin-bottom:10px; background:var(--gold); color:#000;" onclick="useItem('${itemId}')">${db[itemId].name} AKTİF ET</button>`;
+            inv.innerHTML += `<button class="btn-main" onclick="useItem('${itemId}')">${db[itemId].name} TAK</button>`;
         });
     }
 
@@ -149,7 +186,6 @@
         const frame = document.getElementById('activeFrame');
         frame.src = db[id].img;
         frame.style.display = 'block';
-        alert("Çerçeve Takıldı!");
     }
 
     function openScreen(id) {
