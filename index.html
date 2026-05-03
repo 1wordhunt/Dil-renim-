@@ -3,94 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch | NEXUS CORE</title>
+    <title>Nexus Connect | Maceraya Katıl</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050505; --accent: #00f2ff; --gold: #ffcc00; --panel: rgba(20, 20, 25, 0.95); }
-        body { font-family: 'Orbitron', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow: hidden; }
+        :root { --neon: #00d2ff; --gold: #f5af19; --red: #ff3b5c; --panel: rgba(15, 25, 35, 0.95); }
+        body { font-family: 'Rajdhani', sans-serif; margin: 0; background: #050a0f; color: #fff; overflow-x: hidden; }
         
-        /* OYUN HAVASI ARKA PLAN */
-        .bg-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #102a43 0%, #050505 100%); z-index: -1; }
-
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; }
-        .active { display: flex !important; }
-
-        /* KAYIT EKRANI (REVOLUTION) */
-        .auth-card { background: var(--panel); border: 2px solid var(--accent); border-radius: 30px; padding: 40px; width: 80%; max-width: 380px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); text-align: center; }
-        .input-group { margin-bottom: 15px; width: 100%; }
-        input, select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; }
+        /* --- KAYIT EKRANI (CANVA STİLİ) --- */
+        .auth-screen { background: radial-gradient(circle at center, #102a43 0%, #050a0f 100%); height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .auth-card { width: 90%; max-width: 400px; text-align: center; }
+        .title-maceraya { font-family: 'Orbitron', sans-serif; font-style: italic; font-size: 28px; letter-spacing: 2px; margin-bottom: 5px; }
         
-        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4); margin-top: 10px; }
+        .input-box { background: rgba(255,255,255,0.05); border: 1px solid var(--neon); border-radius: 12px; padding: 12px; margin: 8px 0; width: 100%; color: #fff; font-family: inherit; box-sizing: border-box; }
+        .row { display: flex; gap: 10px; }
         
-        /* ANA MENÜ (OYUN LOBİSİ) */
-        .lobby-header { width: 100%; padding: 20px; display: flex; justify-content: space-between; position: fixed; top: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-        .match-btn { width: 250px; height: 250px; border-radius: 50%; background: rgba(0, 242, 255, 0.1); border: 4px solid var(--accent); color: var(--accent); font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(0, 242, 255, 0.3); }
-        .match-btn:hover { transform: scale(1.05); background: var(--accent); color: #000; }
+        .btn-kaydol { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 18px; border-radius: 15px; width: 100%; color: #fff; font-weight: bold; font-size: 18px; cursor: pointer; box-shadow: 0 0 20px rgba(0, 210, 255, 0.4); margin-top: 15px; }
 
-        /* GÖRÜNTÜLÜ EŞLEŞME ALANI */
-        .video-box { width: 100%; height: 100%; position: relative; background: #000; }
-        #remoteVideo { width: 100%; height: 100%; object-fit: cover; }
-        #localVideo { width: 120px; height: 160px; position: absolute; top: 20px; right: 20px; border: 2px solid var(--accent); border-radius: 15px; z-index: 10; background: #111; transform: scaleX(-1); }
+        /* --- LOBİ & NAVBAR --- */
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #0a0f15; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid #1a2530; z-index: 100; }
+        .nav-item { text-align: center; font-size: 12px; color: #666; cursor: pointer; }
+        .nav-item.active { color: var(--neon); }
 
-        .ui-controls { position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 20; }
-        .btn-round { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        /* --- BATTLE PASS --- */
+        .bp-container { background: #111; padding: 15px; border-radius: 15px; border-left: 4px solid var(--gold); margin: 10px; }
+        .bp-progress { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 10px; }
+        .bp-bar { height: 100%; background: var(--gold); width: 30%; transition: 0.5s; }
+
+        /* --- TELAFFUZ ODASI --- */
+        .word-card { background: var(--panel); border: 2px solid var(--neon); border-radius: 20px; padding: 40px; text-align: center; margin: 20px; }
+        .word-text { font-size: 42px; font-weight: bold; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+
+        /* --- EŞLEŞME PANELİ --- */
+        .match-info { position: absolute; top: 100px; width: 100%; display: flex; justify-content: space-around; font-size: 20px; font-weight: bold; z-index: 20; pointer-events: none; }
+        .user-tag { background: rgba(0,0,0,0.7); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--neon); }
+
+        .screen { display: none; min-height: 100vh; padding-bottom: 80px; }
+        .active-screen { display: block; }
     </style>
 </head>
 <body>
-    <div class="bg-effect"></div>
 
-    <div id="screenAuth" class="screen active">
+    <div id="scrAuth" class="screen active-screen auth-screen">
         <div class="auth-card">
-            <h1 style="color:var(--accent); margin-bottom:30px;">NEXUS CORE</h1>
-            <div class="input-group"><input type="email" id="email" placeholder="E-posta"></div>
-            <div class="input-group"><input type="password" id="pass" placeholder="Şifre"></div>
-            <div id="regFields" style="display:none">
-                <div class="input-group"><input type="text" id="username" placeholder="Kullanıcı Adı"></div>
-                <div class="input-group">
-                    <select id="gender">
-                        <option value="Erkek">Erkek</option>
-                        <option value="Kadın">Kadın</option>
-                    </select>
+            <h1 class="title-maceraya">MACERAYA KATIL!</h1>
+            <p style="color:#aaa; font-size:14px;">Kayıt ol ve rütbeni belirlemek için ilk adımı at.</p>
+            
+            <input type="text" id="uName" placeholder="👤 Kullanıcı Adı" class="input-box">
+            <input type="email" id="uEmail" placeholder="📧 E-posta" class="input-box">
+            <input type="password" id="uPass" placeholder="🔒 Şifre" class="input-box">
+            
+            <div class="row">
+                <select id="uGender" class="input-box"><option>Cinsiyet</option><option>Erkek</option><option>Kadın</option></select>
+                <input type="number" id="uAge" placeholder="🎂 Yaş" class="input-box">
+            </div>
+            <select id="uCountry" class="input-box">
+                <option>Ülke Seç</option><option>Türkiye 🇹🇷</option><option>USA 🇺🇸</option><option>Germany 🇩🇪</option>
+            </select>
+
+            <label style="font-size:12px; color:#777; display:block; margin: 10px 0;">
+                <input type="checkbox"> Hizmet Şartlarını ve Gizlilik Politikasını okudum.
+            </label>
+
+            <button class="btn-kaydol" onclick="startJourney()">[ KAYIT OL ]</button>
+        </div>
+    </div>
+
+    <div id="scrHome" class="screen">
+        <div style="padding: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div><h3 id="displayNick">Savaşçı</h3><span style="color:var(--gold)" id="displayRank">Demir Gri</span></div>
+                <div style="text-align:right">💰 <span id="displayCoins">500</span></div>
+            </div>
+
+            <div class="bp-container" style="background: linear-gradient(90deg, #1e3a5f, #111);">
+                <b>📅 GÜNLÜK GÖREV</b>
+                <p id="dailyTask">Telaffuz odasında 5 kelime oku!</p>
+                <small style="color:var(--neon)">Ödül: 50 XP / 20 Coin</small>
+            </div>
+
+            <div class="bp-container">
+                <div style="display:flex; justify-content:space-between">
+                    <b>🔥 BATTLE PASS: SEZON 1</b>
+                    <span>Tier 4/50</span>
                 </div>
+                <div class="bp-progress"><div class="bp-bar" id="bpBar"></div></div>
+                <p style="font-size:12px; margin-top:5px;">Sonraki Ödül: <span style="color:var(--neon)">Altın Ejderha Çerçevesi</span></p>
             </div>
-            <button class="btn-action" onclick="handleAuth()" id="btnAuth">GİRİŞ YAP</button>
-            <p onclick="toggleAuth()" id="switchAuth" style="margin-top:20px; cursor:pointer; color:var(--gold); font-size:14px;">Hesabın yok mu? Kayıt Ol</p>
+
+            <button class="btn-kaydol" style="height:120px; font-size:24px;" onclick="switchTab('scrMatch')">📹 SAVAŞI BAŞLAT</button>
         </div>
     </div>
 
-    <div id="screenLobby" class="screen">
-        <div class="lobby-header">
-            <div>👤 <b id="uName">...</b></div>
-            <div style="color:var(--gold)">💰 <span id="uCoins">0</span></div>
+    <div id="scrWords" class="screen">
+        <div class="word-card">
+            <p style="color:#666">Kelimeyi Mikrofona Oku</p>
+            <div class="word-text" id="targetWord">CHALLENGE</div>
+            <button class="btn-kaydol" id="micBtn" style="background:var(--panel); border:1px solid var(--neon)">🎤 DİNLE VE KONTROL ET</button>
+            <p id="micStatus" style="margin-top:10px; color:var(--gold)"></p>
         </div>
-        <button class="match-btn" onclick="startMatching()">
-            <span style="font-size:50px">📹</span><br>SAVAŞI BAŞLAT
-        </button>
     </div>
 
-    <div id="screenMatch" class="screen" style="padding:0">
-        <div class="video-box">
-            <video id="remoteVideo" autoplay playsinline></video>
-            <video id="localVideo" autoplay muted playsinline></video>
-            <div id="statusLabel" style="position:absolute; top:30px; left:30px; background:rgba(0,0,0,0.7); padding:10px 20px; border-radius:10px;">Aranıyor...</div>
-            <div class="ui-controls">
-                <button class="btn-round" style="background:var(--gold)" onclick="location.reload()">⏭️ PAS</button>
-                <button class="btn-round" style="background:#ff3b5c" onclick="location.reload()">❌ ÇIK</button>
-            </div>
+    <div id="scrMatch" class="screen" style="padding:0; background:#000;">
+        <video id="remoteVideo" style="width:100%; height:100vh; object-fit:cover;" autoplay playsinline></video>
+        <video id="localVideo" style="width:110px; height:150px; position:absolute; bottom:100px; right:20px; border:2px solid var(--neon); border-radius:10px; z-index:50;" autoplay muted playsinline></video>
+        
+        <div class="match-info">
+            <div class="user-tag" id="myTag">Siz</div>
+            <div class="user-tag" id="otherTag">Rakip Aranıyor...</div>
         </div>
+
+        <div style="position:absolute; bottom:100px; width:100%; text-align:center;">
+            <button class="btn-kaydol" style="width:150px; background:var(--red);" onclick="location.reload()">ÇIK</button>
+            <button class="btn-kaydol" style="width:150px; background:var(--gold);" onclick="nextMatch()">PAS GEÇ</button>
+        </div>
+    </div>
+
+    <div class="nav-bottom">
+        <div class="nav-item active" onclick="switchTab('scrHome')">🏠<br>LOBİ</div>
+        <div id="navShop" class="nav-item">🛒<br>MARKET</div>
+        <div class="nav-item" onclick="switchTab('scrWords')">🎤<br>TELAFFUZ</div>
+        <div class="nav-item">🎒<br>ENVANTER</div>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
         authDomain: "nexus-b73be.firebaseapp.com",
         projectId: "nexus-b73be",
-        storageBucket: "nexus-b73be.firebasestorage.app",
-        messagingSenderId: "364035825759",
+        databaseURL: "https://nexus-b73be-default-rtdb.firebaseio.com",
         appId: "1:364035825759:web:fc25365d33c0a7513ffbea"
     };
 
@@ -98,88 +143,82 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    let isRegister = false;
-    let peer = null;
-    let localStream = null;
+    let userData = null;
+    const words = ["ADVENTURE", "VICTORY", "WARRIOR", "CONNECTION", "LANGUAGE", "DRAGON", "LEGEND"];
 
-    window.toggleAuth = () => {
-        isRegister = !isRegister;
-        document.getElementById('regFields').style.display = isRegister ? 'block' : 'none';
-        document.getElementById('btnAuth').innerText = isRegister ? 'KAYIT OL' : 'GİRİŞ YAP';
-        document.getElementById('switchAuth').innerText = isRegister ? 'Giriş Yap' : 'Kayıt Ol';
-    };
-
-    window.handleAuth = async () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
+    // --- KAYIT SİSTEMİ ---
+    window.startJourney = async () => {
+        const email = document.getElementById('uEmail').value;
+        const pass = document.getElementById('uPass').value;
+        const name = document.getElementById('uName').value;
+        
         try {
-            if(isRegister) {
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await set(ref(db, 'users/' + res.user.uid), {
-                    username: document.getElementById('username').value,
-                    gender: document.getElementById('gender').value,
-                    coins: 500, xp: 0, status: "idle", peerId: ""
-                });
-            } else {
-                await signInWithEmailAndPassword(auth, email, pass);
-            }
+            const res = await createUserWithEmailAndPassword(auth, email, pass);
+            await set(ref(db, 'users/' + res.user.uid), {
+                username: name,
+                gender: document.getElementById('uGender').value,
+                country: document.getElementById('uCountry').value,
+                age: document.getElementById('uAge').value,
+                coins: 500, xp: 0, rank: "Çaylak Bronz", bpLevel: 1, inventory: ["Basic Frame"]
+            });
         } catch(e) { alert(e.message); }
     };
 
-    onAuthStateChanged(auth, user => {
-        if(user) {
-            onValue(ref(db, 'users/' + user.uid), snap => {
-                const data = snap.val();
-                document.getElementById('uName').innerText = data.username;
-                document.getElementById('uCoins').innerText = data.coins;
-                showScreen('screenLobby');
+    onAuthStateChanged(auth, u => {
+        if(u) {
+            onValue(ref(db, 'users/' + u.uid), s => {
+                userData = s.val();
+                document.getElementById('displayNick').innerText = userData.username;
+                document.getElementById('displayCoins').innerText = userData.coins;
+                document.getElementById('displayRank').innerText = userData.rank;
+                document.getElementById('bpBar').style.width = (userData.xp % 100) + "%";
+                switchTab('scrHome');
             });
-        } else { showScreen('screenAuth'); }
+        }
     });
 
-    // --- GERÇEK EŞLEŞME MOTORU ---
-    window.startMatching = async () => {
-        showScreen('screenMatch');
-        localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-        document.getElementById('localVideo').srcObject = localStream;
+    // --- TELAFFUZ KONTROL (Web Speech API) ---
+    window.onload = () => {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
 
-        peer = new Peer(auth.currentUser.uid); // Sabit ID: Firebase UID
-        
-        peer.on('open', (id) => {
-            update(ref(db, 'users/' + auth.currentUser.uid), { status: "searching", peerId: id });
-            findPartner();
-        });
+        document.getElementById('micBtn').onclick = () => {
+            recognition.start();
+            document.getElementById('micStatus').innerText = "Dinleniyor...";
+        };
 
-        peer.on('call', call => {
-            call.answer(localStream);
-            call.on('stream', rs => {
-                document.getElementById('remoteVideo').srcObject = rs;
-                document.getElementById('statusLabel').innerText = "BAĞLANDI!";
-            });
-        });
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toUpperCase();
+            const target = document.getElementById('targetWord').innerText;
+            
+            if(transcript.includes(target)) {
+                document.getElementById('micStatus').innerText = "✅ MÜKEMMEL! +10 XP";
+                update(ref(db, 'users/' + auth.currentUser.uid), { xp: userData.xp + 10 });
+                setTimeout(nextWord, 2000);
+            } else {
+                document.getElementById('micStatus').innerText = "❌ Tekrar Dene: " + transcript;
+            }
+        };
     };
 
-    async function findPartner() {
-        const snap = await get(ref(db, 'users'));
-        const users = snap.val();
-        for(let id in users) {
-            if(id !== auth.currentUser.uid && users[id].status === "searching") {
-                const call = peer.call(users[id].peerId, localStream);
-                call.on('stream', rs => {
-                    document.getElementById('remoteVideo').srcObject = rs;
-                    document.getElementById('statusLabel').innerText = "BAĞLANDI!";
-                    update(ref(db, 'users/' + auth.currentUser.uid), { status: "busy" });
-                    update(ref(db, 'users/' + id), { status: "busy" });
-                });
-                break;
-            }
-        }
+    function nextWord() {
+        document.getElementById('targetWord').innerText = words[Math.floor(Math.random() * words.length)];
+        document.getElementById('micStatus').innerText = "";
     }
 
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+    // --- EŞLEŞME MOTORU ---
+    window.switchTab = (id) => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(id).classList.add('active-screen');
+        if(id === 'scrMatch') initVideo();
+    };
+
+    async function initVideo() {
+        const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        document.getElementById('localVideo').srcObject = stream;
+        document.getElementById('myTag').innerText = `Me: ${userData.username} (${userData.country})`;
     }
+
 </script>
 </body>
 </html>
