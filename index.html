@@ -3,75 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro</title>
+    <title>LangMatch Pro | Final Fix</title>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <style>
         :root {
-            --bg: #0f1015; --card-bg: #1c1c1e; --text: #ffffff;
+            --bg: #0f1015; --card: #1c1c1e; --text: #ffffff;
             --neon-red: linear-gradient(135deg, #ff416c, #ff4b2b);
             --neon-green: linear-gradient(135deg, #00b09b, #96c93d);
             --neon-blue: linear-gradient(135deg, #2193b0, #6dd5ed);
             --neon-yellow: linear-gradient(135deg, #f12711, #f5af19);
             --neon-purple: linear-gradient(135deg, #6a11cb, #2575fc);
         }
-
         body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
         
-        /* Ekran Yönetimi */
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; top: 0; left: 0; }
+        /* Navigasyon Sistemi */
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* UI Elemanları */
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--card-bg); border-bottom: 1px solid #333; }
-        .p-circle { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #f5af19; object-fit: cover; }
+        /* Header & Profil */
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--card); border-bottom: 1px solid #333; }
+        .p-circle { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #f5af19; object-fit: cover; cursor: pointer; }
         
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        /* Grid Menü */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
         .menu-btn { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; color: white; transition: 0.2s; position: relative; }
-        .menu-btn:active { transform: scale(0.95); }
         .large { grid-column: span 2; height: 110px; }
         .half { height: 150px; }
 
-        /* Görevler Listesi */
-        .task-item { background: var(--card-bg); margin: 10px 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--blue); }
-
-        /* Kayıt Formu */
-        .auth-container { margin: auto; width: 85%; max-width: 380px; text-align: center; }
+        /* Formlar */
         input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; background: #25262e; border: 1px solid #444; color: white; box-sizing: border-box; }
-        .btn-main { background: var(--neon-blue); padding: 15px; border-radius: 12px; border: none; color: white; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
+        .btn-main { background: var(--neon-blue); padding: 15px; border-radius: 12px; border: none; color: white; font-weight: bold; width: 100%; cursor: pointer; }
 
-        /* Video */
-        .video-box { height: 50%; width: 100%; object-fit: cover; background: #222; }
+        /* Video Alanı */
+        .video-box { height: 50%; width: 100%; object-fit: cover; background: #222; border-bottom: 1px solid #333; }
         
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.9); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; backdrop-filter: blur(10px); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.95); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; backdrop-filter: blur(10px); z-index: 100; }
         .nav-btn { font-size: 10px; text-align: center; color: #888; cursor: pointer; }
-        .nav-btn.active { color: white; }
+        .nav-btn.active { color: #2193b0; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
-    <div class="auth-container">
-        <div style="width:80px; height:80px; background:var(--neon-yellow); border-radius:20px; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:40px;">🌐</div>
-        <h2 style="margin-bottom:5px;">Yeni Hesap Oluştur</h2>
-        <p style="color:#888; font-size:13px; margin-bottom:20px;">LangMatch dünyasına katıl</p>
-        
+    <div style="margin: auto; width: 85%; text-align: center;">
+        <h2 style="margin-bottom:20px;">LangMatch'e Hoş Geldin</h2>
         <input type="text" id="regName" placeholder="Kullanıcı Adı">
         <input type="password" id="regPass" placeholder="Şifre">
-        <div style="display:flex; gap:10px;">
-            <select id="regGender"><option>Erkek</option><option>Kız</option></select>
-            <select id="regCountry"><option>🇹🇷 Türkiye</option><option>🇺🇸 USA</option></select>
-        </div>
-        <button class="btn-main" onclick="handleRegister()">KAYIT OL VE BAŞLA</button>
+        <button class="btn-main" onclick="handleRegister()">GİRİŞ YAP / KAYDOL</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="header">
         <div style="display:flex; align-items:center; gap:10px;">
-            <img id="uAvatar" src="https://via.placeholder.com/100" class="p-circle" onclick="openProfile()">
+            <img id="uAvatar" src="https://via.placeholder.com/100" class="p-circle" onclick="openScreen('screenProfile')">
             <div>
-                <div id="uName" style="font-weight:bold; font-size:14px;">Misafir</div>
-                <div id="uRank" style="font-size:11px; color:#f5af19;">Çaylak Bronz</div>
+                <div id="uName" style="font-weight:bold; font-size:14px;">User</div>
+                <div style="font-size:11px; color:#f5af19;">Çaylak Bronz</div>
             </div>
         </div>
         <div style="text-align:right;">
@@ -82,10 +70,9 @@
 
     <div class="main-grid">
         <div class="menu-btn large" style="background:var(--neon-red);" onclick="openScreen('screenGlobal')">
-            <span style="position:absolute; top:10px; right:15px; background:white; color:red; padding:2px 6px; border-radius:8px; font-size:10px;">99+</span>
             <div style="font-size:24px;">💬</div> GLOBAL CHAT
         </div>
-        <div class="menu-btn half" style="background:var(--neon-green);" onclick="openScreen('screenMatch')">
+        <div class="menu-btn half" style="background:var(--neon-green);" onclick="openScreen('screenMatchOptions')">
             <div style="font-size:30px;">📹</div> MATCHING
         </div>
         <div class="menu-btn half" style="background:var(--neon-yellow);" onclick="openScreen('screenShop')">
@@ -94,7 +81,7 @@
         <div class="menu-btn half" style="background:var(--neon-blue);" onclick="openScreen('screenPronounce')">
             <div style="font-size:30px;">🗣️</div> TELAFFUZ
         </div>
-        <div class="menu-btn half" style="background:var(--card-bg); border:1px solid #444;" onclick="openScreen('screenSearch')">
+        <div class="menu-btn half" style="background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">
             <div style="font-size:30px;">🔍</div> ÜYE ARA
         </div>
     </div>
@@ -107,52 +94,69 @@
     </div>
 </div>
 
-<div id="screenTasks" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Günlük Görevler</b> <span></span></div>
-    <div style="padding-top:10px;" id="taskList">
-        <div class="task-item">
-            <div><b>İlk Eşleşme</b><br><small>1 kişiyle konuş</small></div>
-            <div style="color:#ffd60a;">+50 💰</div>
-        </div>
-        <div class="task-item">
-            <div><b>Kelime Avcısı</b><br><small>3 kelime telaffuz et</small></div>
-            <div style="color:#ffd60a;">+100 💰</div>
-        </div>
+<div id="screenMatchOptions" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️ Geri</span> <b>Eşleşme Tercihi</b> <span></span></div>
+    <div style="margin:auto; width:85%; text-align:center; gap:15px; display:flex; flex-direction:column;">
+        <h3>Kiminle Eşleşmek İstersin?</h3>
+        <button class="btn-main" style="background:#ff416c;" onclick="startMatch('female')">Kızlarla Eşleş</button>
+        <button class="btn-main" style="background:#2193b0;" onclick="startMatch('male')">Erkeklerle Eşleş</button>
     </div>
 </div>
 
 <div id="screenMatch" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Canlı Eşleşme</b> <span></span></div>
     <video id="remoteVideo" class="video-box" autoplay playsinline></video>
     <video id="localVideo" class="video-box" autoplay muted playsinline></video>
-    <div id="matchUI" style="position:absolute; bottom:100px; width:100%; text-align:center;">
-        <button class="btn-main" style="width:200px; background:red;" onclick="location.reload()">KAPAT</button>
+    <div style="position:absolute; bottom:50px; width:100%; text-align:center;">
+        <button class="btn-main" style="width:150px; background:red;" onclick="location.reload()">KAPAT</button>
     </div>
+</div>
+
+<div id="screenProfile" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Profilim</b> <span></span></div>
+    <div style="text-align:center; padding:40px;">
+        <img id="pImgBig" src="https://via.placeholder.com/150" style="width:150px; height:150px; border-radius:50%; border:4px solid #f5af19; object-fit: cover;">
+        <br><br>
+        <button class="btn-main" onclick="document.getElementById('fileInp').click()">FOTOĞRAF DEĞİŞTİR</button>
+        <input type="file" id="fileInp" style="display:none" onchange="uploadPhoto(this)">
+        <h2 id="pNameDisp">Kullanıcı</h2>
+        <button class="btn-main" style="background:red; margin-top:20px;" onclick="location.reload()">ÇIKIŞ YAP</button>
+    </div>
+</div>
+
+<div id="screenGlobal" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b> <span></span></div>
+    <div style="flex:1; padding:20px;">Sohbet odası yükleniyor...</div>
 </div>
 
 <div id="screenShop" class="screen">
     <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Market</b> <span></span></div>
-    <div style="padding:20px; text-align:center; color:#888;">Henüz ürün eklenmedi.</div>
+    <div style="padding:20px;">Dükkan ürünleri yakında burada!</div>
+</div>
+
+<div id="screenTasks" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Görevler</b> <span></span></div>
+    <div style="padding:20px;">Günlük görevlerini tamamla, ödülleri kap!</div>
+</div>
+
+<div id="screenPronounce" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz</b> <span></span></div>
+    <div style="padding:40px; text-align:center;"><h1>Developer</h1><button class="btn-main">KONUŞ</button></div>
+</div>
+
+<div id="screenSearch" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Ara</b> <span></span></div>
+    <div style="padding:20px;"><input type="text" placeholder="Kullanıcı ara..."></div>
 </div>
 
 <script>
-    let user = { name: '', coins: 0, gender: '', country: '' };
+    let userData = { name: '', coins: 0, avatar: 'https://via.placeholder.com/100' };
 
     function handleRegister() {
         const name = document.getElementById('regName').value;
-        const pass = document.getElementById('regPass').value;
-        if(!name || !pass) return alert("Bilgileri doldur!");
-
-        user.name = name;
-        user.gender = document.getElementById('regGender').value;
-        user.country = document.getElementById('regCountry').value;
-        
-        // Yeni hesapta 0 para
-        user.coins = 0;
-
-        document.getElementById('uName').innerText = user.name;
-        document.getElementById('uCoins').innerText = user.coins;
-        
+        if(!name) return alert("İsim giriniz!");
+        userData.name = name;
+        document.getElementById('uName').innerText = name;
+        document.getElementById('pNameDisp').innerText = name;
         openScreen('screenHome');
     }
 
@@ -162,17 +166,24 @@
         if(target) target.classList.add('active');
     }
 
-    async function startVideo() {
+    function uploadPhoto(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('uAvatar').src = e.target.result;
+                document.getElementById('pImgBig').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function startMatch(gender) {
+        openScreen('screenMatch');
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
             document.getElementById('localVideo').srcObject = stream;
-        } catch(e) { alert("Kamera açılmadı!"); }
+        } catch(e) { alert("Kamera izni gerekiyor!"); openScreen('screenHome'); }
     }
-
-    // Butonlara tıklayınca ilgili ekrana gitmesi için eventler
-    // Matching tıklandığında kamera otomatik açılır
-    document.querySelector('[onclick="openScreen(\'screenMatch\')"]').addEventListener('click', startVideo);
-
 </script>
 
 </body>
