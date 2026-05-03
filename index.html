@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch | Pro Developer</title>
+    <title>LangMatch | Global Developer Edition</title>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <style>
         :root {
@@ -15,7 +15,7 @@
         .screen { display: none; height: 100vh; width: 100vw; position: relative; flex-direction: column; }
         .active { display: flex; }
 
-        /* ÜST BAR (SOLDA PROFİL, YANINDA COİN) */
+        /* ÜST BAR */
         .top-bar { display: flex; align-items: center; padding: 15px; background: rgba(0,0,0,0.3); border-bottom: 2px solid #333; }
         .mini-profile { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--bs-blue); cursor: pointer; background: #555; overflow: hidden; }
         .mini-profile img { width: 100%; height: 100%; object-fit: cover; }
@@ -23,30 +23,26 @@
 
         /* KAYIT EKRANI */
         .auth-card { background: var(--card-dark); padding: 25px; border-radius: 30px; border: 5px solid #000; text-align: center; width: 85%; max-width: 380px; margin: auto; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 12px; background: #3a3a3c; color: white; font-weight: bold; box-sizing: border-box; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 12px; background: #3a3a3c; color: white; font-weight: bold; box-sizing: border-box; outline: none; }
         
-        .gender-grid { display: flex; gap: 10px; margin: 15px 0; }
-        .g-btn { flex: 1; padding: 12px; border-radius: 12px; background: #3a3a3c; cursor: pointer; border: 3px solid transparent; transition: 0.2s; }
+        .gender-grid { display: flex; gap: 10px; margin: 10px 0; }
+        .g-btn { flex: 1; padding: 12px; border-radius: 12px; background: #3a3a3c; cursor: pointer; border: 3px solid transparent; transition: 0.2s; font-size: 12px; }
         .g-btn.selected { border-color: var(--bs-blue); background: #48484a; }
 
-        /* ANA MENÜ (WEPLAY STİLİ IZGARA) */
+        /* ANA MENÜ (WEPLAY GRID) */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; flex: 1; overflow-y: auto; }
-        .menu-item { border-radius: 25px; border: 4px solid #000; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 6px 0 #000; }
+        .menu-item { border-radius: 25px; border: 4px solid #000; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 6px 0 #000; text-align: center; padding: 10px; }
         .menu-item:active { transform: translateY(4px); box-shadow: none; }
         
-        .item-global { grid-column: span 2; background: #ff4757; height: 120px; }
-        .item-start { background: var(--bs-green); height: 160px; }
-        .item-shop { background: var(--bs-yellow); color: #000; height: 160px; }
-        .item-rank { grid-column: span 2; background: var(--bs-blue); height: 100px; }
+        .item-global { grid-column: span 2; background: #ff4757; height: 110px; }
+        .item-start { background: var(--bs-green); height: 150px; }
+        .item-shop { background: var(--bs-yellow); color: #000; height: 150px; }
+        .item-rank { grid-column: span 2; background: var(--bs-blue); height: 90px; }
 
         /* VİDEO EKRANI */
-        .video-container { flex: 1; display: flex; flex-direction: column; background: #000; }
+        .video-container { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         .vid-box { height: 50%; width: 100%; object-fit: cover; border-bottom: 2px solid #333; }
-        .match-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
-
-        /* PROFİL PANELİ (POP-UP) */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-active { display: flex; }
+        .flag-overlay { position: absolute; top: 20px; right: 20px; font-size: 40px; z-index: 10; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px; }
 
         .btn-action { background: var(--bs-yellow); border: 4px solid #000; padding: 15px 30px; border-radius: 15px; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
@@ -55,86 +51,142 @@
 
 <div id="screenRegister" class="screen active">
     <div class="auth-card">
-        <h2 style="color: var(--bs-blue)">LANGMATCH</h2>
-        <input type="text" id="regName" placeholder="Kullanıcı Adı">
+        <h2 style="color: var(--bs-blue); margin-top: 0;">LANGMATCH</h2>
+        <input type="text" id="regName" placeholder="Username">
+        <input type="password" id="regPass" placeholder="Password">
+        
+        <select id="regCountry" onchange="updateAppLanguage(this.value)">
+            <option value="TR">Turkey 🇹🇷</option>
+            <option value="US">USA 🇺🇸</option>
+            <option value="DE">Germany 🇩🇪</option>
+            <option value="FR">France 🇫🇷</option>
+            <option value="ES">Spain 🇪🇸</option>
+        </select>
+
         <div class="gender-grid">
-            <div class="g-btn" id="mBtn" onclick="selectGender('male')">♂️ ERKEK</div>
-            <div class="g-btn" id="fBtn" onclick="selectGender('female')">♀️ KIZ</div>
+            <div class="g-btn" id="mBtn" onclick="selectGender('male')">♂️ MALE / ERKEK</div>
+            <div class="g-btn" id="fBtn" onclick="selectGender('female')">♀️ FEMALE / KIZ</div>
         </div>
-        <button class="btn-action" style="width: 100%;" onclick="doRegister()">KAYDOL</button>
+        <button class="btn-action" style="width: 100%;" id="btnRegister" onclick="doRegister()">REGISTER</button>
     </div>
 </div>
 
 <div id="screenDashboard" class="screen">
     <div class="top-bar">
-        <div class="mini-profile" onclick="toggleProfile()">
+        <div class="mini-profile" onclick="showScreen('screenProfile')">
             <img id="p-img-mini" src="https://via.placeholder.com/50">
         </div>
         <div class="coin-display">💰 <span id="uCoins">500</span></div>
     </div>
 
     <div class="menu-grid">
-        <div class="menu-item item-global" onclick="alert('Global Chat yakında!')">💬 GLOBAL CHAT</div>
-        <div class="menu-item item-start" onclick="showScreen('screenMatchOptions')">📹 START<br>MATCHING</div>
-        <div class="menu-item item-shop" onclick="showScreen('screenShop')">🛒 SHOP</div>
-        <div class="menu-item item-rank" onclick="alert('Sıralama Listesi!')">🏆 RANKING</div>
+        <div class="menu-item item-global" id="menuChat">💬 GLOBAL CHAT</div>
+        <div class="menu-item item-start" id="menuStart" onclick="showScreen('screenMatchOptions')">📹 START MATCHING</div>
+        <div class="menu-item item-shop" id="menuShop" onclick="showScreen('screenShop')">🛒 SHOP</div>
+        <div class="menu-item item-rank" id="menuRank">🏆 WORLD RANKING</div>
     </div>
 </div>
 
 <div id="screenMatchOptions" class="screen" style="justify-content: center; align-items: center; background: rgba(0,0,0,0.8);">
     <div class="auth-card">
-        <h3>Kimi Arıyorsun?</h3>
-        <button class="btn-action" style="background: #ff4757; width:100%;" onclick="startAutoMatch('female')">KIZLARLA EŞLEŞ</button>
-        <button class="btn-action" style="background: #1e90ff; width:100%;" onclick="startAutoMatch('male')">ERKEKLERLE EŞLEŞ</button>
-        <p onclick="showScreen('screenDashboard')" style="cursor:pointer; margin-top: 15px; font-size: 14px;">Geri Dön</p>
+        <h3 id="txtMatchTitle">Who are you looking for?</h3>
+        <button class="btn-action" id="btnMatchFemale" style="background: #ff4757; width:100%;" onclick="startAutoMatch('female')">MATCH WITH GIRLS</button>
+        <button class="btn-action" id="btnMatchMale" style="background: #1e90ff; width:100%;" onclick="startAutoMatch('male')">MATCH WITH BOYS</button>
+        <p onclick="showScreen('screenDashboard')" id="btnBack" style="cursor:pointer; margin-top: 15px; font-size: 14px;">Back</p>
     </div>
 </div>
 
 <div id="screenVideo" class="screen">
-    <div id="matchLoading" class="match-overlay">
-        <div style="font-size: 40px; animation: spin 1s linear infinite;">🌀</div>
-        <h2 id="statusText">EŞLEŞİLİYOR...</h2>
-        <button class="btn-action" style="background:red;" onclick="location.reload()">İPTAL</button>
-    </div>
     <div class="video-container">
+        <div id="remoteFlag" class="flag-overlay" style="display:none;">🌍</div>
         <video id="remoteVideo" class="vid-box" autoplay playsinline></video>
         <video id="localVideo" class="vid-box" autoplay muted playsinline></video>
-    </div>
-</div>
-
-<div id="screenShop" class="screen" style="background: #0055ff;">
-    <div style="padding: 20px; display: flex; justify-content: space-between;">
-        <h2>MAĞAZA</h2>
-        <button onclick="showScreen('screenDashboard')" style="background:none; border:none; color:white; font-size:30px;">×</button>
-    </div>
-    <div style="display: flex; gap: 20px; padding: 20px; overflow-x: auto;">
-        <div style="min-width: 150px; height: 200px; background: white; border-radius: 20px; border: 4px solid #000; color: #000; text-align: center;">
-            <p>Gold Frame</p>
-            <div style="font-size: 40px;">🖼️</div>
-            <div class="btn-action" style="padding: 5px 15px;">200 💰</div>
+        <div id="matchLoading" style="position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <h2 id="statusText">MATCHING...</h2>
+            <button class="btn-action" id="btnCancel" style="background:red;" onclick="location.reload()">CANCEL</button>
         </div>
     </div>
 </div>
 
-<div id="profileModal" class="modal">
-    <div class="auth-card" style="position: relative;">
-        <span onclick="toggleProfile()" style="position: absolute; right: 20px; top: 10px; cursor: pointer; font-size: 24px;">×</span>
-        <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bs-blue); margin: auto; overflow: hidden;">
+<div id="screenProfile" class="screen">
+    <div class="auth-card">
+        <div id="p-img-container" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bs-blue); margin: auto; overflow: hidden;">
             <img id="p-img-big" src="https://via.placeholder.com/100" style="width:100%; height:100%; object-fit: cover;">
         </div>
-        <h2 id="p-name-display">Dev</h2>
-        <button class="btn-action" onclick="document.getElementById('fileInput').click()">RESİM YÜKLE</button>
-        <input type="file" id="fileInput" style="display:none" onchange="uploadImg(this)">
+        <h2 id="p-name-display">Alex</h2>
+        <p id="p-country-display" style="font-size: 40px;"></p>
+        <button class="btn-action" id="btnProfileBack" onclick="showScreen('screenDashboard')">BACK</button>
     </div>
 </div>
 
 <script>
-    let myGender = '';
+    // DİL PAKETLERİ
+    const languages = {
+        TR: {
+            reg: "KAYDOL",
+            chat: "💬 KÜRESEL SOHBET",
+            start: "📹 EŞLEŞMEYE BAŞLA",
+            shop: "🛒 DÜKKAN",
+            rank: "🏆 DÜNYA SIRALAMASI",
+            matchTitle: "Kimi Arıyorsun?",
+            matchF: "KIZLARLA EŞLEŞ",
+            matchM: "ERKEKLERLE EŞLEŞ",
+            back: "Geri Dön",
+            matching: "EŞLEŞİLİYOR...",
+            cancel: "İPTAL"
+        },
+        US: {
+            reg: "REGISTER",
+            chat: "💬 GLOBAL CHAT",
+            start: "📹 START MATCHING",
+            shop: "🛒 SHOP",
+            rank: "🏆 WORLD RANKING",
+            matchTitle: "Who are you looking for?",
+            matchF: "MATCH WITH GIRLS",
+            matchM: "MATCH WITH BOYS",
+            back: "Back",
+            matching: "MATCHING...",
+            cancel: "CANCEL"
+        },
+        DE: {
+            reg: "REGISTRIEREN",
+            chat: "💬 GLOBALER CHAT",
+            start: "📹 MATCHING STARTEN",
+            shop: "🛒 SHOP",
+            rank: "🏆 WELTRANGLISTE",
+            matchTitle: "Wen suchen Sie?",
+            matchF: "MATCH MIT MÄDCHEN",
+            matchM: "MATCH MIT JUNGS",
+            back: "Zurück",
+            matching: "SUCHEN...",
+            cancel: "ABBRECHEN"
+        }
+    };
+
+    let myData = { name: '', gender: '', country: 'TR', lang: 'TR' };
     let peer;
     let localStream;
 
+    function updateAppLanguage(langCode) {
+        myData.lang = langCode;
+        const lang = languages[langCode] || languages.US;
+        
+        document.getElementById('btnRegister').innerText = lang.reg;
+        document.getElementById('menuChat').innerText = lang.chat;
+        document.getElementById('menuStart').innerText = lang.start;
+        document.getElementById('menuShop').innerText = lang.shop;
+        document.getElementById('menuRank').innerText = lang.rank;
+        document.getElementById('txtMatchTitle').innerText = lang.matchTitle;
+        document.getElementById('btnMatchFemale').innerText = lang.matchF;
+        document.getElementById('btnMatchMale').innerText = lang.matchM;
+        document.getElementById('btnBack').innerText = lang.back;
+        document.getElementById('statusText').innerText = lang.matching;
+        document.getElementById('btnCancel').innerText = lang.cancel;
+        document.getElementById('btnProfileBack').innerText = lang.back;
+    }
+
     function selectGender(g) {
-        myGender = g;
+        myData.gender = g;
         document.getElementById('mBtn').classList.toggle('selected', g === 'male');
         document.getElementById('fBtn').classList.toggle('selected', g === 'female');
     }
@@ -144,45 +196,32 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function toggleProfile() {
-        document.getElementById('profileModal').classList.toggle('modal-active');
-    }
-
     function doRegister() {
-        const name = document.getElementById('regName').value;
-        if(!name || !myGender) return alert("İsim ve Cinsiyet Seç!");
-        document.getElementById('p-name-display').innerText = name;
+        myData.name = document.getElementById('regName').value;
+        const countrySelect = document.getElementById('regCountry');
+        myData.country = countrySelect.options[countrySelect.selectedIndex].text.split(' ')[1]; // Bayrağı al
+        
+        if(!myData.name || !myData.gender) return alert("Fill all areas!");
+        
+        document.getElementById('p-name-display').innerText = myData.name;
+        document.getElementById('p-country-display').innerText = myData.country;
         showScreen('screenDashboard');
     }
 
-    function uploadImg(input) {
-        if (input.files && input.files[0]) {
-            let r = new FileReader();
-            r.onload = e => {
-                document.getElementById('p-img-mini').src = e.target.result;
-                document.getElementById('p-img-big').src = e.target.result;
-            }
-            r.readAsDataURL(input.files[0]);
-        }
-    }
-
+    // Eşleşme Mantığı v5 (Global)
     async function startAutoMatch(targetGender) {
         showScreen('screenVideo');
         localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
         document.getElementById('localVideo').srcObject = localStream;
 
-        // EŞLEŞME MANTIĞI: Akşam iki cihazda aynı anda basıldığında
-        // Biri langmatch-test-X0 diğeri langmatch-test-X1 olarak açılır.
-        let randomSlot = Math.floor(Math.random() * 2);
-        peer = new Peer('langmatch-2026-' + myGender + randomSlot);
+        let slot = Math.floor(Math.random() * 2);
+        peer = new Peer('lm-global-' + myData.gender + slot);
 
-        peer.on('open', (id) => {
-            console.log("Benim ID: " + id);
+        peer.on('open', () => {
             setTimeout(() => {
-                // Diğer slotu aramaya başla
-                let otherSlot = randomSlot === 0 ? 1 : 0;
-                let otherId = 'langmatch-2026-' + targetGender + otherSlot;
-                const call = peer.call(otherId, localStream);
+                let otherSlot = slot === 0 ? 1 : 0;
+                let targetId = 'lm-global-' + targetGender + otherSlot;
+                const call = peer.call(targetId, localStream);
                 if(call) handleStream(call);
             }, 3000);
         });
@@ -197,13 +236,16 @@
         call.on('stream', rs => {
             document.getElementById('remoteVideo').srcObject = rs;
             document.getElementById('matchLoading').style.display = 'none';
+            document.getElementById('remoteFlag').style.display = 'block';
+            // Eşleşen kişinin bayrağı (Simülasyon)
+            const flags = ["🇹🇷", "🇺🇸", "🇬🇧", "🇩🇪", "🇫🇷", "🇪🇸"];
+            document.getElementById('remoteFlag').innerText = flags[Math.floor(Math.random()*flags.length)];
         });
     }
-</script>
 
-<style>
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-</style>
+    // Başlangıçta dili Türkçe yap
+    updateAppLanguage('TR');
+</script>
 
 </body>
 </html>
