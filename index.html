@@ -3,344 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch | English Learning</title>
+    <title>LangMatch | Auto-Match Test</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <style>
-        :root {
-            /* Beyaz Tema Renk Paleti */
-            --bg-body: #F0F2F5; /* Çok açık gri arka plan */
-            --bg-card: #FFFFFF; /* Beyaz kartlar */
-            --text-main: #2E3338; /* Koyu metin */
-            --text-muted: #8E9297; /* Gri metin */
-            --border: #E3E5E8; /* Açık sınır çizgisi */
-            
-            /* Referans Resimden Alınan Gradyanlar */
-            --grad-primary: linear-gradient(135deg, #62ACFC 0%, #BA75FF 100%);
-            --grad-active: linear-gradient(135deg, #4A90E2 0%, #9B51E0 100%);
-            --accent-green: #2ecc71;
-            --accent-gold: #f1c40f;
-            --accent-diamond: #3498db;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Ana Uygulama Konteyneri */
-        .app-phone {
-            width: 375px; /* Standart Mobil Genişliği */
-            height: 812px; /* Standart Mobil Yüksekliği */
-            background: var(--bg-body);
-            border-radius: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 8px solid #333; /* Telefon Kasası */
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* Çentik (Notch) */
-        .notch {
-            height: 30px;
-            width: 150px;
-            background: #333;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            z-index: 10;
-        }
-
-        /* --- KAYIT EKRANI (AÇILIŞ) --- */
-        .screen-auth {
-            display: flex;
-            flex-direction: column;
-            padding: 40px 20px;
-            height: 100%;
-            display: flex;
-        }
-
-        .auth-header { text-align: center; margin-top: 20px; }
-        .auth-title { font-size: 20px; font-weight: 800; margin-bottom: 5px; }
-        .auth-subtitle { color: var(--text-muted); font-size: 14px; }
-
-        .form-group { margin-bottom: 12px; }
-        .input-icon-wrap { position: relative; }
-        .input-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        input {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-main);
-            font-size: 14px;
-        }
-
-        .btn-register {
-            background: var(--grad-primary);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 30px;
-            font-weight: 800;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-
-        /* --- ANA UYGULAMA PANELİ (DASHBOARD) --- */
-        .screen-main {
-            display: none; /* Kayıttan sonra açılacak */
-            flex-direction: column;
-            height: 100%;
-        }
-
-        /* Üst Bar (Profil, Coin, Elmas) */
-        .top-bar {
-            display: grid;
-            grid-template-columns: 80px 1fr 100px;
-            align-items: center;
-            padding: 40px 15px 15px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-        }
-        .user-avatar-wrap {
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            border: 4px solid var(--accent-gold);
-            padding: 2px; position: relative;
-        }
-        .user-avatar-img { width: 100%; height: 100%; border-radius: 50%; background: #ccc; }
-        .user-tag { position: absolute; bottom: -5px; right: -5px; background: orange; color: white; padding: 2px 6px; border-radius: 10px; font-size: 9px; }
+        :root { --primary: #5865F2; --bg: #ffffff; --text: #2e3338; --grad: linear-gradient(135deg, #62ACFC 0%, #BA75FF 100%); }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); }
         
-        .user-info { padding-left: 10px; }
-        .user-name { font-weight: 800; font-size: 16px; }
-        .user-rank { color: var(--accent-gold); font-size: 12px; }
-        .user-xp { color: var(--text-muted); font-size: 11px; }
+        /* Ekranlar */
+        .screen { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .active { display: flex; }
 
-        .currency-wrap { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
-        .currency-item { font-size: 12px; font-weight: bold; color: var(--text-muted); }
+        /* Video Alanı */
+        .video-wrapper { width: 100%; max-width: 400px; display: grid; grid-template-rows: 1fr 1fr; gap: 10px; flex: 1; margin: 20px 0; }
+        video { width: 100%; height: 100%; background: #000; border-radius: 15px; object-fit: cover; border: 2px solid #eee; }
 
-        /* İçerik Alanı */
-        .content-area {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* Görev Kartı */
-        .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid var(--border);
-        }
-        .card-header { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
+        /* UI Elemanları */
+        input { width: 80%; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .btn { background: var(--grad); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; width: 80%; }
         
-        .task-item { display: grid; grid-template-columns: 1fr 60px 60px; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
-        .task-progress { height: 6px; background: #eee; border-radius: 3px; position: relative; overflow: hidden; }
-        .task-bar { height: 100%; background: var(--grad-primary); width: 0%; }
-        
-        .btn-claim, .btn-go {
-            padding: 6px 12px; border-radius: 6px; border: none; font-size: 11px; font-weight: bold; cursor: pointer;
+        /* Dükkan Overlay */
+        #shopOverlay { 
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: rgba(255,255,255,0.95); z-index:100; flex-direction:column; align-items:center; justify-content:center;
         }
-        .btn-claim { background: rgba(46, 204, 113, 0.1); color: var(--accent-green); }
-        .btn-go { background: rgba(98, 172, 252, 0.1); color: #62ACFC; }
-
-        /* Sohbet Başlat Butonu */
-        .chat-match-area { text-align: center; margin: 15px 0; }
-        .btn-start-chat {
-            background: var(--grad-primary);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 40px;
-            font-weight: 800;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(98, 172, 252, 0.4);
-        }
-
-        /* Dükkan Kartı */
-        .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .shop-item {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
-            font-size: 11px;
-            background: var(--bg-card);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .shop-item:hover { border-color: #62ACFC; transform: translateY(-2px); }
-        .shop-item-title { color: var(--text-muted); margin-bottom: 5px; }
-        .shop-item-price { color: var(--accent-gold); font-weight: bold; margin-top: 5px; }
-
-        /* Alt Navigasyon */
-        .bottom-nav {
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            height: 70px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: 10px;
-        }
-        .nav-item { text-align: center; color: var(--text-muted); cursor: pointer; font-size: 10px; }
-        .nav-item.active { color: #62ACFC; font-weight: bold; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
-
+        .shop-item { border: 1px solid #ddd; padding: 20px; border-radius: 15px; margin: 10px; width: 150px; text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="app-phone">
-    <div class="notch"></div>
+<div id="authScreen" class="screen active">
+    <h1>LangMatch</h1>
+    <input type="text" id="username" placeholder="Username (e.g. Alex)">
+    <button class="btn" onclick="startApp()">JOIN APP</button>
+</div>
 
-    <div class="screen-auth" id="authScreen">
-        <div class="auth-header">
-            <div class="auth-title">REGISTER NEW USER</div>
-            <div class="auth-subtitle">Fill in your details to get started</div>
-        </div>
-
-        <div style="text-align: center; margin: 20px 0;">
-            <div class="user-avatar-wrap" style="width: 100px; height: 100px; border-color: var(--accent-gold); display: inline-block;">
-                <div class="user-avatar-img" style="background: #e1e1e1;"></div>
-            </div>
-            <div style="color: #62ACFC; font-size: 12px; margin-top: 8px; cursor: pointer;">Upload Profile Photo</div>
-        </div>
-
-        <div class="form-group">
-            <div class="input-icon-wrap">
-                <span class="input-icon">👤</span>
-                <input type="text" placeholder="Full Name (as it appears on ID)">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-icon-wrap">
-                <span class="input-icon">✉️</span>
-                <input type="email" placeholder="Email Address">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-icon-wrap">
-                <span class="input-icon">🔑</span>
-                <input type="password" placeholder="Password">
-            </div>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button style="flex:1; padding: 10px; border-radius: 8px; border: 1px solid #62ACFC; background: white; color: #62ACFC; cursor:pointer;">♂️ Male</button>
-            <button style="flex:1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: white; color: var(--text-muted); cursor:pointer;">♀️ Female</button>
-        </div>
-
-        <button class="btn-register" onclick="completeRegistration()">COMPLETE REGISTRATION ✔️</button>
+<div id="mainScreen" class="screen">
+    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <div id="userInfo"><b>Dev:</b> <span id="uName"></span></div>
+        <div>💰 <span id="coins">500</span></div>
     </div>
 
-    <div class="screen-main" id="mainScreen">
-        <div class="top-bar">
-            <div class="user-avatar-wrap">
-                <div class="user-avatar-img"></div>
-                <div class="user-tag">dev</div>
-            </div>
-            <div class="user-info">
-                <div class="user-name">User: Alex</div>
-                <div class="user-rank">🥇 Gold</div>
-                <div class="user-xp">9,480 XP</div>
-            </div>
-            <div class="currency-wrap">
-                <div class="currency-item">💰 <span id="coinCount">12,500</span></div>
-                <div class="currency-item">💎 <span id="diamondCount">350</span></div>
-            </div>
-        </div>
+    <div class="video-wrapper">
+        <video id="remoteVideo" autoplay playsinline></video> <video id="localVideo" autoplay muted playsinline></video> </div>
 
-        <div class="content-area">
-            <div class="card">
-                <div class="card-header">🏆 DAILY TASKS</div>
-                
-                <div class="task-item">
-                    Connect 5 new friends
-                    <div class="task-progress"><div class="task-bar" style="width: 60%;"></div></div>
-                    <button class="btn-claim">[Claim]</button>
-                </div>
-                <div class="task-item">
-                    Gift 1 user
-                    <div class="task-progress"><div class="task-bar" style="width: 0%;"></div></div>
-                    <button class="btn-go">[Go]</button>
-                </div>
-            </div>
-
-            <div class="chat-match-area">
-                <button class="btn-start-chat">▶️ START CHAT</button>
-                <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">RANDOM VIDEO MATCHMAKING</div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">🎁 SHOP</div>
-                <div class="shop-grid">
-                    <div class="shop-item">
-                        <div class="shop-item-title">AVATAR FRAMES</div>
-                        <div style="font-size: 24px;">🖼️</div>
-                        <div class="shop-item-price">500💰</div>
-                    </div>
-                    <div class="shop-item">
-                        <div class="shop-item-title">GIFTS</div>
-                        <div style="font-size: 24px;">❤️</div>
-                        <div class="shop-item-price">100💰</div>
-                    </div>
-                    <div class="shop-item">
-                        <div class="shop-item-title">BOOSTS</div>
-                        <div style="font-size: 24px;">💎</div>
-                        <div class="shop-item-price">250💰</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active">
-                <div class="nav-icon">🏠</div>
-                HOME
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">🛒</div>
-                SHOP
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">📝</div>
-                TASKS
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">👤</div>
-                PROFILE
-            </div>
-        </div>
+    <div id="status" style="margin-bottom: 10px; font-weight: bold; color: var(--primary);">Ready to match...</div>
+    
+    <button class="btn" id="matchBtn" onclick="findRandomMatch()">START RANDOM MATCH</button>
+    
+    <div style="margin-top: 20px; display: flex; gap: 20px;">
+        <button onclick="toggleShop()" style="background:none; border:none; cursor:pointer; font-weight:bold;">🛒 SHOP</button>
+        <button style="background:none; border:none; cursor:pointer; font-weight:bold;">👤 PROFILE</button>
     </div>
 </div>
 
+<div id="shopOverlay">
+    <h2>SHOP</h2>
+    <div style="display: flex;">
+        <div class="shop-item">
+            <p>Golden Frame</p>
+            <button class="btn" onclick="buy(200)">200 💰</button>
+        </div>
+        <div class="shop-item">
+            <p>Blue Diamond</p>
+            <button class="btn" onclick="buy(500)">500 💰</button>
+        </div>
+    </div>
+    <button class="btn" style="margin-top: 20px; background: #333;" onclick="toggleShop()">CLOSE</button>
+</div>
+
 <script>
-    // Kayıt tamamlandığında ana ekrana geçiş simülasyonu
-    function completeRegistration() {
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('mainScreen').style.display = 'flex';
+    let myPeer;
+    let myStream;
+    let coins = 500;
+
+    async function startApp() {
+        const name = document.getElementById('username').value;
+        if(!name) return alert("Enter name!");
+        document.getElementById('uName').innerText = name;
+        
+        document.getElementById('authScreen').classList.remove('active');
+        document.getElementById('mainScreen').classList.add('active');
+
+        // Kamerayı aç
+        myStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        document.getElementById('localVideo').srcObject = myStream;
+
+        // PeerJS Başlat - Basit bir oda mantığı için ID'yi "langmatch-room-" ile başlatıyoruz
+        // Gerçek uygulamada rastgele ID olur, biz test için özel bir havuz oluşturuyoruz
+        myPeer = new Peer(); 
+
+        myPeer.on('call', (call) => {
+            document.getElementById('status').innerText = "Connected!";
+            call.answer(myStream);
+            call.on('stream', (remoteStream) => {
+                document.getElementById('remoteVideo').srcObject = remoteStream;
+            });
+        });
+    }
+
+    function findRandomMatch() {
+        document.getElementById('status').innerText = "Searching for someone...";
+        // Bu kısım normalde Backend ile yapılır. 
+        // Test için: Sen Manuel olarak diğer cihazın ID'sini sormak yerine 
+        // ekrana gelen ID'yi kopyalayıp diğerine yazmalısın.
+        // Ama otomatik olsun dersen:
+        let partnerId = prompt("Partner ID'sini gir (Test için diğer cihazdaki ID'yi buraya yaz):");
+        if(partnerId) {
+            const call = myPeer.call(partnerId, myStream);
+            call.on('stream', (remoteStream) => {
+                document.getElementById('status').innerText = "Connected!";
+                document.getElementById('remoteVideo').srcObject = remoteStream;
+            });
+        }
+    }
+
+    function toggleShop() {
+        const shop = document.getElementById('shopOverlay');
+        shop.style.display = (shop.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function buy(price) {
+        if(coins >= price) {
+            coins -= price;
+            document.getElementById('coins').innerText = coins;
+            alert("Bought! Remaining: " + coins);
+        } else {
+            alert("No coins!");
+        }
     }
 </script>
 
