@@ -3,50 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v19 | Dragon Fixed</title>
+    <title>LangMatch Pro v20 | Profile Photo</title>
     <style>
         :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow-x: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; }
         .active { display: flex !important; }
 
         /* --- KAYIT EKRANI --- */
         #screenAuth { justify-content: center; align-items: center; background: radial-gradient(circle, #1f2833 0%, #000 100%); }
         .auth-card { width: 80%; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid var(--accent); backdrop-filter: blur(10px); text-align: center; }
+        
+        /* FOTOĞRAF SEÇME ALANI */
+        .photo-upload { width: 90px; height: 90px; border-radius: 50%; border: 2px dashed var(--accent); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; }
+        .photo-upload img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        
         input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
 
-        /* --- TOP BAR --- */
+        /* --- GENEL UI --- */
         .top-bar { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #111; border-bottom: 1px solid #222; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .block { border-radius: 22px; height: 120px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         
-        /* --- DÜKKAN --- */
-        .shop-container { padding: 15px; overflow-y: auto; flex: 1; }
-        .product-card { background: #1a1a1d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; }
-        .p-img { width: 70px; height: 70px; border-radius: 12px; object-fit: contain; background: #000; border: 1px solid #444; }
-        .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-
-        /* --- PROFİL --- */
+        /* --- PROFİL & EJDERHA --- */
         .avatar-wrap { position: relative; width: 150px; height: 150px; margin: 30px auto; display: flex; align-items: center; justify-content: center; }
-        .u-pic { width: 95px; height: 95px; border-radius: 50%; z-index: 1; border: 2px solid #222; }
+        .u-pic { width: 95px; height: 95px; border-radius: 50%; z-index: 1; object-fit: cover; background: #222; }
         .u-frame { position: absolute; width: 155px; height: 155px; z-index: 2; pointer-events: none; }
 
         .btn-main { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .block { border-radius: 22px; height: 130px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .buy-btn { background: var(--gold); border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div class="auth-card">
-        <h2 style="color:var(--accent)">THE CORE: NEXUS</h2>
-        <input type="text" id="regName" placeholder="Adını Yaz">
-        <button class="btn-main" onclick="initApp()">GİRİŞ YAP</button>
+        <h2 style="color:var(--accent)">NEXUS CORE</h2>
+        
+        <div class="photo-upload" onclick="document.getElementById('fileInput').click()">
+            <span id="plusIcon" style="font-size:30px">+</span>
+            <img id="regPreview" src="">
+        </div>
+        <input type="file" id="fileInput" hidden accept="image/*" onchange="previewFile()">
+        
+        <input type="text" id="regName" placeholder="Adını Yaz Kanka">
+        <button class="btn-main" onclick="initApp()">SİSTEMİ BAŞLAT</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="top-bar">
-        <div onclick="openScreen('screenProfile')" style="cursor:pointer">👤 <b id="nDisplay">Dev</b></div>
+        <div onclick="openScreen('screenProfile')" style="cursor:pointer; display:flex; align-items:center; gap:10px;">
+            <img id="miniPic" src="" style="width:35px; height:35px; border-radius:50%; object-fit:cover; background:#333">
+            <b id="nDisplay">Developer</b>
+        </div>
         <div style="color:var(--gold)">💰 <span id="myCoins">1500</span></div>
     </div>
     <div class="grid">
@@ -59,59 +69,72 @@
 </div>
 
 <div id="screenShop" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>MARKET</b></div>
-    <div class="shop-container">
-        <div class="product-card">
-            <img src="https://i.ibb.co/FqmZGsjZ/b854bda4d42c0228b4af81984c8bdd78.jpg" class="p-img">
-            <div style="flex:1"><b>Altın Ejderha</b><br><small style="color:var(--gold)">0 Coin</small></div>
-            <button class="buy-btn" onclick="processBuy('dragon', 0)">AL</button>
+    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️</span> <b>MARKET</b></div>
+    <div style="padding:15px;">
+        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px;">
+            <img src="https://i.ibb.co/FqmZGsjZ/b854bda4d42c0228b4af81984c8bdd78.jpg" style="width:60px;">
+            <div style="flex:1"><b>Altın Ejderha</b><br><small>0 Coin</small></div>
+            <button class="buy-btn" onclick="processBuy('dragon')">AL</button>
         </div>
     </div>
 </div>
 
 <div id="screenProfile" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>PROFİL</b></div>
+    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️</span> <b>PROFİL</b></div>
     <div class="avatar-wrap">
-        <img src="https://via.placeholder.com/100" class="u-pic">
+        <img id="profPic" src="" class="u-pic">
         <img id="activeFrame" src="" class="u-frame" style="display:none;">
     </div>
-    <div style="padding:20px; text-align:center;">
+    <div style="text-align:center; padding:20px;">
         <h2 id="pName">Developer</h2>
-        <div id="inventory">
+        <p style="color:var(--accent); font-size:12px;">Rütbe: Çaylak Bronz (0-200)</p>
+        <div id="inventory" style="margin-top:20px; background:#111; padding:15px; border-radius:20px;">
             <h4>ENVANTERİN</h4>
-            <p id="emptyNote">Eşya yok.</p>
+            <p id="emptyNote">Henüz eşya yok.</p>
         </div>
     </div>
 </div>
 
 <script>
-    let user = { name: '', coins: 1500, inventory: [] };
-    let db = {
-        dragon: { name: 'Altın Ejderha', img: 'https://i.ibb.co/FqmZGsjZ/b854bda4d42c0228b4af81984c8bdd78.jpg' }
-    };
+    let user = { name: '', photo: '', coins: 1500, inventory: [] };
+    let db = { dragon: { name: 'Altın Ejderha', img: 'https://i.ibb.co/FqmZGsjZ/b854bda4d42c0228b4af81984c8bdd78.jpg' } };
+
+    function previewFile() {
+        const file = document.getElementById('fileInput').files[0];
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            user.photo = reader.result;
+            document.getElementById('regPreview').src = reader.result;
+            document.getElementById('regPreview').style.display = 'block';
+            document.getElementById('plusIcon').style.display = 'none';
+        }
+        if (file) reader.readAsDataURL(file);
+    }
 
     function initApp() {
         const n = document.getElementById('regName').value;
-        if(!n) return alert("İsim yaz!");
+        if(!n) return alert("İsim yaz kanka!");
         user.name = n + " (Dev)";
         document.getElementById('nDisplay').innerText = user.name;
         document.getElementById('pName').innerText = user.name;
+        document.getElementById('miniPic').src = user.photo || '';
+        document.getElementById('profPic').src = user.photo || '';
         openScreen('screenHome');
     }
 
-    function processBuy(id, price) {
-        if(user.inventory.includes(id)) return alert("Zaten aldın!");
+    function processBuy(id) {
+        if(user.inventory.includes(id)) return alert("Zaten var kanka!");
         user.inventory.push(id);
         document.getElementById('emptyNote').style.display = 'none';
         updateInventory();
-        alert("Aldın kanka!");
+        alert("Envantere eklendi!");
     }
 
     function updateInventory() {
         const inv = document.getElementById('inventory');
         inv.innerHTML = '<h4>ENVANTERİN</h4>';
         user.inventory.forEach(itemId => {
-            inv.innerHTML += `<button class="btn-main" style="margin-bottom:10px;" onclick="useItem('${itemId}')">${db[itemId].name} TAK</button>`;
+            inv.innerHTML += `<button class="btn-main" style="margin-bottom:10px; background:var(--gold)" onclick="useItem('${itemId}')">${db[itemId].name} TAK</button>`;
         });
     }
 
