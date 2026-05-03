@@ -3,108 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v31 | FINAL BUILD</title>
+    <title>LangMatch | NEXUS CORE</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
-        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow-x: hidden; }
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; }
+        :root { --bg: #050505; --accent: #00f2ff; --gold: #ffcc00; --panel: rgba(20, 20, 25, 0.95); }
+        body { font-family: 'Orbitron', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow: hidden; }
+        
+        /* OYUN HAVASI ARKA PLAN */
+        .bg-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #102a43 0%, #050505 100%); z-index: -1; }
+
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; }
         .active { display: flex !important; }
-        
-        /* --- ASİL BUTONLAR & FORMLAR --- */
-        .card { width: 85%; max-width: 400px; padding: 30px; background: rgba(0,0,0,0.8); border-radius: 20px; border: 2px solid var(--accent); margin: auto; text-align: center; box-shadow: 0 0 15px var(--accent); }
-        .nexus-input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; box-sizing: border-box; }
-        
-        /* Oyun Havasında Butonlar */
-        .btn-nexus { background: linear-gradient(45deg, #111, #333); color: var(--accent); border: 2px solid var(--accent); padding: 18px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .btn-nexus:hover { background: var(--accent); color: #000; box-shadow: 0 0 10px var(--accent); }
-        
-        .btn-gold { background: linear-gradient(45deg, #f5af19, #f1c40f); color: #000; border: 2px solid #b8860b; }
-        .btn-red { background: linear-gradient(45deg, #ff3b5c, #c0392b); color: #fff; border: 2px solid #8b0000; }
 
-        /* --- PROFİL & ÇERÇEVE (ASİL DÜZEN) --- */
-        .av-wrap { position: relative; width: 160px; height: 160px; margin: 20px auto; }
-        .u-pic { width: 100px; height: 100px; border-radius: 50%; position: absolute; top: 30px; left: 30px; z-index: 1; object-fit: cover; background: #222; }
-        .u-frame { width: 160px; height: 160px; position: absolute; top: 0; left: 0; z-index: 2; pointer-events: none; }
+        /* KAYIT EKRANI (REVOLUTION) */
+        .auth-card { background: var(--panel); border: 2px solid var(--accent); border-radius: 30px; padding: 40px; width: 80%; max-width: 380px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); text-align: center; }
+        .input-group { margin-bottom: 15px; width: 100%; }
+        input, select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; }
+        
+        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4); margin-top: 10px; }
+        
+        /* ANA MENÜ (OYUN LOBİSİ) */
+        .lobby-header { width: 100%; padding: 20px; display: flex; justify-content: space-between; position: fixed; top: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .match-btn { width: 250px; height: 250px; border-radius: 50%; background: rgba(0, 242, 255, 0.1); border: 4px solid var(--accent); color: var(--accent); font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(0, 242, 255, 0.3); }
+        .match-btn:hover { transform: scale(1.05); background: var(--accent); color: #000; }
 
-        /* --- GÖRÜNTÜLÜ EŞLEŞME (REAL VIDEO) --- */
-        .video-container { flex: 1; position: relative; background: #000; }
+        /* GÖRÜNTÜLÜ EŞLEŞME ALANI */
+        .video-box { width: 100%; height: 100%; position: relative; background: #000; }
         #remoteVideo { width: 100%; height: 100%; object-fit: cover; }
-        #localVideo { width: 110px; height: 150px; position: absolute; top: 20px; right: 20px; border: 3px solid var(--accent); border-radius: 12px; z-index: 10; transform: scaleX(-1); object-fit: cover; }
-        
-        /* Eşleşme Arayüzü Overlays */
-        .match-overlay { position: absolute; bottom: 30px; width: 100%; text-align: center; z-index: 11; }
-        .timer-box { font-size: 36px; color: var(--red); font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 10px #000; }
-        .status-text { font-size: 18px; color: #aaa; margin-bottom: 10px; }
+        #localVideo { width: 120px; height: 160px; position: absolute; top: 20px; right: 20px; border: 2px solid var(--accent); border-radius: 15px; z-index: 10; background: #111; transform: scaleX(-1); }
+
+        .ui-controls { position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 20; }
+        .btn-round { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
     </style>
 </head>
 <body>
+    <div class="bg-effect"></div>
 
-<div id="screenAuth" class="screen active">
-    <div class="card">
-        <img src="https://i.ibb.co/b854bda4d42c0228b4af81984c8bdd78.jpg" style="width:100px; margin-bottom:10px;"> <h2 style="color:var(--accent); margin-top:0;">NEXUS CORE</h2>
-        <input type="email" id="email" placeholder="E-posta Adresi" class="nexus-input">
-        <input type="password" id="pass" placeholder="Şifre (Min. 6 Karakter)" class="nexus-input">
-        
-        <div id="regFields" style="display:none;">
-            <input type="text" id="username" placeholder="Kullanıcı Adı" class="nexus-input">
-            <select id="gender" class="nexus-input">
-                <option value="Erkek">Savaşçı (Erkek)</option>
-                <option value="Kadın">Savaşçı (Kadın)</option>
-            </select>
+    <div id="screenAuth" class="screen active">
+        <div class="auth-card">
+            <h1 style="color:var(--accent); margin-bottom:30px;">NEXUS CORE</h1>
+            <div class="input-group"><input type="email" id="email" placeholder="E-posta"></div>
+            <div class="input-group"><input type="password" id="pass" placeholder="Şifre"></div>
+            <div id="regFields" style="display:none">
+                <div class="input-group"><input type="text" id="username" placeholder="Kullanıcı Adı"></div>
+                <div class="input-group">
+                    <select id="gender">
+                        <option value="Erkek">Erkek</option>
+                        <option value="Kadın">Kadın</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-action" onclick="handleAuth()" id="btnAuth">GİRİŞ YAP</button>
+            <p onclick="toggleAuth()" id="switchAuth" style="margin-top:20px; cursor:pointer; color:var(--gold); font-size:14px;">Hesabın yok mu? Kayıt Ol</p>
         </div>
-        
-        <button class="btn-nexus" onclick="processAuth()" id="authBtn">GİRİŞ YAP</button>
-        <p onclick="toggleMode()" id="toggleTxt" style="color:var(--gold); cursor:pointer; margin-top:15px; font-size:13px;">Hesabın yok mu? Kayıt Ol</p>
     </div>
-</div>
 
-<div id="screenHome" class="screen">
-    <div style="padding:15px 20px; display:flex; justify-content:space-between; align-items:center; background:#111; border-bottom: 1px solid #222;">
-        <div onclick="openScreen('screenProfile')" style="cursor:pointer">👤 <b id="uDisplay" style="color:var(--accent)">...</b></div>
-        <div style="color:var(--gold)">💰 <span id="uCoins">0</span></div>
+    <div id="screenLobby" class="screen">
+        <div class="lobby-header">
+            <div>👤 <b id="uName">...</b></div>
+            <div style="color:var(--gold)">💰 <span id="uCoins">0</span></div>
+        </div>
+        <button class="match-btn" onclick="startMatching()">
+            <span style="font-size:50px">📹</span><br>SAVAŞI BAŞLAT
+        </button>
     </div>
-    <div style="padding:20px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:20px;">
-        <button class="btn-nexus btn-gold" style="height:150px; font-size:22px;" onclick="startRealMatching()">📹 GÖRÜNTÜLÜ EŞLEŞME</button>
-        <button class="btn-nexus" style="background:#3498db; border-color:#2980b9" onclick="openScreen('screenLeaderboard')">🏆 SIRALAMA</button>
-    </div>
-</div>
 
-<div id="screenProfile" class="screen">
-    <div style="padding:15px 20px; background:#111; border-bottom: 1px solid #222;"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ Lobiye Dön</span></div>
-    <div class="av-wrap">
-        <img src="https://via.placeholder.com/100" class="u-pic" id="pImg">
-        <img src="https://i.ibb.co/b854bda4d42c0228b4af81984c8bdd78.jpg" class="u-frame">
-    </div>
-    <div style="text-align:center;">
-        <h2 id="pName" style="color:var(--gold)">...</h2>
-        <p style="color:var(--accent)">⭐ XP: <span id="pXP">0</span></p>
-        <button class="btn-nexus btn-red" style="width:50%; margin-top:20px;" onclick="location.reload()">ÇIKIŞ YAP</button>
-    </div>
-</div>
-
-<div id="screenMatching" class="screen">
-    <div class="video-container">
-        <video id="localVideo" autoplay muted playsinline></video>
-        <video id="remoteVideo" autoplay playsinline></video>
-        
-        <div class="match-overlay">
-            <div class="timer-box" id="matchTime">60</div>
-            <p class="status-text" id="statusTxt">Rakip Aranıyor...</p>
-            <div style="display:flex; justify-content:center; gap:15px; padding: 0 20px;">
-                <button class="btn-nexus btn-gold" style="width:140px; font-size:12px;" onclick="addTime()">+30s (30💰)</button>
-                <button class="btn-nexus btn-red" style="width:140px; font-size:12px;" onclick="closeMatch()">AYRIL</button>
+    <div id="screenMatch" class="screen" style="padding:0">
+        <div class="video-box">
+            <video id="remoteVideo" autoplay playsinline></video>
+            <video id="localVideo" autoplay muted playsinline></video>
+            <div id="statusLabel" style="position:absolute; top:30px; left:30px; background:rgba(0,0,0,0.7); padding:10px 20px; border-radius:10px;">Aranıyor...</div>
+            <div class="ui-controls">
+                <button class="btn-round" style="background:var(--gold)" onclick="location.reload()">⏭️ PAS</button>
+                <button class="btn-round" style="background:#ff3b5c" onclick="location.reload()">❌ ÇIK</button>
             </div>
         </div>
     </div>
-</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- SENİN CONFIG BİLGİLERİN ---
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
         authDomain: "nexus-b73be.firebaseapp.com",
@@ -118,131 +98,88 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    let isReg = false;
-    let myData = null;
+    let isRegister = false;
     let peer = null;
     let localStream = null;
-    let countdown = null;
 
-    // --- AUTH MANTIĞI (OYUN HAVASI) ---
-    window.toggleMode = () => {
-        isReg = !isReg;
-        document.getElementById('regFields').style.display = isReg ? 'block' : 'none';
-        document.getElementById('authBtn').innerText = isReg ? 'HESAP OLUŞTUR' : 'SAVAŞA GİR';
-        document.getElementById('toggleTxt').innerText = isReg ? 'Zaten hesabım var' : 'Yeni Savaşçı Kaydı';
+    window.toggleAuth = () => {
+        isRegister = !isRegister;
+        document.getElementById('regFields').style.display = isRegister ? 'block' : 'none';
+        document.getElementById('btnAuth').innerText = isRegister ? 'KAYIT OL' : 'GİRİŞ YAP';
+        document.getElementById('switchAuth').innerText = isRegister ? 'Giriş Yap' : 'Kayıt Ol';
     };
 
-    window.processAuth = async () => {
+    window.handleAuth = async () => {
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
         try {
-            if(isReg) {
-                const user = await createUserWithEmailAndPassword(auth, email, pass);
-                await set(ref(db, 'users/' + user.user.uid), {
-                    username: document.getElementById('username').value || "Savaşçı",
+            if(isRegister) {
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                await set(ref(db, 'users/' + res.user.uid), {
+                    username: document.getElementById('username').value,
                     gender: document.getElementById('gender').value,
-                    coins: 500, xp: 0, status: "idle", rank: "Çaylak Bronz"
+                    coins: 500, xp: 0, status: "idle", peerId: ""
                 });
             } else {
                 await signInWithEmailAndPassword(auth, email, pass);
             }
-        } catch(e) { alert("Firebase Hatası: " + e.message); }
+        } catch(e) { alert(e.message); }
     };
 
-    onAuthStateChanged(auth, u => {
-        if(u) {
-            onValue(ref(db, 'users/' + u.uid), s => {
-                myData = s.val();
-                document.getElementById('uDisplay').innerText = myData.username;
-                document.getElementById('pName').innerText = myData.username;
-                document.getElementById('uCoins').innerText = myData.coins;
-                document.getElementById('pXP').innerText = myData.xp;
-                openScreen('screenHome');
+    onAuthStateChanged(auth, user => {
+        if(user) {
+            onValue(ref(db, 'users/' + user.uid), snap => {
+                const data = snap.val();
+                document.getElementById('uName').innerText = data.username;
+                document.getElementById('uCoins').innerText = data.coins;
+                showScreen('screenLobby');
             });
-            // Aktiflik XP'si (Pasif Kazan)
-            setInterval(() => {
-                if(userData) update(ref(db, 'users/' + u.uid), { xp: userData.xp + 1 });
-            }, 1000);
-        } else { openScreen('screenAuth'); }
+        } else { showScreen('screenAuth'); }
     });
 
-    // --- GERÇEK GÖRÜNTÜLÜ EŞLEŞME (PEERJS + FIREBASE) ---
-    window.startRealMatching = async () => {
-        openScreen('screenMatching');
+    // --- GERÇEK EŞLEŞME MOTORU ---
+    window.startMatching = async () => {
+        showScreen('screenMatch');
         localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
         document.getElementById('localVideo').srcObject = localStream;
+
+        peer = new Peer(auth.currentUser.uid); // Sabit ID: Firebase UID
         
-        // PeerJS Bağlantısını Başlat (Firebase UID'sini kullanıyoruz)
-        peer = new Peer(auth.currentUser.uid);
         peer.on('open', (id) => {
             update(ref(db, 'users/' + auth.currentUser.uid), { status: "searching", peerId: id });
-            searchPartner();
+            findPartner();
         });
 
-        // Biri seni ararsa cevapla
         peer.on('call', call => {
             call.answer(localStream);
             call.on('stream', rs => {
                 document.getElementById('remoteVideo').srcObject = rs;
-                startTimer();
-                document.getElementById('statusTxt').innerText = "Bağlantı Kuruldu!";
+                document.getElementById('statusLabel').innerText = "BAĞLANDI!";
             });
         });
     };
 
-    // Firebase'deki "searching" kullanıcıları tarama
-    async function searchPartner() {
+    async function findPartner() {
         const snap = await get(ref(db, 'users'));
-        snap.forEach(child => {
-            const u = child.val();
-            // Kendimiz değilse ve arıyorsa
-            if(child.key !== auth.currentUser.uid && u.status === "searching") {
-                const call = peer.call(u.peerId, localStream);
+        const users = snap.val();
+        for(let id in users) {
+            if(id !== auth.currentUser.uid && users[id].status === "searching") {
+                const call = peer.call(users[id].peerId, localStream);
                 call.on('stream', rs => {
                     document.getElementById('remoteVideo').srcObject = rs;
+                    document.getElementById('statusLabel').innerText = "BAĞLANDI!";
                     update(ref(db, 'users/' + auth.currentUser.uid), { status: "busy" });
-                    update(ref(db, 'users/' + child.key), { status: "busy" });
-                    startTimer();
+                    update(ref(db, 'users/' + id), { status: "busy" });
                 });
+                break;
             }
-        });
-    }
-
-    // --- SÜRE & SONUÇ ---
-    function startTimer() {
-        let t = 60;
-        countdown = setInterval(() => {
-            t--;
-            document.getElementById('matchTime').innerText = t;
-            if(t <= 0) closeMatch();
-        }, 1000);
-    }
-
-    window.addTime = () => {
-        if(myData.coins >= 30) {
-            update(ref(db, 'users/' + auth.currentUser.uid), { coins: myData.coins - 30 });
-            let current = parseInt(document.getElementById('matchTime').innerText);
-            document.getElementById('matchTime').innerText = current + 30;
         }
-    };
+    }
 
-    window.closeMatch = () => {
-        clearInterval(countdown);
-        if(localStream) localStream.getTracks().forEach(t => t.stop());
-        if(peer) peer.destroy();
-        // Tur sonu ödülü ve durum güncellemesi
-        update(ref(db, 'users/' + auth.currentUser.uid), { status: "idle", coins: myData.coins + 5 });
-        
-        // AI Sesli Geri Bildirim Simülasyonu
-        const voice = new SpeechSynthesisUtterance("Görüşme bitti kanka. +5 Coin kazandın. Aksanın üzerinde çalışmalısın.");
-        window.speechSynthesis.speak(voice);
-        openScreen('screenHome');
-    };
-
-    window.openScreen = (id) => {
+    function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-    };
+    }
 </script>
 </body>
 </html>
