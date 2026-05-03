@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro | Kusursuz</title>
+    <title>LangMatch Pro | Final</title>
     <style>
         :root {
             --bg: #0f1015; --card: #1c1c1e; --text: #ffffff;
@@ -12,55 +12,45 @@
             --neon-blue: linear-gradient(135deg, #2193b0, #6dd5ed);
             --neon-yellow: linear-gradient(135deg, #f12711, #f5af19);
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
+        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
+        
+        /* Ekranlar */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
         .active { display: flex !important; }
-        
-        /* UI Tasarımı */
+
+        /* UI Elemanları */
         .header { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--card); border-bottom: 1px solid #333; }
         .p-circle { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #f5af19; object-fit: cover; }
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .menu-btn { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; color: white; }
-        .btn-main { background: var(--neon-blue); padding: 15px; border-radius: 12px; border: none; color: white; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
         
-        /* Form Elemanları */
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; background: #25262e; border: 1px solid #444; color: white; box-sizing: border-box; font-size: 14px; }
-        option { background: #1c1c1e; color: white; }
-
-        .user-card { background: var(--card); margin: 8px 15px; padding: 12px; border-radius: 18px; display: flex; align-items: center; gap: 12px; border: 1px solid #333; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
+        .menu-btn { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; color: white; transition: 0.2s; position: relative; }
+        .menu-btn:active { transform: scale(0.95); }
+        
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.98); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
         .nav-btn { font-size: 10px; text-align: center; color: #888; cursor: pointer; }
         .nav-btn.active { color: #00d2ff; }
+
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; background: #25262e; border: 1px solid #444; color: white; box-sizing: border-box; }
+        .user-card { background: var(--card); margin: 8px 15px; padding: 12px; border-radius: 18px; display: flex; align-items: center; gap: 12px; border: 1px solid #333; }
+        .btn-main { background: var(--neon-blue); padding: 15px; border-radius: 12px; border: none; color: white; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
-        <h1 style="background: var(--neon-blue); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;">LangMatch Pro</h1>
-        
+        <h1 style="background: var(--neon-blue); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">LangMatch Pro</h1>
         <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 15px;">
             <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid #f5af19; object-fit:cover;">
-            <p style="font-size:12px; color:#f5af19; margin-top: 5px;">Fotoğraf Seç</p>
+            <p style="font-size:12px; color:#f5af19">Fotoğraf Yükle</p>
         </div>
         <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
-        
         <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        
         <div style="display:flex; gap:10px;">
-            <select id="regGender">
-                <option value="Erkek">👨 Erkek</option>
-                <option value="Kız">👩 Kız</option>
-            </select>
-            <select id="regCountry">
-                <option value="TR">🇹🇷 Türkiye</option>
-                <option value="US">🇺🇸 USA</option>
-                <option value="DE">🇩🇪 Almanya</option>
-                <option value="GB">🇬🇧 İngiltere</option>
-            </select>
+            <select id="regGender"><option>Erkek</option><option>Kız</option></select>
+            <select id="regCountry"><option>Türkiye 🇹🇷</option><option>USA 🇺🇸</option></select>
         </div>
-        
-        <button class="btn-main" onclick="handleRegister()">KAYIT OL VE BAŞLA</button>
+        <button class="btn-main" onclick="handleRegister()">KAYIT OL</button>
     </div>
 </div>
 
@@ -69,13 +59,12 @@
         <div style="display:flex; align-items:center; gap:10px;">
             <img id="uAvatar" src="" class="p-circle" onclick="openScreen('screenProfile')">
             <div>
-                <div id="uName" style="font-weight:bold; font-size:14px;">User</div>
-                <div id="uDetail" style="font-size:10px; color:#aaa;">Türkiye | Erkek</div>
+                <div id="uName" style="font-weight:bold;">Burak</div>
+                <div id="uSub" style="font-size:10px; color:#888;">Türkiye | Erkek</div>
             </div>
         </div>
         <div style="color:#ffd60a; font-weight:bold;">💰 <span id="uCoins">0</span></div>
     </div>
-    
     <div class="main-grid">
         <div class="menu-btn" style="grid-column:span 2; height:100px; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
         <div class="menu-btn" style="height:140px; background:var(--neon-green);" onclick="openScreen('screenMatchOptions')">📹 MATCHING</div>
@@ -83,7 +72,6 @@
         <div class="menu-btn" style="height:140px; background:var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFFUZ</div>
         <div class="menu-btn" style="height:140px; background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
     </div>
-
     <div class="nav-bar">
         <div class="nav-btn active" onclick="openScreen('screenHome')">🏠<br>HOME</div>
         <div class="nav-btn" onclick="openScreen('screenTasks')">✅<br>TASKS</div>
@@ -93,87 +81,92 @@
 </div>
 
 <div id="screenSearch" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Bul</b> <span></span></div>
-    <div style="padding:15px;"><input type="text" id="searchInput" placeholder="İsim ara..." oninput="searchUsers()"></div>
-    <div id="searchResults" style="overflow-y:auto; flex:1;"></div>
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️ Geri</span> <b>Üye Bul</b> <span></span></div>
+    <div style="padding:15px;"><input type="text" id="searchInput" placeholder="İsim yazınca çıkacak..." oninput="searchUsers()"></div>
+    <div id="searchResults" style="flex:1; overflow-y:auto;"></div>
 </div>
 
 <div id="screenTasks" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Görevler</b> <span></span></div>
-    <div id="taskList" style="padding:10px;"></div>
-</div>
-
-<div id="screenMatchOptions" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Eşleşme</b> <span></span></div>
-    <div style="margin:auto; width:80%; display:flex; flex-direction:column; gap:15px;">
-        <button class="btn-main" style="background:#ff416c;" onclick="alert('Kızlarla eşleşme aranıyor...')">Kızlarla Eşleş</button>
-        <button class="btn-main" style="background:#2193b0;" onclick="alert('Erkeklerle eşleşme aranıyor...')">Erkeklerle Eşleş</button>
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Günlük Görevler</b> <span></span></div>
+    <div style="padding:10px;">
+        <div class="user-card"><span>Günlük Giriş</span> <b style="color:#ffd60a">+10 💰</b></div>
+        <div class="user-card"><span>3 Kişiyle Eşleş</span> <b style="color:#ffd60a">+50 💰</b></div>
     </div>
 </div>
 
-<script>
-    let userDatabase = [
-        {name: 'Ece', gender: 'Kız', country: 'TR', img: 'https://i.pravatar.cc/150?u=ece'},
-        {name: 'Can', gender: 'Erkek', country: 'TR', img: 'https://i.pravatar.cc/150?u=can'}
-    ];
+<div id="screenMatchOptions" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Eşleşme Tercihi</b> <span></span></div>
+    <div style="margin:auto; width:85%; gap:15px; display:flex; flex-direction:column;">
+        <button class="btn-main" style="background:#ff416c;" onclick="alert('Kızlar aranıyor...')">KIZLARLA EŞLEŞ</button>
+        <button class="btn-main" style="background:#2193b0;" onclick="alert('Erkekler aranıyor...')">ERKEKLERLE EŞLEŞ</button>
+    </div>
+</div>
 
-    let currentUser = { name: '', avatar: 'https://via.placeholder.com/100', coins: 0, gender: '', country: '' };
+<div id="screenGlobal" class="screen"><div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b></div><div style="padding:20px;">Sohbet Odası Hazırlanıyor...</div></div>
+<div id="screenShop" class="screen"><div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Market</b></div><div style="padding:20px;">Dükkan Yakında!</div></div>
+<div id="screenPronounce" class="screen"><div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz</b></div><div style="padding:20px; text-align:center;"><h1>HELLO</h1><button class="btn-main">KONUŞ</button></div></div>
+<div id="screenDMList" class="screen"><div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Mesajlar</b></div><div style="padding:20px;">Mesaj Kutusu Boş.</div></div>
+<div id="screenProfile" class="screen"><div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Profilim</b></div><div style="text-align:center; padding:30px;"><img id="pBig" src="" style="width:120px; height:120px; border-radius:50%; border:3px solid #f5af19;"><h2 id="pName"></h2><button class="btn-main" style="background:red;" onclick="location.reload()">ÇIKIŞ</button></div></div>
+
+<script>
+    let db = [
+        {name: 'Merve', gender: 'Kız', country: 'Türkiye', img: 'https://i.pravatar.cc/150?u=merve'},
+        {name: 'Ece', gender: 'Kız', country: 'Türkiye', img: 'https://i.pravatar.cc/150?u=ece'}
+    ];
+    let cur = { name: '', avatar: 'https://via.placeholder.com/100', gender: '', country: '' };
 
     function previewFile(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
             reader.onload = e => {
                 document.getElementById('regPreview').src = e.target.result;
-                currentUser.avatar = e.target.result;
+                cur.avatar = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
     function handleRegister() {
-        const name = document.getElementById('regName').value.trim();
-        if(!name) return alert("Lütfen ismini gir!");
+        const n = document.getElementById('regName').value.trim();
+        if(!n) return alert("İsimsiz kayıt olmaz!");
+        
+        cur.name = n;
+        cur.gender = document.getElementById('regGender').value;
+        cur.country = document.getElementById('regCountry').value;
 
-        currentUser.name = name;
-        currentUser.gender = document.getElementById('regGender').value;
-        currentUser.country = document.getElementById('regCountry').value;
+        // KENDİNİ LİSTEYE EKLE
+        db.push({name: cur.name, gender: cur.gender, country: cur.country, img: cur.avatar});
 
-        // Veritabanına ekle
-        userDatabase.push({ name: currentUser.name, gender: currentUser.gender, country: currentUser.country, img: currentUser.avatar });
+        document.getElementById('uName').innerText = cur.name;
+        document.getElementById('uSub').innerText = `${cur.country} | ${cur.gender}`;
+        document.getElementById('uAvatar').src = cur.avatar;
+        document.getElementById('pBig').src = cur.avatar;
+        document.getElementById('pName').innerText = cur.name;
 
-        document.getElementById('uName').innerText = currentUser.name;
-        document.getElementById('uDetail').innerText = `${currentUser.country} | ${currentUser.gender}`;
-        document.getElementById('uAvatar').src = currentUser.avatar;
-
-        generateTasks();
         openScreen('screenHome');
     }
 
     function openScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        const target = document.getElementById(id);
+        if(target) target.classList.add('active');
+        
+        // Navigasyon Aktifliği
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     }
 
     function searchUsers() {
         const q = document.getElementById('searchInput').value.toLowerCase();
-        const res = document.getElementById('searchResults');
-        res.innerHTML = '';
-        userDatabase.filter(u => u.name.toLowerCase().includes(q)).forEach(u => {
-            res.innerHTML += `
+        const r = document.getElementById('searchResults');
+        r.innerHTML = '';
+        db.filter(u => u.name.toLowerCase().includes(q)).forEach(u => {
+            r.innerHTML += `
                 <div class="user-card">
                     <img src="${u.img}" style="width:45px; height:45px; border-radius:50%">
-                    <div style="flex:1">
-                        <b>${u.name}</b><br>
-                        <small style="color:#888">${u.country} | ${u.gender}</small>
-                    </div>
-                    <button onclick="alert('Eklendi!')" style="background:none; border:1px solid #2193b0; color:white; border-radius:8px; padding:5px;">➕</button>
+                    <div style="flex:1"><b>${u.name}</b><br><small>${u.country} | ${u.gender}</small></div>
+                    <button onclick="alert('İstek gönderildi!')" style="background:#2193b0; border:none; color:white; padding:8px; border-radius:8px;">➕</button>
                 </div>`;
         });
-    }
-
-    function generateTasks() {
-        const list = document.getElementById('taskList');
-        list.innerHTML = `<div class="user-card" style="justify-content:space-between"><span>Profilini Tamamla</span><b style="color:#ffd60a">+50 💰</b></div>`;
     }
 </script>
 </body>
