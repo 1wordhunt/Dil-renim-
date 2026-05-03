@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro | Final Fix</title>
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <title>LangMatch Pro v10</title>
     <style>
         :root {
             --bg: #0f1015; --card: #1c1c1e; --text: #ffffff;
@@ -12,179 +11,162 @@
             --neon-green: linear-gradient(135deg, #00b09b, #96c93d);
             --neon-blue: linear-gradient(135deg, #2193b0, #6dd5ed);
             --neon-yellow: linear-gradient(135deg, #f12711, #f5af19);
-            --neon-purple: linear-gradient(135deg, #6a11cb, #2575fc);
         }
         body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
-        
-        /* Navigasyon Sistemi */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
         .active { display: flex !important; }
-
-        /* Header & Profil */
         .header { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--card); border-bottom: 1px solid #333; }
-        .p-circle { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #f5af19; object-fit: cover; cursor: pointer; }
-        
-        /* Grid Menü */
+        .p-circle { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #f5af19; object-fit: cover; }
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
         .menu-btn { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; color: white; transition: 0.2s; position: relative; }
-        .large { grid-column: span 2; height: 110px; }
-        .half { height: 150px; }
-
-        /* Formlar */
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; background: #25262e; border: 1px solid #444; color: white; box-sizing: border-box; }
         .btn-main { background: var(--neon-blue); padding: 15px; border-radius: 12px; border: none; color: white; font-weight: bold; width: 100%; cursor: pointer; }
-
-        /* Video Alanı */
-        .video-box { height: 50%; width: 100%; object-fit: cover; background: #222; border-bottom: 1px solid #333; }
-        
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.95); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; backdrop-filter: blur(10px); z-index: 100; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.95); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 100; }
         .nav-btn { font-size: 10px; text-align: center; color: #888; cursor: pointer; }
         .nav-btn.active { color: #2193b0; }
+        .user-card { background: var(--card); margin: 5px 15px; padding: 12px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #333; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
-        <h2 style="margin-bottom:20px;">LangMatch'e Hoş Geldin</h2>
+        <h2>LangMatch v10</h2>
+        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer">
+            <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid #f5af19; object-fit:cover;">
+            <p style="font-size:12px; color:#f5af19">Fotoğraf Ekle</p>
+        </div>
+        <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
         <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <input type="password" id="regPass" placeholder="Şifre">
-        <button class="btn-main" onclick="handleRegister()">GİRİŞ YAP / KAYDOL</button>
+        <button class="btn-main" onclick="handleRegister()">BAŞLAT</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="header">
         <div style="display:flex; align-items:center; gap:10px;">
-            <img id="uAvatar" src="https://via.placeholder.com/100" class="p-circle" onclick="openScreen('screenProfile')">
-            <div>
-                <div id="uName" style="font-weight:bold; font-size:14px;">User</div>
-                <div style="font-size:11px; color:#f5af19;">Çaylak Bronz</div>
-            </div>
+            <img id="uAvatar" src="" class="p-circle" onclick="openScreen('screenProfile')">
+            <div><div id="uName" style="font-weight:bold;">User</div><div style="font-size:11px; color:#f5af19;">Çaylak Bronz</div></div>
         </div>
-        <div style="text-align:right;">
-            <div style="color:#ffd60a; font-weight:bold;">💰 <span id="uCoins">0</span></div>
-            <div style="color:#00d2ff; font-size:11px;">💎 0</div>
-        </div>
+        <div style="color:#ffd60a; font-weight:bold;">💰 <span id="uCoins">0</span></div>
     </div>
-
     <div class="main-grid">
-        <div class="menu-btn large" style="background:var(--neon-red);" onclick="openScreen('screenGlobal')">
-            <div style="font-size:24px;">💬</div> GLOBAL CHAT
-        </div>
-        <div class="menu-btn half" style="background:var(--neon-green);" onclick="openScreen('screenMatchOptions')">
-            <div style="font-size:30px;">📹</div> MATCHING
-        </div>
-        <div class="menu-btn half" style="background:var(--neon-yellow);" onclick="openScreen('screenShop')">
-            <div style="font-size:30px;">🛒</div> SHOP
-        </div>
-        <div class="menu-btn half" style="background:var(--neon-blue);" onclick="openScreen('screenPronounce')">
-            <div style="font-size:30px;">🗣️</div> TELAFFUZ
-        </div>
-        <div class="menu-btn half" style="background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">
-            <div style="font-size:30px;">🔍</div> ÜYE ARA
-        </div>
+        <div class="menu-btn" style="grid-column:span 2; height:110px; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
+        <div class="menu-btn" style="height:150px; background:var(--neon-green);" onclick="openScreen('screenMatchOptions')">📹 MATCHING</div>
+        <div class="menu-btn" style="height:150px; background:var(--neon-yellow);" onclick="openScreen('screenShop')">🛒 SHOP</div>
+        <div class="menu-btn" style="height:150px; background:var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFFUZ</div>
+        <div class="menu-btn" style="height:150px; background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
     </div>
-
     <div class="nav-bar">
-        <div class="nav-btn active" onclick="openScreen('screenHome')">🏠<br>ANA SAYFA</div>
-        <div class="nav-btn" onclick="openScreen('screenShop')">🛒<br>DÜKKAN</div>
+        <div class="nav-btn active" onclick="openScreen('screenHome')">🏠<br>ANA</div>
         <div class="nav-btn" onclick="openScreen('screenTasks')">✅<br>GÖREVLER</div>
+        <div class="nav-btn" onclick="openScreen('screenDMList')">📩<br>MESAJLAR</div>
         <div class="nav-btn" onclick="openScreen('screenProfile')">👤<br>PROFİL</div>
     </div>
 </div>
 
-<div id="screenMatchOptions" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️ Geri</span> <b>Eşleşme Tercihi</b> <span></span></div>
-    <div style="margin:auto; width:85%; text-align:center; gap:15px; display:flex; flex-direction:column;">
-        <h3>Kiminle Eşleşmek İstersin?</h3>
-        <button class="btn-main" style="background:#ff416c;" onclick="startMatch('female')">Kızlarla Eşleş</button>
-        <button class="btn-main" style="background:#2193b0;" onclick="startMatch('male')">Erkeklerle Eşleş</button>
-    </div>
-</div>
-
-<div id="screenMatch" class="screen">
-    <video id="remoteVideo" class="video-box" autoplay playsinline></video>
-    <video id="localVideo" class="video-box" autoplay muted playsinline></video>
-    <div style="position:absolute; bottom:50px; width:100%; text-align:center;">
-        <button class="btn-main" style="width:150px; background:red;" onclick="location.reload()">KAPAT</button>
-    </div>
-</div>
-
-<div id="screenProfile" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Profilim</b> <span></span></div>
-    <div style="text-align:center; padding:40px;">
-        <img id="pImgBig" src="https://via.placeholder.com/150" style="width:150px; height:150px; border-radius:50%; border:4px solid #f5af19; object-fit: cover;">
-        <br><br>
-        <button class="btn-main" onclick="document.getElementById('fileInp').click()">FOTOĞRAF DEĞİŞTİR</button>
-        <input type="file" id="fileInp" style="display:none" onchange="uploadPhoto(this)">
-        <h2 id="pNameDisp">Kullanıcı</h2>
-        <button class="btn-main" style="background:red; margin-top:20px;" onclick="location.reload()">ÇIKIŞ YAP</button>
-    </div>
-</div>
-
-<div id="screenGlobal" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b> <span></span></div>
-    <div style="flex:1; padding:20px;">Sohbet odası yükleniyor...</div>
-</div>
-
-<div id="screenShop" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Market</b> <span></span></div>
-    <div style="padding:20px;">Dükkan ürünleri yakında burada!</div>
-</div>
-
-<div id="screenTasks" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Görevler</b> <span></span></div>
-    <div style="padding:20px;">Günlük görevlerini tamamla, ödülleri kap!</div>
+<div id="screenSearch" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Ara</b> <span></span></div>
+    <div style="padding:15px;"><input type="text" id="searchInput" placeholder="İsim yazın..." oninput="searchUsers()"></div>
+    <div id="searchResults" style="overflow-y:auto; flex:1;"></div>
 </div>
 
 <div id="screenPronounce" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz</b> <span></span></div>
-    <div style="padding:40px; text-align:center;"><h1>Developer</h1><button class="btn-main">KONUŞ</button></div>
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz Testi</b> <span></span></div>
+    <div style="text-align:center; padding:50px;">
+        <h1 id="wordToSay" style="font-size:40px; color:#00d2ff;">DEVELOPER</h1>
+        <p id="micStatus" style="color:#888;">Butona bas ve konuş</p>
+        <button id="micBtn" class="btn-main" style="width:100px; height:100px; border-radius:50%; font-size:30px;" onclick="startListening()">🎤</button>
+    </div>
 </div>
 
-<div id="screenSearch" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Ara</b> <span></span></div>
-    <div style="padding:20px;"><input type="text" placeholder="Kullanıcı ara..."></div>
+<div id="screenChat" class="screen">
+    <div class="header"><span onclick="openScreen('screenDMList')">⬅️</span> <b id="chatTargetName">Mesaj</b> <span></span></div>
+    <div id="chatBox" style="flex:1; padding:15px; overflow-y:auto;"></div>
+    <div style="padding:15px; background:var(--card); display:flex; gap:10px;">
+        <input type="text" id="msgInput" placeholder="Mesaj yaz...">
+        <button class="btn-main" style="width:80px;" onclick="sendMsg()">GÖNDER</button>
+    </div>
 </div>
 
 <script>
-    let userData = { name: '', coins: 0, avatar: 'https://via.placeholder.com/100' };
+    let user = { name: '', avatar: '', coins: 0 };
+    const mockUsers = [
+        {name: 'Merve', img: 'https://i.pravatar.cc/150?u=1'},
+        {name: 'Can', img: 'https://i.pravatar.cc/150?u=2'},
+        {name: 'Selin', img: 'https://i.pravatar.cc/150?u=3'},
+        {name: 'Arda', img: 'https://i.pravatar.cc/150?u=4'}
+    ];
 
-    function handleRegister() {
-        const name = document.getElementById('regName').value;
-        if(!name) return alert("İsim giriniz!");
-        userData.name = name;
-        document.getElementById('uName').innerText = name;
-        document.getElementById('pNameDisp').innerText = name;
-        openScreen('screenHome');
-    }
-
-    function openScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(id);
-        if(target) target.classList.add('active');
-    }
-
-    function uploadPhoto(input) {
+    function previewFile(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('uAvatar').src = e.target.result;
-                document.getElementById('pImgBig').src = e.target.result;
+            reader.onload = e => {
+                document.getElementById('regPreview').src = e.target.result;
+                user.avatar = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    async function startMatch(gender) {
-        openScreen('screenMatch');
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-            document.getElementById('localVideo').srcObject = stream;
-        } catch(e) { alert("Kamera izni gerekiyor!"); openScreen('screenHome'); }
+    function handleRegister() {
+        user.name = document.getElementById('regName').value || 'User';
+        document.getElementById('uName').innerText = user.name;
+        document.getElementById('uAvatar').src = user.avatar || 'https://via.placeholder.com/100';
+        openScreen('screenHome');
+    }
+
+    function openScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    // ARAMA FONKSİYONU
+    function searchUsers() {
+        const val = document.getElementById('searchInput').value.toLowerCase();
+        const res = document.getElementById('searchResults');
+        res.innerHTML = '';
+        mockUsers.filter(u => u.name.toLowerCase().includes(val)).forEach(u => {
+            res.innerHTML += `
+                <div class="user-card">
+                    <img src="${u.img}" style="width:40px; height:40px; border-radius:50%">
+                    <b style="flex:1; margin-left:10px">${u.name}</b>
+                    <button onclick="alert('İstek gönderildi!')" style="background:none; border:1px solid #2193b0; color:white; border-radius:5px; padding:5px; margin-right:5px">➕</button>
+                    <button onclick="openDM('${u.name}')" style="background:#2193b0; border:none; color:white; border-radius:5px; padding:5px">📩</button>
+                </div>`;
+        });
+    }
+
+    function openDM(name) {
+        document.getElementById('chatTargetName').innerText = name;
+        openScreen('screenChat');
+    }
+
+    // MİKROFON FONKSİYONU
+    function startListening() {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        document.getElementById('micStatus').innerText = "Dinleniyor...";
+        document.getElementById('micBtn').style.background = "red";
+        
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toUpperCase();
+            const target = document.getElementById('wordToSay').innerText;
+            if(transcript.includes(target)) {
+                alert("Mükemmel! +20 💰");
+                user.coins += 20;
+                document.getElementById('uCoins').innerText = user.coins;
+            } else {
+                alert("Tekrar dene! Duyulan: " + transcript);
+            }
+            stopMic();
+        };
+        recognition.onerror = () => { alert("Mikrofon hatası!"); stopMic(); };
+        recognition.start();
+    }
+    function stopMic() {
+        document.getElementById('micStatus').innerText = "Butona bas ve konuş";
+        document.getElementById('micBtn').style.background = "var(--neon-blue)";
     }
 </script>
-
 </body>
 </html>
