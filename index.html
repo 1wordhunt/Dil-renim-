@@ -12,10 +12,8 @@
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; box-sizing: border-box; }
         .active-screen { display: flex !important; }
 
-        /* MERKEZİ GRID SİSTEMİ */
+        /* GRID MENÜ */
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 95%; max-width: 500px; margin-top: 60px; }
-        
-        /* GÖRSEL TABANLI BUTONLAR */
         .menu-card { 
             background-size: cover; background-position: center; border: 1px solid #333; 
             border-radius: 15px; height: 110px; display: flex; flex-direction: column; 
@@ -24,78 +22,102 @@
             text-shadow: 2px 2px 4px #000;
         }
         .menu-card:hover { border-color: var(--neon); transform: scale(1.02); }
-        .menu-card h4 { margin: 0; font-family: 'Orbitron'; font-size: 13px; }
 
-        /* ÖZEL KARTLARIN RESİM ALANLARI (BURALARA RESİM EKLEYEBİLİRSİN) */
-        #btnShop { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('BURAYA_DUKKAN_RESMI_GELECEK'); grid-column: span 2; height: 100px; }
-        #btnMatch { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('BURAYA_MATCH_RESMI_GELECEK'); grid-column: span 2; height: 130px; border: 1px solid var(--neon); }
-        #btnWords { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BURAYA_TELAFFUZ_RESMI_GELECEK'); }
-        #btnBP { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://i.ibb.co/QvvzRnvv/file-00000000348c724680b5f28515b5e552.png'); }
-        #btnDaily { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BURAYA_SORU_RESMI_GELECEK'); }
-        #btnProfile { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BURAYA_PROFIL_RESMI_GELECEK'); }
+        /* BATTLE PASS (YANA KAYDIRMALI) */
+        .bp-container { display: flex; overflow-x: auto; gap: 15px; padding: 20px; width: 100%; scroll-snap-type: x mandatory; }
+        .bp-tier { min-width: 120px; scroll-snap-align: center; display: flex; flex-direction: column; gap: 10px; }
+        .bp-reward { background: rgba(255,255,255,0.05); border: 2px solid #444; border-radius: 15px; height: 100px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .bp-reward.premium { border-color: var(--gold); background: rgba(245, 175, 25, 0.1); }
+        .bp-locked { opacity: 0.5; filter: grayscale(1); }
 
         /* MODAL SİSTEMİ */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; position: relative; text-align: center; }
-        
-        /* XP BAR */
-        .xp-container { width: 100%; height: 8px; background: #222; border-radius: 5px; margin: 10px 0; border: 1px solid #444; }
-        .xp-fill { height: 100%; background: var(--neon); width: 0%; transition: 0.5s; box-shadow: 0 0 10px var(--neon); }
+        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; position: relative; text-align: center; max-height: 80vh; overflow-y: auto; }
 
         .btn-action { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 12px; border-radius: 10px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        /* ÖZEL ARKA PLANLAR */
+        #btnBP { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg'); }
     </style>
 </head>
 <body>
 
-    <div id="scrAuth" class="screen active-screen">
-        <div style="background:rgba(10,20,30,0.9); padding:40px; border-radius:25px; border:2px solid var(--neon); width:80%; max-width:350px; text-align:center;">
-            <h1 style="font-family:'Orbitron'; margin-bottom:30px;">NEXUS</h1>
-            <input type="email" id="uEmail" placeholder="E-posta" style="width:100%; padding:12px; margin-bottom:10px; background:#000; border:1px solid #333; color:#fff; border-radius:10px;">
-            <input type="password" id="uPass" placeholder="Şifre" style="width:100%; padding:12px; margin-bottom:20px; background:#000; border:1px solid #333; color:#fff; border-radius:10px;">
-            <button class="btn-action" onclick="handleAuth()">BAŞLA</button>
-        </div>
-    </div>
-
-    <div id="scrLobby" class="screen">
-        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:rgba(0,0,0,0.5); box-sizing:border-box;">
-            <div><b id="dispName">...</b><br><small style="color:var(--neon)">LVL <span id="dispLvl">1</span></small></div>
+    <div id="scrLobby" class="screen active-screen">
+        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:rgba(0,0,0,0.8); z-index:100; box-sizing:border-box;">
+            <div><b id="dispName">Developer</b><br><small style="color:var(--neon)">LEVEL <span id="dispLvl">1</span></small></div>
             <div style="text-align:right">💰 <span id="dispCoins">0</span></div>
         </div>
 
         <div class="grid-container">
-            <div id="btnShop" class="menu-card" onclick="openModal('modalShop')"><h4>DÜKKAN</h4></div>
-            <div id="btnMatch" class="menu-card" onclick="alert('Eşleşme aranıyor...')"><h4>MATCHMAKING</h4></div>
-            <div id="btnWords" class="menu-card" onclick="openModal('modalWords')"><h4>TELAFFUZ</h4></div>
+            <div class="menu-card" style="grid-column: span 2; height: 100px; background-color: #1a1a1a;" onclick="openModal('modalShop')"><h4>DÜKKAN</h4></div>
+            <div class="menu-card" style="grid-column: span 2; height: 120px; background-color: #0a1520; border: 1px solid var(--neon);"><h4>MATCHMAKING BAŞLAT</h4></div>
+            <div class="menu-card" style="background-color: #111;" onclick="openModal('modalWords')"><h4>TELAFFUZ</h4></div>
             <div id="btnBP" class="menu-card" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
-            <div id="btnDaily" class="menu-card" onclick="openModal('modalDaily')"><h4>GÜNLÜK SORU</h4></div>
-            <div id="btnProfile" class="menu-card" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
+            <div class="menu-card" style="background-color: #111;" onclick="openModal('modalDaily')"><h4>GÜNLÜK SORU</h4></div>
+            <div class="menu-card" style="background-color: #111;" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
         </div>
     </div>
 
+    <div id="modalBP" class="modal"><div class="modal-content" style="max-width: 600px;">
+        <span style="position:absolute; top:10px; right:15px; font-size:24px; cursor:pointer;" onclick="closeModal()">×</span>
+        <h2 style="color:var(--gold); font-family: 'Orbitron';">EJDERHA ÇAĞI PASS</h2>
+        <p>Tier: <span id="bpTier">1</span> | XP: <span id="bpXP">0</span>/100</p>
+        
+        <div class="bp-container">
+            <div class="bp-tier">
+                <small>TIER 1</small>
+                <div class="bp-reward premium">💎 50</div>
+                <div class="bp-reward">💰 100</div>
+            </div>
+            <div class="bp-tier">
+                <small>TIER 2</small>
+                <div class="bp-reward premium">🖼️ Frame</div>
+                <div class="bp-reward">💰 150</div>
+            </div>
+            <div class="bp-tier">
+                <small>TIER 3</small>
+                <div class="bp-reward premium">🐉 Skin</div>
+                <div class="bp-reward">💰 200</div>
+            </div>
+            </div>
+        <button id="buyPrem" class="btn-action" style="background:var(--gold); color:#000;" onclick="buyPremium()">PREMIUM PASS AÇ (500 💰)</button>
+    </div></div>
+
     <div id="modalDaily" class="modal"><div class="modal-content">
-        <h2>GÜNLÜK SORU</h2>
-        <p>100 XP ve 50 Coin kazanmak için cevapla:</p>
-        <p><b>"Success" kelimesinin anlamı nedir?</b></p>
-        <button class="btn-action" onclick="giveReward(100, 50)">Başarı</button>
+        <h2>GÜNLÜK MEYDAN OKUMA</h2>
+        <div id="dailyContent">
+            <p id="qText">Yükleniyor...</p>
+            <button class="btn-action" onclick="checkDaily(true)" id="opt1">...</button>
+            <button class="btn-action" onclick="checkDaily(false)" id="opt2">...</button>
+        </div>
+        <div id="dailyTimer" style="display:none; color:var(--red);">
+            <p>Bugünkü soruyu bildin!</p>
+            <p>Yeni soruya kalan: <span id="timeLeft">--:--:--</span></p>
+        </div>
+    </div></div>
+
+    <div id="modalShop" class="modal"><div class="modal-content">
+        <span class="close-btn" style="float:right; cursor:pointer;" onclick="closeModal()">×</span>
+        <h2 style="color:var(--gold)">NEXUS MARKET</h2>
+        <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin:5px 0;">
+            <span>Mavi Alev Çerçevesi</span><button style="background:var(--neon); border:none; border-radius:5px; padding:5px 10px;">250 💰</button>
+        </div>
         <button class="btn-action" style="background:#444" onclick="closeModal()">Kapat</button>
     </div></div>
 
-    <div id="modalBP" class="modal"><div class="modal-content">
-        <h2 style="color:var(--gold)">BATTLE PASS</h2>
-        <p>Tier: <span id="bpTier">1</span> / 50</p>
-        <div class="xp-container"><div id="bpBar" class="xp-fill"></div></div>
-        <p><small>Sıradaki Ödül: 100 Coin</small></p>
-        <button id="btnPrem" class="btn-action" style="background:var(--gold); color:#000" onclick="buyPremium()">PREMIUM PASS AÇ (500 💰)</button>
+    <div id="modalWords" class="modal"><div class="modal-content">
+        <h2>TELAFFUZ ODASI</h2>
+        <p>Kelime: <b>"Phenomenon"</b></p>
+        <button class="btn-action" onclick="giveReward(20, 10)">Mikrofonu Aç ve Söyle</button>
         <button class="btn-action" style="background:#444" onclick="closeModal()">Kapat</button>
     </div></div>
 
     <div id="scrProfile" class="screen">
-        <div style="background:var(--panel); padding:30px; border-radius:20px; border:1px solid var(--neon); width:85%; max-width:400px; text-align:center;">
+        <div style="background:var(--panel); padding:30px; border-radius:20px; border:2px solid var(--neon); width:85%; max-width:400px; text-align:center;">
             <div style="position:relative; width:100px; height:100px; margin: 0 auto 20px;">
                 <img id="pImg" src="https://via.placeholder.com/100" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                <img id="pFrame" src="" style="position:absolute; top:-5px; left:-5px; width:110px; height:110px; pointer-events:none;">
             </div>
-            <input type="text" id="pImgUrl" placeholder="Profil Resmi URL" class="btn-action" style="background:#111; border:1px solid #333;" onchange="updateProfileImg()">
+            <input type="text" id="pImgUrl" placeholder="Profil Resmi URL Yapıştır" class="btn-action" style="background:#111;" onchange="updateProfileImg()">
             <h2 id="profName">...</h2>
             <button class="btn-action" style="background:var(--red)" onclick="logout()">ÇIKIŞ YAP</button>
             <button class="btn-action" style="background:#333" onclick="switchTab('scrLobby')">GERİ</button>
@@ -104,8 +126,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -119,76 +141,89 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+    window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; if(id === 'modalDaily') initDaily(); };
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
-    // --- AUTH & DATA ---
-    window.handleAuth = async () => {
-        const e = document.getElementById('uEmail').value;
-        const p = document.getElementById('uPass').value;
-        try {
-            await signInWithEmailAndPassword(auth, e, p).catch(async () => {
-                const res = await createUserWithEmailAndPassword(auth, e, p);
-                await set(ref(db, 'users/' + res.user.uid), {
-                    username: e.split('@')[0], coins: 0, xp: 0, lvl: 1, pImg: "", premium: false
-                });
-            });
-        } catch(err) { alert(err.message); }
-    };
-
+    // --- VERİ TAKİBİ ---
     onAuthStateChanged(auth, user => {
         if(user) {
-            switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
                 const d = s.val();
                 if(!d) return;
                 document.getElementById('dispName').innerText = d.username;
                 document.getElementById('profName').innerText = d.username;
                 document.getElementById('dispCoins').innerText = d.coins;
-                document.getElementById('dispLvl').innerText = d.lvl;
+                document.getElementById('dispLvl').innerText = Math.floor(d.xp / 500) + 1;
+                document.getElementById('bpXP').innerText = d.xp % 100;
+                document.getElementById('bpTier').innerText = Math.floor(d.xp / 100) + 1;
                 document.getElementById('pImg').src = d.pImg || "https://via.placeholder.com/100";
-                
-                // BP Mantığı: Her 100 XP bir Tier
-                const tier = Math.floor(d.xp / 100) + 1;
-                document.getElementById('bpTier').innerText = tier;
-                document.getElementById('bpBar').style.width = (d.xp % 100) + "%";
-                if(d.premium) document.getElementById('btnPrem').style.display = 'none';
             });
-        } else { switchTab('scrAuth'); }
+        }
     });
 
-    // --- ÖDÜL SİSTEMİ ---
+    // --- GÜNLÜK SORU SİSTEMİ (24 SAAT) ---
+    const questions = [
+        { q: "Hangi kelime 'Olağanüstü' anlamına gelir?", a: "Extraordinary", b: "Ordinary", correct: "a" },
+        { q: "Hangisi 'Sürdürülebilirlik' demektir?", a: "Maintain", b: "Sustainability", correct: "b" }
+    ];
+
+    function initDaily() {
+        const user = auth.currentUser;
+        onValue(ref(db, 'users/' + user.uid), s => {
+            const lastTime = s.val().lastDaily || 0;
+            const now = Date.now();
+            if(now - lastTime < 86400000) { // 24 saat kontrolü
+                document.getElementById('dailyContent').style.display = 'none';
+                document.getElementById('dailyTimer').style.display = 'block';
+                startTimer(86400000 - (now - lastTime));
+            } else {
+                const q = questions[Math.floor(Math.random() * questions.length)];
+                document.getElementById('qText').innerText = q.q;
+                document.getElementById('opt1').innerText = q.a;
+                document.getElementById('opt2').innerText = q.b;
+                window.currentCorrect = q.correct;
+            }
+        }, {onlyOnce: true});
+    }
+
+    window.checkDaily = (isA) => {
+        const choice = isA ? 'a' : 'b';
+        if(choice === window.currentCorrect) {
+            giveReward(150, 100);
+            update(ref(db, 'users/' + auth.currentUser.uid), { lastDaily: Date.now() });
+            alert("Harika! 24 saatlik ödülünü aldın.");
+            closeModal();
+        } else { alert("Yanlış cevap! Tekrar dene."); }
+    };
+
+    function startTimer(duration) {
+        let timer = duration / 1000;
+        const interval = setInterval(() => {
+            let h = Math.floor(timer / 3600);
+            let m = Math.floor((timer % 3600) / 60);
+            let s = Math.floor(timer % 60);
+            document.getElementById('timeLeft').innerText = `${h}:${m}:${s}`;
+            if (--timer < 0) clearInterval(interval);
+        }, 1000);
+    }
+
     window.giveReward = (xp, coin) => {
         const user = auth.currentUser;
         onValue(ref(db, 'users/' + user.uid), s => {
-            const d = s.val();
             update(ref(db, 'users/' + user.uid), {
-                xp: d.xp + xp,
-                coins: d.coins + coin
+                xp: s.val().xp + xp,
+                coins: s.val().coins + coin
             });
-            alert(`${xp} XP ve ${coin} Coin kazanıldı!`);
-            closeModal();
         }, {onlyOnce: true});
     };
 
     window.updateProfileImg = () => {
-        const url = document.getElementById('pImgUrl').value;
-        update(ref(db, 'users/' + auth.currentUser.uid), { pImg: url });
-    };
-
-    window.buyPremium = () => {
-        const user = auth.currentUser;
-        onValue(ref(db, 'users/' + user.uid), s => {
-            const d = s.val();
-            if(d.coins >= 500) {
-                update(ref(db, 'users/' + user.uid), { coins: d.coins - 500, premium: true });
-                alert("Premium Pass Aktif Edildi!");
-            } else { alert("Yetersiz Coin!"); }
-        }, {onlyOnce: true});
+        update(ref(db, 'users/' + auth.currentUser.uid), { pImg: document.getElementById('pImgUrl').value });
     };
 
     window.logout = () => signOut(auth);
+
 </script>
 </body>
 </html>
