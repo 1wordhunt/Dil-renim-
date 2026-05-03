@@ -12,87 +12,101 @@
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; box-sizing: border-box; }
         .active-screen { display: flex !important; }
 
-        /* --- OYUN MENÜSÜ (IZGARA) --- */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 95%; max-width: 500px; padding: 10px; }
-        .menu-card { background: var(--panel); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: 0.3s; }
+        /* GRID MENÜ */
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 95%; max-width: 500px; padding: 10px; margin-top: 60px; }
+        .menu-card { background: var(--panel); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
         .menu-card:hover { border-color: var(--neon); background: rgba(0, 210, 255, 0.1); transform: scale(1.02); }
-        .card-large { grid-column: span 2; border-left: 4px solid var(--gold); }
-        .card-match { grid-column: span 2; border: 2px solid var(--neon); background: linear-gradient(135deg, #0a1520, #1a2a3a); height: 100px; }
-
-        /* --- MODAL (PENCERE) SİSTEMİ --- */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 85%; max-width: 450px; border-radius: 20px; padding: 25px; position: relative; animation: popIn 0.3s ease; overflow: hidden; }
         
-        /* --- BATTLE PASS ÖZEL ARKA PLAN (SENİN RESMİN) --- */
-        .bp-special-content {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');
+        .card-large { grid-column: span 2; border-left: 4px solid var(--gold); }
+        .card-match { grid-column: span 2; border: 2px solid var(--neon); background: linear-gradient(135deg, #0a1520, #1a2a3a); height: 90px; justify-content: center; }
+
+        /* --- ÖZEL BATTLE PASS BUTONU (RESİMLİ) --- */
+        .bp-card-image {
+            grid-column: span 1;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');
             background-size: cover;
             background-position: center;
-            border: 2px solid var(--gold);
+            border: 1px solid var(--gold) !important;
+            height: 140px; /* Diğerlerinden biraz daha uzun durması için */
+            justify-content: flex-end; /* Yazıları alta yasla */
+            padding-bottom: 10px;
         }
+        .bp-card-image h4 { margin: 0; color: var(--gold); text-shadow: 2px 2px #000; font-family: 'Orbitron'; font-size: 14px; }
+        .bp-bar-mini { width: 80%; height: 6px; background: rgba(0,0,0,0.8); border-radius: 3px; margin-top: 5px; border: 1px solid var(--gold); overflow: hidden; }
+        .bp-bar-fill { width: 45%; height: 100%; background: var(--gold); box-shadow: 0 0 5px var(--gold); }
 
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .close-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: var(--red); z-index: 10; }
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 85%; max-width: 400px; border-radius: 20px; padding: 25px; position: relative; animation: popIn 0.3s ease; }
         
-        .shop-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); padding: 10px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; }
         .btn-main { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 15px; border-radius: 12px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-
         .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #0a0f15; display: none; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
-        <div class="auth-card" style="background:rgba(10,20,30,0.9); padding:30px; border-radius:20px; border:1px solid var(--neon); text-align:center;">
-            <h2 style="font-family:'Orbitron'; color: var(--neon);">NEXUS CONNECT</h2>
-            <input type="email" id="uEmail" placeholder="📧 E-posta" style="width:100%; padding:12px; margin:10px 0; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
-            <input type="password" id="uPass" placeholder="🔒 Şifre" style="width:100%; padding:12px; margin:10px 0; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
-            <button class="btn-main" onclick="handleAuth()">[ GİRİŞ / KAYIT ]</button>
+        <div class="auth-card" style="width:85%; max-width:380px; background:rgba(10,20,30,0.95); padding:30px; border-radius:20px; border:1px solid var(--neon); text-align:center;">
+            <h2 style="font-family:'Orbitron'; color: var(--neon); margin-bottom: 20px;">NEXUS CONNECT</h2>
+            <input type="email" id="uEmail" placeholder="📧 E-posta" style="width:100%; padding:12px; margin:8px 0; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
+            <input type="password" id="uPass" placeholder="🔒 Şifre" style="width:100%; padding:12px; margin:8px 0; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
+            <button class="btn-main" onclick="handleAuth()">[ GİRİŞ YAP ]</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
-        <div style="width: 100%; padding: 20px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0;">
-            <div><h3 id="pNameDisp" style="margin:0">Savaşçı</h3><span id="pRank" style="color:var(--gold); font-size: 14px;">Developer Rank</span></div>
-            <div style="text-align:right">💰 <span id="pCoins">1500</span></div>
+        <div style="width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; background: var(--bg); z-index: 10;">
+            <div><h3 id="pNameDisp" style="margin:0">Savaşçı</h3><span style="color:var(--gold); font-size: 13px;">Developer Rank</span></div>
+            <div style="text-align:right; color:var(--gold);">💰 <span id="pCoins">1500</span></div>
         </div>
 
         <div class="grid-container">
-            <div class="menu-card card-large" onclick="openModal('modalShop')"><span>🛒 DÜKKAN</span><small>Özel Eşyalar</small></div>
-            <div class="menu-card card-match" onclick="alert('Eşleşme Aranıyor...')"><h3 style="margin:0;">[ MATCHMAKING BAŞLAT ]</h3></div>
-            <div class="menu-card" onclick="openModal('modalWords')"><span>🗣️ TELAFFUZ</span><small>100 Kelime</small></div>
-            <div class="menu-card" onclick="openModal('modalBP')"><span style="color:var(--gold)">🔥 BATTLE PASS</span><small>Ejderha Çağı</small></div>
-            <div class="menu-card" onclick="openModal('modalDaily')"><span>❓ GÜNLÜK SORU</span><small>XP Kazan</small></div>
-            <div class="menu-card" onclick="switchTab('scrProfile')"><span>⚙️ PROFİL</span><small>Ayarlar</small></div>
+            <div class="menu-card card-large" onclick="openModal('modalShop')">
+                <div style="display:flex; align-items:center; gap:15px; width:100%;">
+                    <span style="font-size:30px;">🛒</span>
+                    <div style="text-align:left"><h4>DÜKKAN</h4><small>Özel Teklifler</small></div>
+                </div>
+            </div>
+
+            <div class="menu-card card-match" onclick="alert('Eşleşme Aranıyor...')">
+                <h3 style="margin:0; letter-spacing:2px;">[ MATCHMAKING BAŞLAT ]</h3>
+            </div>
+
+            <div class="menu-card" onclick="alert('Telaffuz Odası...')">
+                <span style="font-size:24px;">🗣️</span>
+                <h4 style="margin:5px 0;">TELAFFUZ</h4>
+                <small>XP Kazan</small>
+            </div>
+
+            <div class="menu-card bp-card-image" onclick="openModal('modalBP')">
+                <h4>BATTLE PASS</h4>
+                <div class="bp-bar-mini"><div class="bp-bar-fill"></div></div>
+            </div>
+
+            <div class="menu-card" onclick="openModal('modalDaily')">
+                <span style="font-size:24px;">❓</span>
+                <h4 style="margin:5px 0;">GÜNLÜK SORU</h4>
+                <small>Ödül Al</small>
+            </div>
+
+            <div class="menu-card" onclick="switchTab('scrProfile')">
+                <span style="font-size:24px;">⚙️</span>
+                <h4 style="margin:5px 0;">PROFİLİM</h4>
+                <small>Ayarlar</small>
+            </div>
         </div>
     </div>
 
     <div id="modalBP" class="modal">
-        <div class="modal-content bp-special-content">
-            <span class="close-btn" onclick="closeModal()">×</span>
-            <h2 style="color:var(--gold); text-shadow: 2px 2px #000; margin-top: 10px;">EJDERHA ÇAĞI</h2>
-            <h4 style="margin-top:-10px; color:#fff; text-shadow: 1px 1px #000;">BATTLE PASS: SEZON 1</h4>
-            
-            <div style="background:rgba(0,0,0,0.7); padding:15px; border-radius:15px; margin-top:20px;">
-                <p style="margin:0; font-weight:bold;">Mevcut Seviye: 4 / 50</p>
-                <div style="width:100%; height:12px; background:#222; border-radius:10px; overflow:hidden; margin-top:10px; border:1px solid var(--gold);">
-                    <div style="width:45%; height:100%; background:linear-gradient(90deg, #f5af19, #f12711); box-shadow: 0 0 10px var(--gold);"></div>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin-top:15px;">
-                    <div style="text-align:center;"><small>TİER 10</small><br>🪙 100</div>
-                    <div style="text-align:center; color:var(--gold);"><small>TİER 15</small><br>🖼️ Çerçeve</div>
-                    <div style="text-align:center;"><small>TİER 20</small><br>⚡ XP</div>
-                </div>
-            </div>
-            <button class="btn-main" style="background:var(--gold); color:#000; margin-top:20px;">PREMIUM PASS AL (500 💰)</button>
+        <div class="modal-content" style="border-color: var(--gold);">
+            <span style="position:absolute; top:15px; right:15px; cursor:pointer; color:var(--red);" onclick="closeModal()">×</span>
+            <h2 style="color:var(--gold); margin:0;">BATTLE PASS</h2>
+            <p>Sezon 1: Ejderha Çağı</p>
+            <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
+            <p>Tier 4 / 50</p>
+            <button class="btn-main" style="background:var(--gold); color:#000;">PREMIUM PASS AL (500 💰)</button>
         </div>
     </div>
-
-    <div id="modalShop" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal()">×</span>
-        <h2 style="color:var(--gold)">DÜKKAN</h2>
-        <div class="shop-item"><span>Altın Ejderha Çerçevesi</span><button class="btn-main" style="width:80px; margin:0;">250 💰</button></div>
-        <div class="shop-item"><span>Mavi Ateş İsim Rengi</span><button class="btn-main" style="width:80px; margin:0;">150 💰</button></div>
-    </div></div>
 
     <div id="navBar" class="nav-bottom">
         <div onclick="switchTab('scrLobby')">🏠</div>
@@ -102,8 +116,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -124,9 +138,7 @@
     window.handleAuth = async () => {
         const email = document.getElementById('uEmail').value;
         const pass = document.getElementById('uPass').value;
-        try {
-            await signInWithEmailAndPassword(auth, email, pass).catch(() => createUserWithEmailAndPassword(auth, email, pass));
-        } catch(e) { alert(e.message); }
+        try { await signInWithEmailAndPassword(auth, email, pass); } catch(e) { alert("Hata: " + e.message); }
     };
 
     onAuthStateChanged(auth, user => {
@@ -134,10 +146,9 @@
             document.getElementById('navBar').style.display = 'flex';
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
-                const d = s.val();
-                if(d) {
-                    document.getElementById('pNameDisp').innerText = d.username;
-                    document.getElementById('pCoins').innerText = d.coins;
+                if(s.val()) {
+                    document.getElementById('pNameDisp').innerText = s.val().username;
+                    document.getElementById('pCoins').innerText = s.val().coins;
                 }
             });
         } else {
@@ -145,8 +156,6 @@
             switchTab('scrAuth');
         }
     });
-
-    window.logout = () => signOut(auth);
 </script>
 </body>
 </html>
