@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v10</title>
+    <title>LangMatch Pro Fix</title>
     <style>
         :root {
             --bg: #0f1015; --card: #1c1c1e; --text: #ffffff;
@@ -13,31 +13,39 @@
             --neon-yellow: linear-gradient(135deg, #f12711, #f5af19);
         }
         body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
+        
+        /* EKRAN SİSTEMİ - SİYAH EKRANI ÖNLEYEN YAPI */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; top: 0; left: 0; background: var(--bg); }
         .active { display: flex !important; }
+
         .header { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--card); border-bottom: 1px solid #333; }
         .p-circle { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #f5af19; object-fit: cover; }
+        
+        /* MENÜ VE BUTONLAR */
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .menu-btn { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; color: white; transition: 0.2s; position: relative; }
+        .menu-btn { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; color: white; }
         .btn-main { background: var(--neon-blue); padding: 15px; border-radius: 12px; border: none; color: white; font-weight: bold; width: 100%; cursor: pointer; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.95); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 100; }
+        
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(20,20,25,0.98); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
         .nav-btn { font-size: 10px; text-align: center; color: #888; cursor: pointer; }
         .nav-btn.active { color: #2193b0; }
-        .user-card { background: var(--card); margin: 5px 15px; padding: 12px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #333; }
+
+        input { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; background: #25262e; border: 1px solid #444; color: white; box-sizing: border-box; }
+        .user-card { background: var(--card); margin: 5px 15px; padding: 12px; border-radius: 15px; display: flex; align-items: center; gap: 10px; border: 1px solid #333; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
-        <h2>LangMatch v10</h2>
-        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer">
+        <h2 style="letter-spacing: -1px;">LangMatch Pro</h2>
+        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 20px;">
             <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid #f5af19; object-fit:cover;">
-            <p style="font-size:12px; color:#f5af19">Fotoğraf Ekle</p>
+            <p style="font-size:12px; color:#f5af19">Profil Fotoğrafı Ekle</p>
         </div>
         <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
-        <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <button class="btn-main" onclick="handleRegister()">BAŞLAT</button>
+        <input type="text" id="regName" placeholder="Kullanıcı Adınız">
+        <button class="btn-main" onclick="handleRegister()">HESABI OLUŞTUR</button>
     </div>
 </div>
 
@@ -50,51 +58,67 @@
         <div style="color:#ffd60a; font-weight:bold;">💰 <span id="uCoins">0</span></div>
     </div>
     <div class="main-grid">
-        <div class="menu-btn" style="grid-column:span 2; height:110px; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
-        <div class="menu-btn" style="height:150px; background:var(--neon-green);" onclick="openScreen('screenMatchOptions')">📹 MATCHING</div>
-        <div class="menu-btn" style="height:150px; background:var(--neon-yellow);" onclick="openScreen('screenShop')">🛒 SHOP</div>
-        <div class="menu-btn" style="height:150px; background:var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFFUZ</div>
-        <div class="menu-btn" style="height:150px; background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
+        <div class="menu-btn" style="grid-column:span 2; height:100px; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
+        <div class="menu-btn" style="height:140px; background:var(--neon-green);" onclick="openScreen('screenMatchOptions')">📹 MATCHING</div>
+        <div class="menu-btn" style="height:140px; background:var(--neon-yellow);" onclick="openScreen('screenShop')">🛒 SHOP</div>
+        <div class="menu-btn" style="height:140px; background:var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFFUZ</div>
+        <div class="menu-btn" style="height:140px; background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
     </div>
     <div class="nav-bar">
-        <div class="nav-btn active" onclick="openScreen('screenHome')">🏠<br>ANA</div>
-        <div class="nav-btn" onclick="openScreen('screenTasks')">✅<br>GÖREVLER</div>
-        <div class="nav-btn" onclick="openScreen('screenDMList')">📩<br>MESAJLAR</div>
-        <div class="nav-btn" onclick="openScreen('screenProfile')">👤<br>PROFİL</div>
+        <div class="nav-btn active" onclick="openScreen('screenHome')">🏠<br>HOME</div>
+        <div class="nav-btn" onclick="openScreen('screenTasks')">✅<br>TASKS</div>
+        <div class="nav-btn" onclick="openScreen('screenDMList')">📩<br>MESSAGES</div>
+        <div class="nav-btn" onclick="openScreen('screenProfile')">👤<br>PROFILE</div>
     </div>
 </div>
 
 <div id="screenSearch" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Ara</b> <span></span></div>
-    <div style="padding:15px;"><input type="text" id="searchInput" placeholder="İsim yazın..." oninput="searchUsers()"></div>
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️ Geri</span> <b>Üye Bul</b> <span></span></div>
+    <div style="padding:15px;"><input type="text" id="searchInput" placeholder="Kullanıcı ara..." oninput="searchUsers()"></div>
     <div id="searchResults" style="overflow-y:auto; flex:1;"></div>
 </div>
 
-<div id="screenPronounce" class="screen">
-    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz Testi</b> <span></span></div>
-    <div style="text-align:center; padding:50px;">
-        <h1 id="wordToSay" style="font-size:40px; color:#00d2ff;">DEVELOPER</h1>
-        <p id="micStatus" style="color:#888;">Butona bas ve konuş</p>
-        <button id="micBtn" class="btn-main" style="width:100px; height:100px; border-radius:50%; font-size:30px;" onclick="startListening()">🎤</button>
+<div id="screenGlobal" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b> <span></span></div>
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; color:#888;">Global Chat Odası Yükleniyor...</div>
+</div>
+
+<div id="screenTasks" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Görevler</b> <span></span></div>
+    <div style="padding:20px;" id="taskList">
+        <div class="user-card"><b>Giriş Ödülü</b> <span style="color:#ffd60a">+50 💰</span></div>
     </div>
 </div>
 
-<div id="screenChat" class="screen">
-    <div class="header"><span onclick="openScreen('screenDMList')">⬅️</span> <b id="chatTargetName">Mesaj</b> <span></span></div>
-    <div id="chatBox" style="flex:1; padding:15px; overflow-y:auto;"></div>
-    <div style="padding:15px; background:var(--card); display:flex; gap:10px;">
-        <input type="text" id="msgInput" placeholder="Mesaj yaz...">
-        <button class="btn-main" style="width:80px;" onclick="sendMsg()">GÖNDER</button>
+<div id="screenDMList" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Mesajlar</b> <span></span></div>
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; color:#888;">Henüz mesajın yok.</div>
+</div>
+
+<div id="screenProfile" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Profil</b> <span></span></div>
+    <div style="text-align:center; padding:30px;">
+        <img id="pImgBig" src="" style="width:120px; height:120px; border-radius:50%; border:3px solid #f5af19;">
+        <h2 id="pNameDisp">User</h2>
+        <button class="btn-main" style="background:red;" onclick="location.reload()">ÇIKIŞ YAP</button>
+    </div>
+</div>
+
+<div id="screenPronounce" class="screen">
+    <div class="header"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz</b> <span></span></div>
+    <div style="text-align:center; padding-top:50px;">
+        <h1 id="wordTarget">HELLO</h1>
+        <button id="micBtn" style="width:100px; height:100px; border-radius:50%; border:none; background:var(--neon-blue); font-size:30px; color:white;" onclick="startSpeech()">🎤</button>
+        <p id="speechResult" style="margin-top:20px;"></p>
     </div>
 </div>
 
 <script>
     let user = { name: '', avatar: '', coins: 0 };
-    const mockUsers = [
-        {name: 'Merve', img: 'https://i.pravatar.cc/150?u=1'},
-        {name: 'Can', img: 'https://i.pravatar.cc/150?u=2'},
-        {name: 'Selin', img: 'https://i.pravatar.cc/150?u=3'},
-        {name: 'Arda', img: 'https://i.pravatar.cc/150?u=4'}
+    const mockData = [
+        {name: 'Ece', img: 'https://i.pravatar.cc/150?u=ece'},
+        {name: 'Burak', img: 'https://i.pravatar.cc/150?u=burak'},
+        {name: 'Aslı', img: 'https://i.pravatar.cc/150?u=asli'}
     ];
 
     function previewFile(input) {
@@ -111,62 +135,60 @@
     function handleRegister() {
         user.name = document.getElementById('regName').value || 'User';
         document.getElementById('uName').innerText = user.name;
+        document.getElementById('pNameDisp').innerText = user.name;
         document.getElementById('uAvatar').src = user.avatar || 'https://via.placeholder.com/100';
+        document.getElementById('pImgBig').src = user.avatar || 'https://via.placeholder.com/100';
         openScreen('screenHome');
     }
 
     function openScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        const target = document.getElementById(id);
+        if(target) {
+            target.classList.add('active');
+        } else {
+            alert("Hata: Ekran bulunamadı! (" + id + ")");
+            document.getElementById('screenHome').classList.add('active');
+        }
     }
 
-    // ARAMA FONKSİYONU
     function searchUsers() {
-        const val = document.getElementById('searchInput').value.toLowerCase();
+        const query = document.getElementById('searchInput').value.toLowerCase();
         const res = document.getElementById('searchResults');
         res.innerHTML = '';
-        mockUsers.filter(u => u.name.toLowerCase().includes(val)).forEach(u => {
+        mockData.filter(u => u.name.toLowerCase().includes(query)).forEach(u => {
             res.innerHTML += `
                 <div class="user-card">
                     <img src="${u.img}" style="width:40px; height:40px; border-radius:50%">
-                    <b style="flex:1; margin-left:10px">${u.name}</b>
-                    <button onclick="alert('İstek gönderildi!')" style="background:none; border:1px solid #2193b0; color:white; border-radius:5px; padding:5px; margin-right:5px">➕</button>
-                    <button onclick="openDM('${u.name}')" style="background:#2193b0; border:none; color:white; border-radius:5px; padding:5px">📩</button>
+                    <b style="flex:1">${u.name}</b>
+                    <button onclick="alert('Eklendi!')" style="background:none; border:1px solid #2193b0; color:white; border-radius:5px; padding:5px;">➕</button>
+                    <button onclick="alert('Mesaj ekranı yakında!')" style="background:#2193b0; border:none; color:white; border-radius:5px; padding:5px;">📩</button>
                 </div>`;
         });
     }
 
-    function openDM(name) {
-        document.getElementById('chatTargetName').innerText = name;
-        openScreen('screenChat');
-    }
-
-    // MİKROFON FONKSİYONU
-    function startListening() {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    function startSpeech() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) return alert("Tarayıcı mikrofonu desteklemiyor!");
+        
+        const recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
-        document.getElementById('micStatus').innerText = "Dinleniyor...";
-        document.getElementById('micBtn').style.background = "red";
+        document.getElementById('speechResult').innerText = "Dinleniyor...";
         
         recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript.toUpperCase();
-            const target = document.getElementById('wordToSay').innerText;
-            if(transcript.includes(target)) {
-                alert("Mükemmel! +20 💰");
+            const text = event.results[0][0].transcript.toUpperCase();
+            const target = document.getElementById('wordTarget').innerText;
+            if(text.includes(target)) {
+                document.getElementById('speechResult').innerHTML = "<span style='color:lime'>DOĞRU! +20 💰</span>";
                 user.coins += 20;
                 document.getElementById('uCoins').innerText = user.coins;
             } else {
-                alert("Tekrar dene! Duyulan: " + transcript);
+                document.getElementById('speechResult').innerHTML = `<span style='color:red'>Hatalı: ${text}</span>`;
             }
-            stopMic();
         };
-        recognition.onerror = () => { alert("Mikrofon hatası!"); stopMic(); };
         recognition.start();
     }
-    function stopMic() {
-        document.getElementById('micStatus').innerText = "Butona bas ve konuş";
-        document.getElementById('micBtn').style.background = "var(--neon-blue)";
-    }
 </script>
+
 </body>
 </html>
