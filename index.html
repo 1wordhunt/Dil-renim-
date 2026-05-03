@@ -3,157 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch | Developer Edition</title>
+    <title>LangMatch | English Learning</title>
     <style>
         :root {
-            --discord-dark: #313338;
-            --discord-gray: #2b2d31;
-            --accent-blue: #5865f2;
-            --gold: #ffcf4b;
+            --primary: #5865f2;
+            --bg-light: #ffffff;
+            --sidebar-bg: #f2f3f5;
+            --text-dark: #2e3338;
+            --border: #e3e5e8;
         }
 
         body {
-            background-color: var(--discord-dark);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
+            overflow: hidden;
+        }
+
+        /* --- KAYIT VE GİRİŞ EKRANI --- */
+        #authScreen {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-        }
-
-        .app-container {
-            width: 90%;
-            max-width: 450px;
-            background: var(--discord-gray);
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .auth-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
+            border: 1px solid var(--border);
         }
 
-        .profile-section {
-            border: 2px solid var(--accent-blue);
-            padding: 15px;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
+        /* --- ANA UYGULAMA EKRANI --- */
+        #mainApp {
+            display: none; /* Başlangıçta gizli */
+            height: 100vh;
+            grid-template-columns: 240px 1fr;
+            grid-template-rows: 60px 1fr;
+        }
+
+        header {
+            grid-column: 1 / 3;
+            background: white;
+            border-bottom: 1px solid var(--border);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            position: relative;
+            padding: 0 20px;
         }
 
-        /* Avatar Çerçevesi Örneği */
-        .premium-frame {
-            border: 4px solid var(--gold) !important;
-            box-shadow: 0 0 10px var(--gold);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-            background: #1e1f22;
-            color: white;
-        }
-
-        .btn-match {
-            background-color: #248046;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
-            cursor: pointer;
+        .stats-group {
+            display: flex;
+            gap: 20px;
             font-weight: bold;
+        }
+
+        nav {
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover { background: #e3e5e8; }
+
+        .content-area {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- GÖRÜNTÜLÜ KONUŞMA EKRANI --- */
+        .video-container {
             width: 100%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .video-box {
+            background: #000;
+            aspect-ratio: 4/3;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             font-size: 16px;
         }
 
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            background: #1e1f22;
-            padding: 10px;
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
             border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .task-box {
-            font-size: 12px;
-            color: #b5bac1;
-            background: #383a40;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 15px;
+            cursor: pointer;
+            width: 95%;
+            font-size: 16px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="app-container" id="loginScreen">
-    <div class="stats-bar">
-        <span>💰 Coins: <b id="coinCount">100</b></span>
-        <span>🏆 Level: 1</span>
+<div id="authScreen">
+    <div class="auth-card" id="emailStep">
+        <h2 style="color: var(--primary);">Join LangMatch</h2>
+        <p>Enter your email to start learning</p>
+        <input type="email" id="userEmail" placeholder="email@example.com">
+        <button class="btn-primary" onclick="sendCode()">SEND VERIFICATION CODE</button>
     </div>
 
-    <div class="profile-section" id="userAvatar">👤</div>
-    
-    <h2>Welcome to LangMatch</h2>
-    <p>English Learning & Socializing</p>
-
-    <input type="text" id="username" placeholder="Username...">
-    <input type="number" id="age" placeholder="Your Age">
-    
-    <select id="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-    </select>
-
-    <hr style="border: 0.5px solid #4e5058; margin: 20px 0;">
-
-    <label>Partner Preference:</label>
-    <select id="pref-gender">
-        <option value="any">Anyone</option>
-        <option value="female">Female</option>
-        <option value="male">Male</option>
-    </select>
-
-    <button class="btn-match" onclick="startMatching()">START MATCHING</button>
-
-    <div class="task-box">
-        <b>Daily Quest:</b> <span id="dailyTask">Use 'Substantial' in a sentence today! (+50 Coins)</span>
+    <div class="auth-card" id="codeStep" style="display: none;">
+        <h2 style="color: var(--primary);">Verify Your Email</h2>
+        <p>We've sent a 6-digit code to your mail.</p>
+        <input type="text" id="verifyCode" placeholder="000000" maxlength="6" style="text-align: center; letter-spacing: 5px;">
+        <button class="btn-primary" onclick="verifyAndLogin()">VERIFY & LOGIN</button>
     </div>
 </div>
 
-<script>
-    let coins = 100;
+<div id="mainApp">
+    <header>
+        <div class="logo"><b>LangMatch</b> <span style="font-size: 12px; color: grey;">developer</span></div>
+        <div class="stats-group">
+            <span title="Coins">💰 <span id="coinBalance">100</span></span>
+            <span title="Level">🏆 Level <span id="userLevel">1</span></span>
+        </div>
+    </header>
 
-    function startMatching() {
-        const name = document.getElementById('username').value;
-        if(!name) {
-            alert("Please enter a username!");
-            return;
+    <nav>
+        <div class="nav-item">🏠 Home</div>
+        <div class="nav-item">🛒 Shop</div>
+        <div class="nav-item">👤 Profile</div>
+        <div class="nav-item">👥 Friends</div>
+        <div class="nav-item">📝 Daily Quests</div>
+    </nav>
+
+    <main class="content-area">
+        <h3>Video Chat</h3>
+        <div class="video-container">
+            <div class="video-box">
+                <div class="video-label">You</div>
+                </div>
+            <div class="video-box" style="background: #e3e5e8; display: flex; align-items: center; justify-content: center;">
+                <div class="video-label">Partner</div>
+                <span style="color: #8e9297;">Waiting for match...</span>
+            </div>
+        </div>
+        <button class="btn-primary" style="margin-top: 20px; width: 300px;">START NEXT MATCH</button>
+    </main>
+</div>
+
+<script>
+    function sendCode() {
+        const email = document.getElementById('userEmail').value;
+        if(email.includes("@")) {
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('codeStep').style.display = 'block';
+        } else {
+            alert("Please enter a valid email!");
         }
-        alert("Searching for a partner who matches your preference...");
-        // Burada WebRTC eşleşme mantığı başlayacak
     }
 
-    // Basit Görev Sistemi
-    const tasks = [
-        "Say 'Hello' to 3 different people",
-        "Talk for more than 5 minutes",
-        "Learn 5 new words from the AI coach",
-        "Send a gift to a new friend"
-    ];
-
-    document.getElementById('dailyTask').innerText = tasks[Math.floor(Math.random() * tasks.length)] + " (+50 Coins)";
+    function verifyAndLogin() {
+        // Kod simülasyonu (Gerçek sistemde backend'e gider)
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'grid';
+    }
 </script>
 
 </body>
