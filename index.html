@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro | Nexus Elite</title>
+    <title>LangMatch Pro | Nexus Elite V2</title>
     <style>
         :root {
             --bg: #0b0c10; --card: #1f2833; --text: #ffffff;
             --accent: #66fcf1; --gold: #f5af19; --diamond: #00d2ff;
             --neon-red: linear-gradient(135deg, #ff416c, #ff4b2b);
             --neon-green: linear-gradient(135deg, #00b09b, #96c93d);
-            --neon-blue: linear-gradient(135deg, #2193b0, #6dd5ed);
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; background: var(--bg); }
@@ -18,23 +17,24 @@
 
         /* Profil Paneli ve Çerçeve Sistemi */
         .user-panel { background: #1a1a1d; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); }
-        .avatar-container { position: relative; width: 65px; height: 65px; }
-        .u-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; position: absolute; z-index: 1; }
-        .u-frame { width: 120%; height: 120%; position: absolute; top: -10%; left: -10%; z-index: 2; pointer-events: none; display: none; }
+        .avatar-container { position: relative; width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; }
+        .u-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; position: absolute; z-index: 1; }
+        .u-frame { width: 85px; height: 85px; position: absolute; z-index: 2; pointer-events: none; display: none; }
         
-        .quest-bar { background: linear-gradient(90deg, #4e54c8, #8f94fb); margin: 0 15px 15px; padding: 12px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; cursor: pointer; }
-
+        /* Grid & Cards */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
         .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
+        /* Nav */
         .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
         .nav-item { font-size: 10px; color: #666; text-align: center; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
 
+        /* Input & Buttons */
         input { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; }
-        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
+        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
+        .btn-claim { background: var(--accent); border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
         
-        /* Telaffuz Efekti */
         .mic-btn { width: 80px; height: 80px; border-radius: 50%; border: none; background: var(--neon-red); color: white; font-size: 30px; cursor: pointer; }
         .mic-active { animation: pulse 1s infinite; background: var(--neon-green); }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
@@ -44,16 +44,14 @@
 
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
-        <h1 style="color: var(--accent);">NEXUS LOGIN</h1>
-        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 20px; position: relative; display: inline-block;">
+        <h1 style="color: var(--accent);">THE CORE: NEXUS</h1>
+        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 20px;">
             <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent); object-fit: cover;">
-            <div style="position:absolute; bottom:0; right:0; background:var(--accent); color:black; border-radius:50%; width:25px; height:25px; font-weight:bold;">+</div>
         </div>
         <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
         <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <input type="password" id="regPass" placeholder="Güçlü Şifre">
-        <button class="btn-action" onclick="handleAuth()">SİSTEME GİRİŞ YAP</button>
-        <p style="font-size:10px; color:#555; margin-top:10px;">Şifreniz cihazınızda şifrelenerek korunur.</p>
+        <input type="password" id="regPass" placeholder="Şifre">
+        <button class="btn-action" onclick="handleAuth()">GİRİŞ YAP</button>
     </div>
 </div>
 
@@ -61,7 +59,7 @@
     <div class="user-panel">
         <div class="avatar-container">
             <img id="uAvatar" src="" class="u-img">
-            <img id="activeFrame" src="https://i.ibb.co/k6zKM8WD/1777813407870.png" class="u-frame">
+            <img id="activeFrame" src="https://i.ibb.co/3bd0e64d-1f5d-4b42-b0b2-32a5b0ea86d7/1000008679.jpg" class="u-frame">
         </div>
         <div style="flex:1">
             <div id="uName" style="font-weight:bold;">User</div>
@@ -72,13 +70,13 @@
             <div style="color:var(--diamond); font-size:12px;">💎 350</div>
         </div>
     </div>
-    <div class="quest-bar">🏆 GÖREV: AWESOME kelimesini telaffuz et! 🧭</div>
     <div class="grid">
         <div class="card" style="grid-column:span 2; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
         <div class="card" style="background:var(--neon-green);" onclick="openScreen('screenMatch')">📹 MATCHING</div>
-        <div class="card" style="background:var(--neon-yellow);" onclick="openScreen('screenShop')">🛒 SHOP</div>
-        <div class="card" style="background:var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFUZ</div>
+        <div class="card" style="background:var(--neon-green); background-image: linear-gradient(135deg, #f5af19, #f12711);" onclick="openScreen('screenShop')">🛒 SHOP</div>
+        <div class="card" style="background:#2193b0;" onclick="openScreen('screenPronounce')">🗣️ TELAFUZ</div>
         <div class="card" style="background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
+        <div class="card" style="background:#333;" onclick="openScreen('screenTasks')">✅ GÖREVLER</div>
     </div>
     <div class="nav">
         <div class="nav-item active" onclick="openScreen('screenHome')">🏠<br>HOME</div>
@@ -89,58 +87,53 @@
 </div>
 
 <div id="screenShop" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b style="margin-left:20px;">CORE STORE</b></div>
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b style="margin-left:20px;">DÜKKAN</b></div>
     <div style="padding:15px; overflow-y:auto;">
-        <div style="background:#25262e; padding:15px; border-radius:15px; display:flex; align-items:center; gap:15px; border:1px solid var(--accent);">
-            <img src="https://i.ibb.co/k6zKM8WD/1777813407870.png" style="width:50px;">
-            <div style="flex:1"><b>Nexus Elite Çerçeve</b><br><small style="color:var(--neon-green)">BEDAVA (Kampanya)</small></div>
-            <button class="btn-action" style="width:auto; padding:8px 15px;" id="buyFrameBtn" onclick="buyFrame()">AL</button>
+        <div style="background:#25262e; padding:15px; border-radius:15px; display:flex; align-items:center; gap:15px; margin-bottom:15px; border:1px solid var(--gold);">
+            <img src="https://i.ibb.co/3bd0e64d-1f5d-4b42-b0b2-32a5b0ea86d7/1000008679.jpg" style="width:50px; border-radius:5px;">
+            <div style="flex:1"><b>Nexus Elite V2</b><br><small style="color:var(--gold)">HİPER HAREKETLİ</small></div>
+            <button class="btn-claim" id="buyV2Btn" onclick="buyFrame('v2')">AL (0 💰)</button>
         </div>
     </div>
 </div>
 
 <div id="screenProfile" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>PROFİLİM</b></div>
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>PROFİL</b></div>
     <div style="text-align:center; padding:30px;">
         <div class="avatar-container" style="width:120px; height:120px; margin:auto;">
-            <img id="pImg" src="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
-            <img id="pFrame" src="https://i.ibb.co/k6zKM8WD/1777813407870.png" style="width:120%; height:120%; position:absolute; top:-10%; left:-10%; display:none;">
+            <img id="pImg" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; position:absolute;">
+            <img id="pFrame" src="https://i.ibb.co/3bd0e64d-1f5d-4b42-b0b2-32a5b0ea86d7/1000008679.jpg" style="width:150px; height:150px; position:absolute; display:none;">
         </div>
-        <h2 id="pNameDisp"></h2>
-        <div id="inventory" style="margin-top:20px; display:none;">
-            <button class="btn-action" onclick="toggleFrame()">ÇERÇEVEYİ TAK / ÇIKAR</button>
+        <h2 id="pNameDisp" style="margin-top:20px;"></h2>
+        <div id="invArea" style="display:none; margin-top:20px;">
+            <button class="btn-action" onclick="toggleFrame()">ÇERÇEVEYİ AKTİF ET</button>
         </div>
-        <button class="btn-action" style="background:red; margin-top:50px;" onclick="location.reload()">ÇIKIŞ</button>
+        <button class="btn-action" style="background:red; margin-top:50px;" onclick="location.reload()">GÜVENLİ ÇIKIŞ</button>
     </div>
 </div>
 
 <div id="screenPronounce" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>SESLİ EĞİTİM</b></div>
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>SESLİ TEST</b></div>
     <div style="text-align:center; padding:50px 20px;">
-        <p>Söylemen gereken kelime:</p>
+        <p>Aşağıdaki kelimeyi telaffuz et:</p>
         <h1 id="targetWord" style="font-size:45px; color:var(--accent);">AWESOME</h1>
-        <div id="pronounceStatus" style="height:30px; margin:20px; color:var(--gold);">Bekleniyor...</div>
+        <div id="status" style="margin:20px; color:var(--gold);">Dinlemeye hazır...</div>
         <button id="micBtn" class="mic-btn" onclick="startSpeech()">🎙️</button>
-        <p id="resultText" style="margin-top:20px; font-weight:bold;"></p>
     </div>
 </div>
 
-<div id="screenGlobal" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global</b></div></div>
+<div id="screenGlobal" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b></div></div>
 <div id="screenMatch" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Matching</b></div></div>
 <div id="screenTasks" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Görevler</b></div></div>
 <div id="screenSearch" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Ara</b></div></div>
 
 <script>
-    let userData = { name: '', pass: '', avatar: '', coins: 0, hasFrame: false, frameOn: false };
-    let currentTarget = "awesome";
+    let userData = { name: '', avatar: '', hasFrame: false, frameOn: false };
 
     function previewFile(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById('regPreview').src = e.target.result;
-                userData.avatar = e.target.result;
-            };
+            reader.onload = e => { document.getElementById('regPreview').src = e.target.result; userData.avatar = e.target.result; };
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -148,11 +141,9 @@
     function handleAuth() {
         const n = document.getElementById('regName').value.trim();
         const p = document.getElementById('regPass').value.trim();
-        if(!n || p.length < 4) return alert("İsim ve en az 4 haneli şifre!");
+        if(!n || !p) return alert("Bilgileri eksiksiz gir kanka!");
         
         userData.name = n;
-        userData.pass = p;
-        
         document.getElementById('uName').innerText = n;
         document.getElementById('pNameDisp').innerText = n;
         document.getElementById('uAvatar').src = userData.avatar || 'https://via.placeholder.com/100';
@@ -166,59 +157,38 @@
         document.getElementById(id).classList.add('active');
     }
 
-    // --- DÜKKAN & ÇERÇEVE SİSTEMİ ---
     function buyFrame() {
         userData.hasFrame = true;
-        document.getElementById('buyFrameBtn').innerText = "ALINDI";
-        document.getElementById('buyFrameBtn').disabled = true;
-        document.getElementById('inventory').style.display = "block";
-        alert("Nexus Elite Çerçevesi Envantere Eklendi!");
+        document.getElementById('buyV2Btn').innerText = "ENVANTERDE";
+        document.getElementById('buyV2Btn').disabled = true;
+        document.getElementById('invArea').style.display = "block";
+        alert("Efsanevi çerçeve alındı! Profilinden aktif edebilirsin.");
     }
 
     function toggleFrame() {
         userData.frameOn = !userData.frameOn;
-        const display = userData.frameOn ? 'block' : 'none';
-        document.getElementById('activeFrame').style.display = display;
-        document.getElementById('pFrame').style.display = display;
-        alert(userData.frameOn ? "Çerçeve Takıldı!" : "Çerçeve Çıkarıldı!");
+        const s = userData.frameOn ? 'block' : 'none';
+        document.getElementById('activeFrame').style.display = s;
+        document.getElementById('pFrame').style.display = s;
     }
 
-    // --- GELİŞMİŞ TELAFFUZ (SPEECH API) ---
     function startSpeech() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return alert("Tarayıcın ses tanımayı desteklemiyor!");
-
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        const btn = document.getElementById('micBtn');
-        const status = document.getElementById('pronounceStatus');
-        
-        btn.classList.add('mic-active');
-        status.innerText = "Dinleniyor...";
-        recognition.start();
-
-        recognition.onresult = (event) => {
-            const result = event.results[0][0].transcript.toLowerCase();
-            document.getElementById('resultText').innerText = "Sen: " + result;
-            
-            if (result.includes(currentTarget)) {
-                status.innerText = "BİNGÖ! DOĞRU!";
-                status.style.color = "var(--neon-green)";
-                btn.classList.remove('mic-active');
-                setTimeout(() => { 
-                    alert("Harika! Kelimeyi geçtin.");
-                    openScreen('screenHome'); 
-                }, 1500);
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(!Speech) return alert("Tarayıcı desteklemiyor!");
+        const rec = new Speech();
+        rec.lang = 'en-US';
+        document.getElementById('micBtn').classList.add('mic-active');
+        document.getElementById('status').innerText = "Seni dinliyorum...";
+        rec.start();
+        rec.onresult = e => {
+            const res = e.results[0][0].transcript.toLowerCase();
+            document.getElementById('micBtn').classList.remove('mic-active');
+            if(res.includes("awesome")) {
+                document.getElementById('status').innerText = "MÜKEMMEL! DOĞRU!";
+                setTimeout(() => openScreen('screenHome'), 1000);
             } else {
-                status.innerText = "Hatalı, tekrar dene!";
-                status.style.color = "var(--neon-red)";
-                btn.classList.remove('mic-active');
+                document.getElementById('status').innerText = "Hatalı: " + res + ". Tekrar dene!";
             }
-        };
-
-        recognition.onerror = () => {
-            btn.classList.remove('mic-active');
-            status.innerText = "Hata oluştu, tekrar bas.";
         };
     }
 </script>
