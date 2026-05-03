@@ -3,164 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v12</title>
+    <title>LangMatch Pro v13 | Nexus Elite</title>
     <style>
         :root {
             --bg: #0b0c10; --card: #1f2833; --text: #ffffff;
             --accent: #66fcf1; --gold: #f5af19; --diamond: #00d2ff;
             --neon-red: linear-gradient(135deg, #ff416c, #ff4b2b);
-            --neon-green: linear-gradient(135deg, #00b09b, #96c93d);
-            --neon-blue: linear-gradient(135deg, #2193b0, #6dd5ed);
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* Profil Paneli */
-        .user-panel { background: #1a1a1d; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); position: relative; }
-        .avatar-container { position: relative; width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; }
-        .u-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; position: absolute; z-index: 1; }
-        .u-frame-v12 { width: 95px; height: 95px; position: absolute; z-index: 2; pointer-events: none; display: none; }
+        /* Üst Panel */
+        .user-panel { background: #1a1a1d; margin: 10px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); position: relative; }
         
-        /* Grid Menü */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; color: white; cursor: pointer; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: relative; }
-        .badge { position: absolute; top: 10px; right: 10px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+        /* ÇERÇEVE SİSTEMİ (Resim 1) */
+        .avatar-wrapper { position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+        .u-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; z-index: 1; }
+        .u-frame-img { position: absolute; width: 100%; height: 100%; z-index: 2; pointer-events: none; display: none; }
 
-        /* Navigasyon */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-item { font-size: 10px; color: #666; text-align: center; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
+        /* GLOBAL CHAT ÇERÇEVE (Resim 2) */
+        .chat-msg-container { position: relative; margin: 10px; padding: 25px; min-height: 60px; display: flex; align-items: center; color: white; align-self: flex-start; max-width: 85%; }
+        .chat-frame-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; object-fit: fill; border-radius: 10px; }
+        .chat-text { position: relative; z-index: 1; font-weight: bold; text-shadow: 1px 1px 2px black; }
 
-        /* Dükkan */
-        .shop-item { background: #25262e; margin: 10px 15px; padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--gold); }
-        .btn-claim { background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .btn-claim:disabled { background: #444; color: #888; }
-
-        /* Global Chat - Heavy Mesaj Çerçevesi */
-        .msg-frame-v13 { background: url('https://i.ibb.co/68vDqF6/transparent-Elite-V2.png') no-repeat center; background-size: cover; padding: 20px; border-radius: 15px; position: relative; margin-bottom: 15px; align-self: flex-start; max-width: 80%; }
-        .msg-text-v13 { position: relative; z-index: 2; color: white; font-size: 14px; text-shadow: 0 0 5px var(--accent); }
-        .me-v13 { align-self: flex-end; margin-left: auto; background-image: linear-gradient(135deg, #ff416c, #ff4b2b); }
-
-        /* Ortak */
-        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
-        input { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; box-sizing: border-box; }
+        /* Grid ve Butonlar */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; flex: 1; overflow-y: auto; }
+        .card { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; color: white; cursor: pointer; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; box-sizing: border-box; }
+        
+        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
-        <h1 style="color: var(--accent);">THE CORE: NEXUS</h1>
-        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 20px;">
-            <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent); object-fit: cover;">
-        </div>
-        <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
-        <input type="text" id="regName" placeholder="Developer Adın">
-        <input type="password" id="regPass" placeholder="Güçlü Şifren">
-        <button class="btn-action" onclick="handleAuth()">EKOSİSTEME GİR</button>
+        <h2 style="color: var(--accent);">THE CORE: NEXUS</h2>
+        <p style="font-size: 12px;">Profil Resmini Seç:</p>
+        <input type="file" id="fileAvatar" accept="image/*" onchange="loadImg(this, 'uAvatar')">
+        <input type="text" id="regName" placeholder="Adın">
+        <button class="btn-action" onclick="handleAuth()">SİSTEME GİR</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="user-panel">
-        <div class="avatar-container">
+        <div class="avatar-wrapper">
             <img id="uAvatar" src="" class="u-img">
-            <img id="activeFrame" src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" class="u-frame-v12">
+            <img id="uFrame" src="" class="u-frame-img">
         </div>
         <div style="flex:1">
-            <div id="uName" style="font-weight:bold;">User</div>
-            <div style="font-size:11px; color:var(--gold);">🏅 Altın Sarı - <span id="uXP">9480</span> XP</div>
+            <div id="uNameDisp" style="font-weight:bold;">Developer</div>
+            <div style="font-size:11px; color:var(--gold);">🏅 Altın Sarı</div>
         </div>
-        <div style="text-align:right">
-            <div style="color:var(--gold); font-weight:bold;">💰 <span id="uCoins">12500</span></div>
-            <div style="color:var(--diamond); font-size:12px;">💎 350</div>
-        </div>
+        <div style="color:var(--gold); font-weight:bold;">💰 12,500</div>
     </div>
+    
     <div class="grid">
-        <div class="card" style="grid-column:span 2; background: #8b0000;" onclick="openScreen('screenGlobal')">
-            <span class="badge">99+</span>
-            💬 GLOBAL CHAT
-        </div>
-        <div class="card" style="background: #2e7d32;" onclick="openScreen('screenMatch')">📹 MATCHING</div>
+        <div class="card" style="grid-column:span 2; background: #8b0000;" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
         <div class="card" style="background: #f5af19;" onclick="openScreen('screenShop')">🛒 SHOP</div>
         <div class="card" style="background: #0277bd;" onclick="openScreen('screenPronounce')">🗣️ TELAFFUZ</div>
-        <div class="card" style="background: #311b92;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
     </div>
+
     <div class="nav">
-        <div class="nav-item active" onclick="openScreen('screenHome')">🏠</div>
-        <div class="nav-item" onclick="openScreen('screenShop')">🛒</div>
-        <div class="nav-item" onclick="openScreen('screenTasks')">✅</div>
-        <div class="nav-item" onclick="openScreen('screenProfile')">👤</div>
+        <div onclick="openScreen('screenHome')">🏠</div>
+        <div onclick="openScreen('screenShop')">🛒</div>
+        <div onclick="openScreen('screenProfile')">👤</div>
     </div>
 </div>
 
 <div id="screenShop" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>NEXUS STORE</b></div>
-    <div style="overflow-y:auto; flex:1;">
-        <div class="shop-item">
-            <img src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" style="width:50px;">
-            <div style="flex:1"><b>Nexus Elite Frame</b><br><small style="color:var(--gold)">VIP HAREKETLİ</small></div>
-            <button class="btn-claim" onclick="alert('Satın alındı! Profilden tak kanka.')">BEDAVA</button>
+    <div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>MARKET</b></div>
+    <div style="padding:15px;">
+        <div style="background:#25262e; padding:15px; border-radius:15px; margin-bottom:10px;">
+            <p><b>1. Resimdeki Profil Çerçevesi</b></p>
+            <input type="file" accept="image/*" onchange="loadImg(this, 'uFrame', true)">
+            <p style="font-size:10px; color:var(--gold);">Resmi yükle ve profilden aktif et!</p>
         </div>
-        <div class="shop-item">
-            <img src="https://i.ibb.co/1230009968/transparent-Nexus-Chat-V13.png" style="width:50px; border-radius:5px;">
-            <div style="flex:1"><b>Chat Starry Frame</b><br><small style="color:red">GLOBAL MESAJ İÇİN</small></div>
-            <button class="btn-claim" onclick="buyChatFrame(this)">BEDAVA</button>
+        <div style="background:#25262e; padding:15px; border-radius:15px;">
+            <p><b>2. Resimdeki Chat Çerçevesi</b></p>
+            <input type="file" accept="image/*" onchange="loadImg(this, 'chatFrameImg')">
+            <p style="font-size:10px; color:var(--gold);">Global Chat'te mesajların bunun içinde gözükür.</p>
         </div>
-    </div>
-</div>
-
-<div id="screenProfile" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>PROFİL</b></div>
-    <div style="text-align:center; padding:30px;">
-        <div class="avatar-container" style="width:120px; height:120px; margin:auto;">
-            <img id="pImg" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; position:absolute;">
-            <img id="pFrame" src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" style="width:160px; height:160px; position:absolute; display:none;">
-        </div>
-        <h2 id="pNameDisp" style="margin-top:20px;">Burak (Dev)</h2>
-        <div id="inventoryArea" style="margin-top:20px;">
-            <button class="btn-action" onclick="toggleFrame()">ÇERÇEVEYİ AKTİF ET / KALDIR</button>
-        </div>
-        <button class="btn-action" style="background:red; margin-top:50px;" onclick="location.reload()">GÜVENLİ ÇIKIŞ</button>
     </div>
 </div>
 
 <div id="screenGlobal" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>GLOBAL CHAT</b></div>
-    <div style="flex:1; padding:15px; overflow-y:auto; display:flex; flex-direction:column;" id="chatBox"></div>
-    <div style="padding:15px; display:flex; gap:10px; background:#121212;">
-        <input type="text" id="chatMsg" placeholder="Premium mesaj yaz..." style="margin:0;">
-        <button class="btn-claim" style="background:var(--accent); border:none; padding:10px; border-radius:10px;" onclick="sendMsg()">➡️</button>
+    <div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>GLOBAL CHAT</b></div>
+    <div id="chatBox" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; padding:10px;"></div>
+    <div style="padding:10px; display:flex; gap:5px;">
+        <input type="text" id="msgInput" placeholder="Mesaj yaz...">
+        <button onclick="sendMsg()" style="padding:10px; border-radius:10px; background:var(--accent);">Gönder</button>
     </div>
 </div>
 
-<div id="screenMatch" class="screen"><div class="user-panel">Matching</div></div>
-<div id="screenTasks" class="screen"><div class="user-panel">Tasks</div></div>
-<div id="screenSearch" class="screen"><div class="user-panel">Search</div></div>
+<div id="screenProfile" class="screen">
+    <div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>PROFİL</b></div>
+    <div style="text-align:center; padding-top:50px;">
+        <div class="avatar-wrapper" style="width:150px; height:150px; margin:auto;">
+            <img id="pAvatar" src="" style="width:90px; height:90px; border-radius:50%; z-index:1;">
+            <img id="pFrame" src="" style="position:absolute; width:100%; height:100%; z-index:2; display:none;">
+        </div>
+        <h2 id="pName">Burak</h2>
+        <button class="btn-action" style="width:80%;" onclick="toggleFrame()">ÇERÇEVEYİ AKTİF ET / KALDIR</button>
+    </div>
+</div>
 
 <script>
-    let userData = { name: '', avatar: '', hasFrame: false, frameOn: false, hasChatFrame: false };
+    let images = { avatar: '', frame: '', chatFrame: '' };
 
-    function previewFile(input) {
+    function loadImg(input, targetId, isFrame = false) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
-            reader.onload = e => { document.getElementById('regPreview').src = e.target.result; userData.avatar = e.target.result; };
+            reader.onload = function(e) {
+                if(targetId === 'chatFrameImg') { images.chatFrame = e.target.result; alert("Chat çerçevesi hazır!"); }
+                else {
+                    document.getElementById(targetId).src = e.target.result;
+                    if(targetId === 'uAvatar') { document.getElementById('pAvatar').src = e.target.result; }
+                    if(isFrame) { document.getElementById('pFrame').src = e.target.result; images.frame = e.target.result; }
+                }
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
     function handleAuth() {
-        const n = document.getElementById('regName').value.trim();
-        const p = document.getElementById('regPass').value.trim();
-        if(!n || !p) return alert("Eksiksiz gir kanka!");
-        
-        userData.name = n + " (Dev)";
-        document.getElementById('uName').innerText = userData.name;
-        document.getElementById('pNameDisp').innerText = userData.name;
-        document.getElementById('uAvatar').src = userData.avatar || 'https://via.placeholder.com/100';
-        document.getElementById('pImg').src = userData.avatar || 'https://via.placeholder.com/100';
-        
+        const name = document.getElementById('regName').value;
+        document.getElementById('uNameDisp').innerText = name + " (Dev)";
+        document.getElementById('pName').innerText = name + " (Dev)";
         openScreen('screenHome');
     }
 
@@ -169,40 +141,32 @@
         document.getElementById(id).classList.add('active');
     }
 
-    // --- NEXUS STORE & ÇERÇEVE SİSTEMİ ---
     function toggleFrame() {
-        userData.frameOn = !userData.frameOn;
-        const s = userData.frameOn ? 'block' : 'none';
-        document.getElementById('activeFrame').style.display = s;
-        document.getElementById('pFrame').style.display = s;
+        const f1 = document.getElementById('uFrame');
+        const f2 = document.getElementById('pFrame');
+        const isOff = f1.style.display === 'none' || f1.style.display === '';
+        f1.style.display = isOff ? 'block' : 'none';
+        f2.style.display = isOff ? 'block' : 'none';
     }
 
-    function buyChatFrame(btn) {
-        userData.hasChatFrame = true;
-        btn.innerText = "AKTİF";
-        btn.disabled = true;
-        alert("Global Chat Premium Mesaj Çerçevesi aktif kanka!");
-    }
-
-    // --- GLOBAL CHAT & PREMİUM MESAJ ---
     function sendMsg() {
-        const m = document.getElementById('chatMsg').value;
-        if(!m) return;
-        const box = document.getElementById('chatBox');
+        const txt = document.getElementById('msgInput').value;
+        if(!txt) return;
+        const chatBox = document.getElementById('chatBox');
         
-        if(userData.hasChatFrame) {
-            // PREMIUM MESAJ (Görsel 13 baz alındı)
-            box.innerHTML += `
-                <div class="msg-frame-v13 me-v13">
-                    <div class="msg-text-v13"><b>Sen:</b> ${m}</div>
-                </div>`;
+        let msgHtml = '';
+        if(images.chatFrame) {
+            msgHtml = `<div class="chat-msg-container">
+                        <img src="${images.chatFrame}" class="chat-frame-bg">
+                        <span class="chat-text"><b>Sen:</b> ${txt}</span>
+                      </div>`;
         } else {
-            // NORMAL MESAJ
-            box.innerHTML += `<div style="background:#333; padding:10px; border-radius:10px; margin-bottom:10px; width:fit-content; align-self:flex-end; margin-left:auto;"><b>Sen:</b> ${m}</div>`;
+            msgHtml = `<div style="background:#333; padding:10px; border-radius:10px; margin:5px;"><b>Sen:</b> ${txt}</div>`;
         }
         
-        document.getElementById('chatMsg').value = '';
-        box.scrollTop = box.scrollHeight;
+        chatBox.innerHTML += msgHtml;
+        document.getElementById('msgInput').value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 </script>
 </body>
