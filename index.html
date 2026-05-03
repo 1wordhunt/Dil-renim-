@@ -3,120 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v22 | Global Connect</title>
+    <title>LangMatch Pro v23 | Final Fix</title>
     <style>
-        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; --blue: #3498db; }
+        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow-x: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; }
         .active { display: flex !important; }
 
-        /* --- KAYIT EKRANI --- */
-        #screenAuth { justify-content: center; align-items: center; background: radial-gradient(circle, #1f2833 0%, #000 100%); }
-        .auth-card { width: 85%; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid var(--accent); backdrop-filter: blur(10px); text-align: center; }
-        .photo-upload { width: 90px; height: 90px; border-radius: 50%; border: 2px dashed var(--accent); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: #111; position: relative; }
-        .photo-upload img { width: 100%; height: 100%; object-fit: cover; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
+        /* --- GARANTİ ÇÖZÜM: KATMANLI AVATAR YAPISI --- */
+        .avatar-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        /* --- GENEL UI --- */
+        /* Profil Fotoğrafı (En Alt Katman) */
+        .user-photo {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%; /* Kare fotoyu yuvarlar */
+            object-fit: cover;
+            z-index: 1;
+            background: #111;
+        }
+
+        /* Çerçeve (En Üst Katman) */
+        .frame-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            z-index: 2;
+            pointer-events: none; /* Tıklamayı engellemez */
+            object-fit: contain;
+        }
+
+        /* Diğer UI Elemanları */
         .top-bar { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #111; border-bottom: 1px solid #222; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .block { border-radius: 22px; height: 120px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.2s; position: relative; }
-        .block:active { transform: scale(0.95); }
-
-        /* --- MATCHING (OMEGLE STYLE) --- */
-        #screenMatching { background: #000; justify-content: center; align-items: center; }
-        .match-video { width: 90%; height: 60%; background: #1a1a1d; border-radius: 20px; position: relative; overflow: hidden; border: 2px solid var(--accent); }
-        .match-overlay { position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; }
-        .status-dot { width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
-
-        /* --- PROFİL & ÇERÇEVE --- */
-        .avatar-wrap { position: relative; width: 160px; height: 160px; margin: 30px auto; display: flex; align-items: center; justify-content: center; }
-        .u-pic { width: 100px; height: 100px; border-radius: 50%; z-index: 1; object-fit: cover; background: #222; }
-        .u-frame { position: absolute; width: 160px; height: 160px; z-index: 2; pointer-events: none; }
-
+        .block { border-radius: 22px; height: 110px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .btn-main { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
-    <div class="auth-card">
-        <h2 style="color:var(--accent)">NEXUS CORE</h2>
-        <div class="photo-upload" onclick="document.getElementById('fileInput').click()">
-            <img id="regPreview" src="" style="display:none">
-            <span id="plusIcon" style="font-size:30px">+</span>
-        </div>
+    <div style="text-align:center; padding:50px;">
+        <h2 style="color:var(--accent)">NEXUS PRO</h2>
         <input type="file" id="fileInput" hidden accept="image/*" onchange="previewFile()">
-        <input type="text" id="regName" placeholder="Adını Yaz Kanka">
-        <button class="btn-main" onclick="initApp()">BAŞLAT</button>
+        <div onclick="document.getElementById('fileInput').click()" style="width:80px; height:80px; border:2px dashed var(--accent); border-radius:50%; margin:20px auto; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <img id="regPreview" style="width:100%; height:100%; object-fit:cover; display:none;">
+            <span id="plus">+</span>
+        </div>
+        <input type="text" id="regName" placeholder="İsim">
+        <button class="btn-main" onclick="initApp()">GİRİŞ</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="top-bar">
-        <div onclick="openScreen('screenProfile')" style="cursor:pointer; display:flex; align-items:center; gap:10px;">
-            <img id="miniPic" src="" style="width:35px; height:35px; border-radius:50%; object-fit:cover; background:#333">
-            <b id="nDisplay">Developer</b>
-        </div>
+        <div onclick="openScreen('screenProfile')">👤 <b id="nDisplay">Developer</b></div>
         <div style="color:var(--gold)">💰 <span id="myCoins">1500</span></div>
     </div>
     <div class="grid">
-        <div class="block" style="grid-column: span 2; background: var(--red);">GLOBAL CHAT</div>
-        <div class="block" style="background: #2ecc71;" onclick="startMatching()">📹 MATCHING</div>
-        <div class="block" style="background: #f1c40f;" onclick="openScreen('screenShop')">🛒 SHOP</div>
-        <div class="block" style="background: #3498db;">🗣️ TELAFFUZ</div>
-        <div class="block" style="background: #9b59b6;">🔍 ÜYE ARA</div>
-    </div>
-</div>
-
-<div id="screenMatching" class="screen">
-    <div class="top-bar" style="position:fixed; top:0; width:100%; box-sizing:border-box">
-        <span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ AYRIL</span>
-        <div id="matchCount">🌍 12,402 Kişi Çevrimiçi</div>
-    </div>
-    <div class="match-video" id="videoBox">
-        <div id="searchingUI" style="text-align:center; padding-top:100px;">
-            <div class="status-dot"></div> <br>
-            <b>YENİ BİRİ ARANIYOR...</b><br>
-            <small style="color:#666">Dünyadan rastgele biri seçiliyor</small>
-        </div>
-        <div id="remoteUser" style="display:none; height:100%; width:100%; justify-content:center; align-items:center; flex-direction:column">
-            <img id="matchAvatar" src="" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent)">
-            <h2 id="matchName">Biri Bulundu!</h2>
-            <div style="display:flex; gap:20px;">
-                <button class="btn-main" style="width:auto; padding:10px 20px; background:red" onclick="startMatching()">PAS GEÇ</button>
-                <button class="btn-main" style="width:auto; padding:10px 20px; background:green" onclick="alert('Bağlanılıyor...')">KONUŞ</button>
-            </div>
-        </div>
+        <div class="block" style="background: #2ecc71;" onclick="alert('Eşleşme Aranıyor...')">MATCHING</div>
+        <div class="block" style="background: #f1c40f;" onclick="openScreen('screenShop')">SHOP</div>
+        <div class="block" style="background: var(--red); grid-column: span 2;">GLOBAL CHAT</div>
     </div>
 </div>
 
 <div id="screenShop" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️</span> <b>MARKET</b></div>
+    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️ Geri</span> <b>MARKET</b></div>
     <div style="padding:15px;">
-        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; border:1px solid var(--gold); margin-bottom:15px;">
-            <img src="https://i.ibb.co/BKgTg3Lc/Ba-l-ks-z.png" style="width:65px;">
-            <div style="flex:1"><b>Asil Çerçeve (V3)</b><br><small style="color:var(--gold)">0 Coin</small></div>
-            <button class="btn-main" style="width:auto; padding:5px 15px;" onclick="processBuy('royal')">AL</button>
-        </div>
-        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; border:1px solid #333;">
-            <img src="https://i.ibb.co/zHGQS8XW/1777817943470.png" style="width:65px;">
-            <div style="flex:1"><b>Altın Ejderha</b><br><small>0 Coin</small></div>
-            <button class="btn-main" style="width:auto; padding:5px 15px;" onclick="processBuy('dragon')">AL</button>
+        <div style="background:#1a1a1d; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px;">
+            <img src="https://i.ibb.co/BKgTg3Lc/Ba-l-ks-z.png" style="width:50px;">
+            <div style="flex:1"><b>Asil Çerçeve</b></div>
+            <button onclick="buy('royal')" style="background:var(--gold); border:none; padding:8px; border-radius:8px;">AL</button>
         </div>
     </div>
 </div>
 
 <div id="screenProfile" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️</span> <b>PROFİL</b></div>
-    <div class="avatar-wrap">
-        <img id="profPic" src="" class="u-pic">
-        <img id="activeFrame" src="" class="u-frame" style="display:none;">
+    <div class="top-bar"><span onclick="openScreen('screenHome')">⬅️ Geri</span> <b>PROFİL</b></div>
+    
+    <div class="avatar-container">
+        <img id="profPic" src="" class="user-photo">
+        <img id="activeFrame" src="" class="frame-overlay" style="display:none;">
     </div>
-    <div style="text-align:center;">
-        <h2 id="pName">Developer</h2>
-        <div id="inventory" style="padding:20px; background:#111; margin:15px; border-radius:25px;">
+
+    <div style="text-align:center; padding:20px;">
+        <h2 id="pName">Burak (Dev)</h2>
+        <div id="inventory" style="background:#111; padding:15px; border-radius:20px;">
             <h4>ENVANTER</h4>
         </div>
     </div>
@@ -124,68 +106,47 @@
 
 <script>
     let user = { name: '', photo: '', coins: 1500, inventory: [] };
-    let db = {
-        royal: { name: 'Asil Çerçeve', img: 'https://i.ibb.co/BKgTg3Lc/Ba-l-ks-z.png' },
-        dragon: { name: 'Altın Ejderha', img: 'https://i.ibb.co/zHGQS8XW/1777817943470.png' }
-    };
+    let db = { royal: { name: 'Asil Çerçeve', img: 'https://i.ibb.co/BKgTg3Lc/Ba-l-ks-z.png' } };
 
     function previewFile() {
-        const file = document.getElementById('fileInput').files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
             user.photo = reader.result;
             document.getElementById('regPreview').src = reader.result;
             document.getElementById('regPreview').style.display = 'block';
-            document.getElementById('plusIcon').style.display = 'none';
+            document.getElementById('plus').style.display = 'none';
         }
-        if (file) reader.readAsDataURL(file);
+        reader.readAsDataURL(document.getElementById('fileInput').files[0]);
     }
 
     function initApp() {
-        const n = document.getElementById('regName').value;
-        if(!n) return alert("İsim yaz!");
-        user.name = n + " (Dev)";
+        user.name = document.getElementById('regName').value + " (Dev)";
         document.getElementById('nDisplay').innerText = user.name;
         document.getElementById('pName').innerText = user.name;
-        document.getElementById('miniPic').src = user.photo || '';
-        document.getElementById('profPic').src = user.photo || '';
+        document.getElementById('profPic').src = user.photo || 'https://via.placeholder.com/100';
         openScreen('screenHome');
     }
 
-    // MATCHING LOGIC (SIMULATION)
-    function startMatching() {
-        openScreen('screenMatching');
-        document.getElementById('searchingUI').style.display = 'block';
-        document.getElementById('remoteUser').style.display = 'none';
-        
-        setTimeout(() => {
-            document.getElementById('searchingUI').style.display = 'none';
-            document.getElementById('remoteUser').style.display = 'flex';
-            document.getElementById('matchAvatar').src = 'https://i.pravatar.cc/150?u=' + Math.random();
-            document.getElementById('matchName').innerText = ["Alex", "Selin", "John", "Miki", "Fatma"][Math.floor(Math.random()*5)];
-        }, 2500);
-    }
-
-    function processBuy(id) {
+    function buy(id) {
         if(!user.inventory.includes(id)) {
             user.inventory.push(id);
-            updateInventory();
-            alert("Dükkandan alındı!");
+            updateInv();
+            alert("Aldın!");
         }
     }
 
-    function updateInventory() {
+    function updateInv() {
         const inv = document.getElementById('inventory');
         inv.innerHTML = '<h4>ENVANTER</h4>';
-        user.inventory.forEach(itemId => {
-            inv.innerHTML += `<button class="btn-main" onclick="useItem('${itemId}')">${db[itemId].name} TAK</button>`;
+        user.inventory.forEach(i => {
+            inv.innerHTML += `<button class="btn-main" onclick="use('${i}')">${db[i].name} TAK</button>`;
         });
     }
 
-    function useItem(id) {
-        const frame = document.getElementById('activeFrame');
-        frame.src = db[id].img;
-        frame.style.display = 'block';
+    function use(id) {
+        const f = document.getElementById('activeFrame');
+        f.src = db[id].img;
+        f.style.display = 'block';
     }
 
     function openScreen(id) {
@@ -194,4 +155,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    
