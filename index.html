@@ -4,102 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Connect | Arena</title>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00d2ff; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: rgba(15, 25, 35, 0.98); }
+        :root { --neon: #00d2ff; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: rgba(20, 30, 45, 0.95); }
         body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #fff; height: 100vh; overflow: hidden; }
         
-        /* --- MERKEZİ HİZALAMA SİSTEMİ --- */
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; padding-bottom: 80px; box-sizing: border-box; }
+        /* --- MERKEZİ HİZALAMA --- */
+        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; box-sizing: border-box; }
         .active-screen { display: flex !important; }
 
-        /* --- KAYIT EKRANI (TAM ORTALANMIŞ) --- */
-        .auth-card { width: 90%; max-width: 420px; padding: 30px; background: rgba(10, 20, 30, 0.8); border: 2px solid var(--neon); border-radius: 25px; box-shadow: 0 0 40px rgba(0, 210, 255, 0.2); backdrop-filter: blur(10px); }
-        .input-box { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 12px; padding: 12px; margin: 8px 0; width: 100%; color: #fff; box-sizing: border-box; font-family: inherit; }
-        .input-box:focus { border-color: var(--neon); outline: none; }
-        .btn-main { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 16px; border-radius: 15px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 15px; box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3); }
+        /* --- KAYIT EKRANI --- */
+        .auth-card { width: 90%; max-width: 400px; padding: 25px; background: rgba(10, 20, 30, 0.95); border: 2px solid var(--neon); border-radius: 20px; box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); backdrop-filter: blur(10px); text-align: center; }
+        .input-box { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 10px; padding: 12px; margin: 8px 0; width: 100%; color: #fff; box-sizing: border-box; font-family: inherit; }
+        .btn-main { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 15px; border-radius: 12px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3); transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); }
 
-        /* --- DISCORD TARZI PROFİL --- */
-        .profile-header { width: 100%; height: 120px; background: linear-gradient(to right, #00d2ff, #3a7bd5); border-radius: 20px 20px 0 0; position: relative; }
-        .p-avatar-wrapper { position: absolute; bottom: -40px; left: 20px; }
-        .p-avatar { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--bg); background: #222; }
-        .p-frame { position: absolute; top: -5px; left: -5px; width: 90px; height: 90px; pointer-events: none; }
-        .p-info { margin-top: 50px; padding: 20px; text-align: left; width: 100%; }
+        /* --- OYUN ANA MENÜ (DÜKKAN, BATTLEPASS VB.) --- */
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 95%; max-width: 800px; padding: 20px; }
+        .menu-card { background: var(--panel); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .menu-card:hover { border-color: var(--neon); background: rgba(0, 210, 255, 0.05); }
+        .menu-card h4 { margin: 10px 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .menu-card span { font-size: 12px; color: #888; }
+        
+        /* ÖZEL KARTLAR */
+        .card-large { grid-column: span 2; height: 120px; border-left: 4px solid var(--gold); }
+        .card-matchmaking { grid-column: span 2; background: linear-gradient(135deg, #1a2a3a 0%, #0a1520 100%); border: 2px solid var(--neon); height: 140px; }
 
-        /* --- GLOBAL CHAT --- */
-        #chatBox { flex: 1; width: 95%; max-width: 500px; background: rgba(0,0,0,0.3); border-radius: 15px; overflow-y: auto; padding: 15px; margin-bottom: 10px; border: 1px solid #222; }
-        .msg { margin-bottom: 8px; font-size: 14px; }
-        .msg b { color: var(--neon); }
+        /* --- BATTLEPASS PROGRESS --- */
+        .bp-bar-bg { width: 100%; height: 8px; background: #222; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .bp-bar-fill { height: 100%; background: var(--gold); width: 45%; box-shadow: 0 0 10px var(--gold); }
 
-        /* --- NAVIGASYON --- */
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #0a0f15; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; }
-        .nav-item { font-size: 22px; cursor: pointer; color: #555; transition: 0.3s; }
-        .nav-item.active { color: var(--neon); transform: translateY(-5px); }
+        /* --- NAVİGASYON --- */
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #0a0f15; display: none; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+        .nav-item { font-size: 20px; cursor: pointer; color: #444; }
+        .nav-item.active { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
         <div class="auth-card">
-            <h2 style="font-family:'Orbitron'; font-style:italic; margin-bottom:5px;">MACERAYA KATIL!</h2>
-            <p style="color:#666; font-size:13px; margin-bottom:20px;">Kayıt ol ve rütbeni belirlemek için ilk adımı at.</p>
-            <input type="text" id="uName" placeholder="👤 Kullanıcı Adı" class="input-box">
+            <h2 style="font-family:'Orbitron'; font-style:italic; color: var(--neon);">NEXUS CONNECT</h2>
+            <div id="regFields">
+                <input type="text" id="uName" placeholder="👤 Kullanıcı Adı" class="input-box">
+                <div style="display:flex; gap:10px;">
+                    <select id="uGender" class="input-box"><option>Cinsiyet</option><option>Erkek</option><option>Kadın</option></select>
+                    <input type="number" id="uAge" placeholder="🎂 Yaş" class="input-box">
+                </div>
+                <select id="uCountry" class="input-box">
+                    <option>Ülke Seç</option><option>Türkiye 🇹🇷</option><option>USA 🇺🇸</option><option>Germany 🇩🇪</option>
+                </select>
+            </div>
             <input type="email" id="uEmail" placeholder="📧 E-posta" class="input-box">
             <input type="password" id="uPass" placeholder="🔒 Şifre" class="input-box">
-            <div style="display:flex; gap:10px;">
-                <select id="uGender" class="input-box"><option>Cinsiyet</option><option>Erkek</option><option>Kadın</option></select>
-                <input type="number" id="uAge" placeholder="🎂 Yaş" class="input-box">
-            </div>
-            <select id="uCountry" class="input-box">
-                <option>Ülke Seç</option><option>Türkiye 🇹🇷</option><option>USA 🇺🇸</option><option>Germany 🇩🇪</option>
-            </select>
-            <button class="btn-main" onclick="handleAuth()">[ KAYIT OL ]</button>
-            <p onclick="toggleLogin()" style="font-size:12px; margin-top:15px; color:var(--gold); cursor:pointer;">Zaten hesabın var mı? Giriş Yap</p>
+            <button class="btn-main" onclick="handleAuth()" id="mainAuthBtn">[ KAYIT OL ]</button>
+            <p id="toggleText" onclick="toggleLogin()" style="font-size:12px; margin-top:15px; color:var(--gold); cursor:pointer;">Zaten hesabın var mı? Giriş Yap</p>
         </div>
     </div>
 
-    <div id="scrChat" class="screen">
-        <h3 style="color:var(--neon)">GLOBAL ARENA CHAT</h3>
-        <div id="chatBox"></div>
-        <div style="width:95%; max-width:500px; display:flex; gap:5px;">
-            <input type="text" id="chatInput" placeholder="Mesaj yaz..." class="input-box">
-            <button class="btn-main" style="width:80px; margin:8px 0;" onclick="sendMsg()">GÖNDER</button>
+    <div id="scrLobby" class="screen">
+        <div style="width: 100%; padding: 20px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+            <div><h3 id="pNameDisplay" style="margin:0">Welcome, [Player]</h3><span id="pRank" style="color:var(--gold); font-size: 14px;">Çaylak Bronz</span></div>
+            <div style="text-align:right">💰 <span id="pCoins">500</span></div>
         </div>
+
+        <div class="grid-container">
+            <div class="menu-card card-large" onclick="alert('Dükkan Yakında!')">
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <span style="font-size:40px;">🛒</span>
+                    <div style="text-align:left"><h4>DÜKKAN</h4><span>Özel Teklifler</span></div>
+                </div>
+            </div>
+
+            <div class="menu-card card-matchmaking" onclick="switchTab('scrMatch')">
+                <span style="font-size:40px;">🛡️</span>
+                <h4>[ MATCHMAKING BAŞLAT ]</h4>
+                <span>REKABETÇİ / SOSYAL</span>
+            </div>
+
+            <div class="menu-card" onclick="alert('Telaffuz Odasına Gidiliyor...')">
+                <span style="font-size:30px;">🗣️</span>
+                <h4>TELAFFUZ MODU</h4>
+                <span>İletişimi Geliştir</span>
+            </div>
+
+            <div class="menu-card" onclick="alert('BattlePass Ayrıntıları')">
+                <h4 style="color:var(--gold)">BATTLEPASS</h4>
+                <span>Sezon 1 İlerlemesi</span>
+                <div class="bp-bar-bg"><div class="bp-bar-fill" id="bpProgress"></div></div>
+            </div>
+
+            <div class="menu-card">
+                <span style="font-size:30px;">❓</span>
+                <h4>GÜNLÜK SORU</h4>
+                <span>Cevapla, Kazan</span>
+            </div>
+
+            <div class="menu-card" onclick="switchTab('scrProfile')">
+                <span style="font-size:30px;">⚙️</span>
+                <h4>PROFİLİM</h4>
+                <span>İstatistikler & Başarımlar</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="navBar" class="nav-bottom">
+        <div class="nav-item" onclick="switchTab('scrLobby')">🏠</div>
+        <div class="nav-item" onclick="alert('Global Chat Yakında!')">💬</div>
+        <div class="nav-item" onclick="switchTab('scrProfile')">👤</div>
+        <div class="nav-item" onclick="logout()">🚪</div>
     </div>
 
     <div id="scrProfile" class="screen">
-        <div class="auth-card" style="padding:0; overflow:hidden;">
-            <div class="profile-header">
-                <div class="p-avatar-wrapper">
-                    <img id="pImg" src="https://via.placeholder.com/80" class="p-avatar">
-                    <img id="currentFrame" src="" class="p-frame"> </div>
-            </div>
-            <div class="p-info">
-                <h2 id="pName" style="margin:0">Kullanıcı Adı</h2>
-                <p id="pBio" style="color:#888; font-size:14px; margin:5px 0;">Nexus Warrior | Durum açıklaması...</p>
-                <div style="background:#111; padding:10px; border-radius:10px; margin-top:10px;">
-                    <small style="color:var(--gold)">ENVANTER</small>
-                    <div id="inventoryList" style="display:flex; gap:10px; margin-top:5px;">
-                        <div style="width:40px; height:40px; border:1px dashed #333; border-radius:5px;"></div>
-                    </div>
+        <div class="auth-card">
+            <h2 id="profileName">OYUNCU ADI</h2>
+            <p style="color:var(--neon)">Rütbe: Demir Gri</p>
+            <div style="text-align:left; background:rgba(0,0,0,0.3); padding:15px; border-radius:10px; margin:15px 0;">
+                <small>ENVANTER</small>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <div style="width:40px; height:40px; border:1px solid #444; border-radius:5px; display:flex; align-items:center; justify-content:center;">🖼️</div>
                 </div>
-                <button class="btn-main" style="background:var(--red); height:40px; padding:0;" onclick="logout()">ÇIKIŞ YAP</button>
             </div>
+            <button class="btn-main" style="background:var(--red);" onclick="logout()">OTURUMU KAPAT</button>
         </div>
-    </div>
-
-    <div class="nav-bottom">
-        <div class="nav-item" onclick="switchTab('scrChat')">💬</div>
-        <div class="nav-item active" onclick="switchTab('scrAuth')">🏠</div> <div class="nav-item" onclick="switchTab('scrProfile')">👤</div>
-        <div class="nav-item" onclick="alert('Ayarlar Çok Yakında!')">⚙️</div>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // --- ÖNEMLİ: HATA ÇÖZÜMÜ İÇİN CONFIG ---
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
         authDomain: "nexus-b73be.firebaseapp.com",
@@ -114,84 +149,70 @@
 
     let isLoginMode = false;
 
-    // --- AUTH İŞLEMLERİ ---
+    // --- EKRAN YÖNETİMİ ---
+    window.switchTab = (id) => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(id).classList.add('active-screen');
+    };
+
+    window.toggleLogin = () => {
+        isLoginMode = !isLoginMode;
+        document.getElementById('regFields').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('mainAuthBtn').innerText = isLoginMode ? '[ GİRİŞ YAP ]' : '[ KAYIT OL ]';
+        document.getElementById('toggleText').innerText = isLoginMode ? 'Hesabın yok mu? Kayıt Ol' : 'Zaten hesabın var mı? Giriş Yap';
+    };
+
+    // --- KAYIT & GİRİŞ ---
     window.handleAuth = async () => {
         const email = document.getElementById('uEmail').value;
         const pass = document.getElementById('uPass').value;
+        if(!email || !pass) return alert("Lütfen alanları doldur!");
+
         try {
             if(isLoginMode) {
                 await signInWithEmailAndPassword(auth, email, pass);
             } else {
                 const res = await createUserWithEmailAndPassword(auth, email, pass);
                 await set(ref(db, 'users/' + res.user.uid), {
-                    username: document.getElementById('uName').value,
+                    username: document.getElementById('uName').value || "Warrior",
                     country: document.getElementById('uCountry').value,
-                    bio: "Maceraya yeni katıldı!",
-                    coins: 500, xp: 0, inventory: ["base_frame"]
+                    gender: document.getElementById('uGender').value,
+                    coins: 500, xp: 0, rank: "Çaylak Bronz"
                 });
             }
-        } catch(e) { alert("Hata: " + e.message); }
+        } catch(e) { 
+            console.error(e);
+            alert("Firebase Hatası: " + e.message); 
+        }
     };
 
+    // --- OTURUM TAKİBİ ---
     onAuthStateChanged(auth, user => {
+        const nav = document.getElementById('navBar');
         if(user) {
-            switchTab('scrChat');
-            loadProfile(user.uid);
-            loadChat();
+            nav.style.display = 'flex';
+            switchTab('scrLobby');
+            loadUserData(user.uid);
         } else {
+            nav.style.display = 'none';
             switchTab('scrAuth');
         }
     });
 
-    window.logout = () => signOut(auth);
-
-    // --- PROFİL & ENVANTER YÜKLEME ---
-    function loadProfile(uid) {
+    function loadUserData(uid) {
         onValue(ref(db, 'users/' + uid), snap => {
             const data = snap.val();
-            document.getElementById('pName').innerText = data.username;
-            document.getElementById('pBio').innerText = data.bio;
-            // Envanter listeleme ve çerçeve seçimi buraya eklenecek
+            if(data) {
+                document.getElementById('pNameDisplay').innerText = "Welcome, " + data.username;
+                document.getElementById('profileName').innerText = data.username;
+                document.getElementById('pCoins').innerText = data.coins;
+                document.getElementById('pRank').innerText = data.rank;
+            }
         });
     }
 
-    // --- GLOBAL CHAT SİSTEMİ ---
-    window.sendMsg = () => {
-        const text = document.getElementById('chatInput').value;
-        if(!text) return;
-        push(ref(db, 'globalChat'), {
-            uid: auth.currentUser.uid,
-            name: document.getElementById('pName').innerText,
-            msg: text,
-            time: Date.now()
-        });
-        document.getElementById('chatInput').value = "";
-    };
+    window.logout = () => signOut(auth);
 
-    function loadChat() {
-        onValue(ref(db, 'globalChat'), snap => {
-            const box = document.getElementById('chatBox');
-            box.innerHTML = "";
-            snap.forEach(child => {
-                const m = child.val();
-                box.innerHTML += `<div class="msg"><b>${m.name}:</b> ${m.msg}</div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        });
-    }
-
-    // --- EKRAN GEÇİŞLERİ ---
-    window.switchTab = (id) => {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active-screen');
-    };
-
-    window.toggleLogin = () => {
-        isLoginMode = !isLoginMode;
-        document.getElementById('uName').style.display = isLoginMode ? 'none' : 'block';
-        document.querySelector('.btn-main').innerText = isLoginMode ? '[ GİRİŞ YAP ]' : '[ KAYIT OL ]';
-    };
 </script>
 </body>
 </html>
