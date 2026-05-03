@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro v18 | Dragon Shop</title>
+    <title>LangMatch Pro v19 | Dragon Fixed</title>
     <style>
-        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; --blue: #3498db; }
+        :root { --bg: #000; --accent: #66fcf1; --gold: #f5af19; --red: #ff3b5c; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #fff; overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; }
         .active { display: flex !important; }
@@ -15,16 +15,13 @@
         .auth-card { width: 80%; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid var(--accent); backdrop-filter: blur(10px); text-align: center; }
         input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
 
-        /* --- ANA PANEL --- */
+        /* --- TOP BAR --- */
         .top-bar { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: #111; border-bottom: 1px solid #222; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .block { border-radius: 22px; height: 130px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.2s; position: relative; }
-        .block:active { transform: scale(0.95); }
-
+        
         /* --- DÜKKAN --- */
         .shop-container { padding: 15px; overflow-y: auto; flex: 1; }
         .product-card { background: #1a1a1d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; }
-        .p-img { width: 70px; height: 70px; border-radius: 12px; object-fit: contain; background: #080808; border: 1px solid #444; }
+        .p-img { width: 70px; height: 70px; border-radius: 12px; object-fit: contain; background: #000; border: 1px solid #444; }
         .buy-btn { background: var(--gold); color: #000; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
         /* --- PROFİL --- */
@@ -33,90 +30,69 @@
         .u-frame { position: absolute; width: 155px; height: 155px; z-index: 2; pointer-events: none; }
 
         .btn-main { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .block { border-radius: 22px; height: 130px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div class="auth-card">
-        <h2 style="color:var(--accent); margin-bottom:20px;">THE CORE: NEXUS</h2>
-        <input type="text" id="regName" placeholder="Kullanıcı Adın">
-        <button class="btn-main" onclick="initApp()">SİSTEMİ BAŞLAT</button>
+        <h2 style="color:var(--accent)">THE CORE: NEXUS</h2>
+        <input type="text" id="regName" placeholder="Adını Yaz">
+        <button class="btn-main" onclick="initApp()">GİRİŞ YAP</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="top-bar">
-        <div onclick="openScreen('screenProfile')" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
-            <div style="width:30px; height:30px; background:#333; border-radius:50%"></div>
-            <b id="nDisplay">Developer</b>
-        </div>
-        <div style="color:var(--gold); font-weight:bold;">💰 <span id="myCoins">1500</span></div>
+        <div onclick="openScreen('screenProfile')" style="cursor:pointer">👤 <b id="nDisplay">Dev</b></div>
+        <div style="color:var(--gold)">💰 <span id="myCoins">1500</span></div>
     </div>
     <div class="grid">
-        <div class="block" style="grid-column: span 2; background: var(--red);" onclick="openScreen('screenGlobal')">GLOBAL CHAT <span style="position:absolute; top:10px; right:15px; background:white; color:red; padding:2px 8px; border-radius:10px; font-size:12px;">99+</span></div>
-        <div class="block" style="background: #2ecc71;">📹 MATCHING</div>
-        <div class="block" style="background: #f1c40f;" onclick="openScreen('screenShop')">🛒 SHOP</div>
-        <div class="block" style="background: #3498db;">🗣️ TELAFFUZ</div>
-        <div class="block" style="background: #9b59b6;">🔍 ÜYE ARA</div>
+        <div class="block" style="grid-column: span 2; background: var(--red);">GLOBAL CHAT</div>
+        <div class="block" style="background: #2ecc71;">MATCHING</div>
+        <div class="block" style="background: #f1c40f;" onclick="openScreen('screenShop')">SHOP</div>
+        <div class="block" style="background: #3498db;">TELAFFUZ</div>
+        <div class="block" style="background: #9b59b6;">ÜYE ARA</div>
     </div>
 </div>
 
 <div id="screenShop" class="screen">
-    <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>NEXUS MARKET</b></div>
-    <div class="shop-container" id="shopList">
-        
+    <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>MARKET</b></div>
+    <div class="shop-container">
         <div class="product-card">
-            <img src="https://i.ibb.co/XRs66fX/dragon-frame.png" class="p-img" alt="Dragon">
-            <div style="flex:1"><b>Altın Ejderha</b><br><small style="color:var(--gold)">0 Coin (Kampanya!)</small></div>
+            <img src="https://i.ibb.co/FqmZGsjZ/b854bda4d42c0228b4af81984c8bdd78.jpg" class="p-img">
+            <div style="flex:1"><b>Altın Ejderha</b><br><small style="color:var(--gold)">0 Coin</small></div>
             <button class="buy-btn" onclick="processBuy('dragon', 0)">AL</button>
         </div>
-
-        <div class="product-card">
-            <img src="https://i.ibb.co/fD8L7Pz/heart-frame.png" class="p-img" alt="Heart">
-            <div style="flex:1"><b>Kraliyet Kalbi</b><br><small style="color:var(--gold)">0 Coin (Kampanya!)</small></div>
-            <button class="buy-btn" onclick="processBuy('heart', 0)">AL</button>
-        </div>
-
-        <div class="product-card">
-            <img src="https://i.ibb.co/vYm6hPr/chat-frame.png" class="p-img" alt="Chat">
-            <div style="flex:1"><b>Kristal Chat Box</b><br><small style="color:var(--gold)">0 Coin (Kampanya!)</small></div>
-            <button class="buy-btn" onclick="processBuy('chatbox', 0)">AL</button>
-        </div>
-
     </div>
 </div>
 
 <div id="screenProfile" class="screen">
     <div class="top-bar"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ GERİ</span> <b>PROFİL</b></div>
     <div class="avatar-wrap">
-        <img src="https://via.placeholder.com/100" id="profPic" class="u-pic">
+        <img src="https://via.placeholder.com/100" class="u-pic">
         <img id="activeFrame" src="" class="u-frame" style="display:none;">
     </div>
     <div style="padding:20px; text-align:center;">
-        <h2 id="pName" style="margin-bottom:5px;">Developer</h2>
-        <p style="font-size:12px; color:var(--accent); margin-top:0;">Rütbe: Çaylak Bronz</p>
-        
-        <div id="inventory" style="margin-top:30px; background:#111; border-radius:15px; padding:15px;">
-            <h4 style="margin-top:0;">ENVANTERİN</h4>
-            <p id="emptyNote" style="font-size:12px; color:#555;">Henüz eşyan yok.</p>
+        <h2 id="pName">Developer</h2>
+        <div id="inventory">
+            <h4>ENVANTERİN</h4>
+            <p id="emptyNote">Eşya yok.</p>
         </div>
     </div>
 </div>
 
 <script>
     let user = { name: '', coins: 1500, inventory: [] };
-
-    // DB: Senin attığın resimlerin temizlenmiş halleri (Temsili Linkler)
     let db = {
-        dragon: { name: 'Altın Ejderha', img: 'https://i.ibb.co/XRs66fX/dragon-frame.png' },
-        heart: { name: 'Kraliyet Kalbi', img: 'https://i.ibb.co/fD8L7Pz/heart-frame.png' },
-        chatbox: { name: 'Kristal Chat Box', img: 'https://i.ibb.co/vYm6hPr/chat-frame.png' }
+        dragon: { name: 'Altın Ejderha', img: 'https://i.ibb.co/FqmZGsjZ/b854bda4d42c0228b4af81984c8bdd78.jpg' }
     };
 
     function initApp() {
         const n = document.getElementById('regName').value;
-        if(!n) return alert("İsimsiz girilmez kanka!");
+        if(!n) return alert("İsim yaz!");
         user.name = n + " (Dev)";
         document.getElementById('nDisplay').innerText = user.name;
         document.getElementById('pName').innerText = user.name;
@@ -124,23 +100,18 @@
     }
 
     function processBuy(id, price) {
-        if(user.inventory.includes(id)) return alert("Bunu zaten aldın kanka!");
-        
-        user.coins -= price;
+        if(user.inventory.includes(id)) return alert("Zaten aldın!");
         user.inventory.push(id);
-        document.getElementById('myCoins').innerText = user.coins;
         document.getElementById('emptyNote').style.display = 'none';
-        
         updateInventory();
-        alert(db[id].name + " envantere eklendi! Profilden takabilirsin.");
+        alert("Aldın kanka!");
     }
 
     function updateInventory() {
         const inv = document.getElementById('inventory');
-        // Başlığı koru
-        inv.innerHTML = '<h4 style="margin-top:0;">ENVANTERİN</h4>';
+        inv.innerHTML = '<h4>ENVANTERİN</h4>';
         user.inventory.forEach(itemId => {
-            inv.innerHTML += `<button class="btn-main" style="margin-bottom:10px; background:var(--gold)" onclick="useItem('${itemId}')">${db[itemId].name} TAK</button>`;
+            inv.innerHTML += `<button class="btn-main" style="margin-bottom:10px;" onclick="useItem('${itemId}')">${db[itemId].name} TAK</button>`;
         });
     }
 
@@ -148,7 +119,6 @@
         const frame = document.getElementById('activeFrame');
         frame.src = db[id].img;
         frame.style.display = 'block';
-        alert(db[id].name + " aktif edildi!");
     }
 
     function openScreen(id) {
