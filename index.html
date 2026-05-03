@@ -3,35 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro | Nexus Fixed</title>
+    <title>LangMatch Pro | Nexus Elite</title>
     <style>
         :root {
             --bg: #0b0c10; --card: #1f2833; --text: #ffffff;
             --accent: #66fcf1; --gold: #f5af19; --diamond: #00d2ff;
             --neon-red: linear-gradient(135deg, #ff416c, #ff4b2b);
+            --neon-green: linear-gradient(135deg, #00b09b, #96c93d);
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* Profil Paneli ve Gelişmiş Çerçeve Sistemi */
-        .user-panel { background: #1a1a1d; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); position: relative; }
+        /* Profil Paneli */
+        .user-panel { background: #1a1a1d; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); }
         .avatar-container { position: relative; width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; }
         .u-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; position: absolute; z-index: 1; }
-        .u-frame { width: 85px; height: 85px; position: absolute; z-index: 2; pointer-events: none; display: none; object-fit: contain; }
+        .u-frame { width: 95px; height: 95px; position: absolute; z-index: 2; pointer-events: none; display: none; }
         
-        /* Grid & Cards */
+        /* Grid Menü */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; color: white; cursor: pointer; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: relative; }
+        .badge { position: absolute; top: 10px; right: 10px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
 
-        /* Nav */
+        /* Navigasyon */
         .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
         .nav-item { font-size: 10px; color: #666; text-align: center; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
 
-        input { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; }
-        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
-        .btn-claim { background: var(--accent); border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        /* Ortak Bileşenler */
+        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
+        input { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; box-sizing: border-box; }
+        
+        .mic-btn { width: 80px; height: 80px; border-radius: 50%; border: none; background: var(--neon-red); color: white; font-size: 30px; cursor: pointer; margin-top: 20px; }
+        .mic-active { animation: pulse 1s infinite; background: var(--neon-green); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -39,156 +45,119 @@
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
         <h1 style="color: var(--accent);">THE CORE: NEXUS</h1>
-        <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <input type="password" id="regPass" placeholder="Şifre">
-        <button class="btn-action" onclick="handleAuth()">GİRİŞ YAP</button>
+        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 20px;">
+            <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent); object-fit: cover;">
+        </div>
+        <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
+        <input type="text" id="regName" placeholder="Developer Adın">
+        <input type="password" id="regPass" placeholder="Şifren">
+        <button class="btn-action" onclick="handleAuth()">SİSTEME GİR</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="user-panel">
         <div class="avatar-container">
-            <img id="uAvatar" src="https://via.placeholder.com/100" class="u-img">
-            <img id="activeFrame" src="" class="u-frame">
+            <img id="uAvatar" src="" class="u-img">
+            <img id="activeFrame" src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" class="u-frame">
         </div>
         <div style="flex:1">
-            <div id="uName" style="font-weight:bold;">Burak</div>
-            <div style="font-size:11px; color:var(--gold);">🏅 Demir Gri</div>
+            <div id="uName" style="font-weight:bold;">Developer</div>
+            <div style="font-size:11px; color:var(--gold);">🏅 Altın Sarı - 9,480 XP</div>
         </div>
-        <div style="color:var(--gold); font-weight:bold;">💰 <span id="uCoins">0</span></div>
+        <div style="text-align:right">
+            <div style="color:var(--gold); font-weight:bold;">💰 12,500</div>
+            <div style="color:var(--diamond); font-size:12px;">💎 350</div>
+        </div>
     </div>
+    
+    <div style="background: linear-gradient(90deg, #4e54c8, #8f94fb); margin: 0 15px 15px; padding: 15px; border-radius: 15px; font-size: 13px;">
+        🏆 <b>GÜNLÜK GÖREV:</b> Bugün 5 farklı kişiyle eşleş!
+    </div>
+
     <div class="grid">
-        <div class="card" style="grid-column:span 2; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
-        <div class="card" style="background:#f5af19; background-image: linear-gradient(135deg, #f5af19, #f12711);" onclick="openScreen('screenShop')">🛒 SHOP</div>
-        <div class="card" style="background:#2193b0;" onclick="openScreen('screenPronounce')">🗣️ TELAFUZ</div>
+        <div class="card" style="grid-column:span 2; background: #8b0000;" onclick="openScreen('screenGlobal')">
+            <span class="badge">99+</span>
+            💬 GLOBAL CHAT
+        </div>
+        <div class="card" style="background: #2e7d32;" onclick="openScreen('screenMatch')">📹 MATCHING</div>
+        <div class="card" style="background: #f5af19;" onclick="openScreen('screenShop')">🛒 SHOP</div>
+        <div class="card" style="background: #0277bd;" onclick="openScreen('screenPronounce')">🗣️ TELAFFUZ</div>
+        <div class="card" style="background: #311b92;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
     </div>
+
     <div class="nav">
-        <div class="nav-item active" onclick="openScreen('screenHome')">🏠</div>
-        <div class="nav-item" onclick="openScreen('screenProfile')">👤</div>
+        <div class="nav-item active" onclick="openScreen('screenHome')">🏠<br>HOME</div>
+        <div class="nav-item" onclick="openScreen('screenShop')">🛒<br>SHOP</div>
+        <div class="nav-item" onclick="openScreen('screenTasks')">✅<br>TASKS</div>
+        <div class="nav-item" onclick="openScreen('screenProfile')">👤<br>PROFILE</div>
+    </div>
+</div>
+
+<div id="screenShop" class="screen">
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b style="margin-left:20px;">CORE MARKET</b></div>
+    <div style="padding:15px;">
+        <div style="background:#25262e; padding:15px; border-radius:15px; display:flex; align-items:center; gap:15px; border:1px solid var(--gold);">
+            <img src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" style="width:50px;">
+            <div style="flex:1"><b>Nexus Elite Frame</b><br><small style="color:var(--gold)">VIP HAREKETLİ</small></div>
+            <button class="btn-action" style="width:auto; padding:8px 15px;" id="buyBtn" onclick="buyFrame()">AL (BEDAVA)</button>
+        </div>
     </div>
 </div>
 
 <div id="screenProfile" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ Geri</span> <b>PROFİL</b></div>
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>PROFİL AYARLARI</b></div>
     <div style="text-align:center; padding:30px;">
         <div class="avatar-container" style="width:120px; height:120px; margin:auto;">
-            <img id="pImg" src="https://via.placeholder.com/100" style="width:80px; height:80px; border-radius:50%; object-fit:cover; position:absolute; z-index: 1;">
-            <img id="pFrame" src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" style="width:150px; height:150px; position:absolute; z-index: 2; display:none; object-fit: contain;">
+            <img id="pImg" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; position:absolute;">
+            <img id="pFrame" src="https://i.ibb.co/68vDqF6/transparent-Elite-V2.png" style="width:160px; height:160px; position:absolute; display:none;">
         </div>
-        <h2 style="margin-top:20px;">Burak</h2>
-        <div style="margin-top:20px;">
-            <button class="btn-action" onclick="toggleFrame()">ÇERÇEVEYİ AKTİF ET</button>
+        <h2 id="pNameDisp" style="margin-top:20px;">Developer</h2>
+        <div id="inventoryArea" style="display:none; margin-top:20px;">
+            <button class="btn-action" onclick="toggleFrame()">ÇERÇEVEYİ AKTİF ET / KALDIR</button>
         </div>
         <button class="btn-action" style="background:red; margin-top:50px;" onclick="location.reload()">GÜVENLİ ÇIKIŞ</button>
     </div>
 </div>
 
-<div id="screenShop" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Market</b></div></div>
-<div id="screenPronounce" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz</b>Anladım kanka, o "image not found" hatası cidden can sıkıcı. Çerçevenin ortasını boşalttığımı sanmıştım ama arka planı siyah kaldığı için fotoğrafı kapatıyormuş.
-
-Pinterest linkindeki o hareketli, parlak ve görkemli altın çerçeveyi inceledim. Kodun içinde çerçevenin arka planını tamamen **şeffaf (transparent)** yapacak şekilde bir düzenleme yaptım. Artık "Çerçeveyi Aktif Et" butonuna bastığında çerçevenin ortasında senin o mavi logolu fotoğrafın kusursuz bir şekilde görünecek.
-
-Hiçbir şeyi silmedim; şifreli kayıt, telaffuz testi ve dükkan sistemi aynen duruyor. Sadece çerçeveyi "tamir ettim".
-
-### 👑 LangMatch Pro: Nexus Elite V2 (Transparent Update)
-
-```html
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro | Nexus Fixed</title>
-    <style>
-        :root {
-            --bg: #0b0c10; --card: #1f2833; --text: #ffffff;
-            --accent: #66fcf1; --gold: #f5af19; --diamond: #00d2ff;
-            --neon-red: linear-gradient(135deg, #ff416c, #ff4b2b);
-        }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
-        .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; background: var(--bg); }
-        .active { display: flex !important; }
-
-        /* Profil Paneli ve Gelişmiş Çerçeve Sistemi */
-        .user-panel { background: #1a1a1d; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); position: relative; }
-        .avatar-container { position: relative; width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; }
-        .u-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; position: absolute; z-index: 1; }
-        .u-frame { width: 85px; height: 85px; position: absolute; z-index: 2; pointer-events: none; display: none; object-fit: contain; }
-        
-        /* Grid & Cards */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-
-        /* Nav */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-item { font-size: 10px; color: #666; text-align: center; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
-
-        input { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; }
-        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
-        .btn-claim { background: var(--accent); border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-<div id="screenAuth" class="screen active">
-    <div style="margin: auto; width: 85%; text-align: center;">
-        <h1 style="color: var(--accent);">THE CORE: NEXUS</h1>
-        <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <input type="password" id="regPass" placeholder="Şifre">
-        <button class="btn-action" onclick="handleAuth()">GİRİŞ YAP</button>
+<div id="screenPronounce" class="screen">
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>PRONOUNCE CHECK</b></div>
+    <div style="text-align:center; padding:50px 20px;">
+        <p>Söylemen gereken kelime:</p>
+        <h1 id="targetWord" style="font-size:45px; color:var(--accent);">AWESOME</h1>
+        <div id="pStatus" style="margin:20px; color:var(--gold);">Mikrofona bas ve konuş</div>
+        <button id="micBtn" class="mic-btn" onclick="startSpeech()">🎙️</button>
+        <p id="pResult" style="margin-top:20px; font-weight:bold;"></p>
     </div>
 </div>
 
-<div id="screenHome" class="screen">
-    <div class="user-panel">
-        <div class="avatar-container">
-            <img id="uAvatar" src="[https://via.placeholder.com/100](https://via.placeholder.com/100)" class="u-img">
-            <img id="activeFrame" src="" class="u-frame">
-        </div>
-        <div style="flex:1">
-            <div id="uName" style="font-weight:bold;">Burak</div>
-            <div style="font-size:11px; color:var(--gold);">🏅 Demir Gri</div>
-        </div>
-        <div style="color:var(--gold); font-weight:bold;">💰 <span id="uCoins">0</span></div>
-    </div>
-    <div class="grid">
-        <div class="card" style="grid-column:span 2; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
-        <div class="card" style="background:#f5af19; background-image: linear-gradient(135deg, #f5af19, #f12711);" onclick="openScreen('screenShop')">🛒 SHOP</div>
-        <div class="card" style="background:#2193b0;" onclick="openScreen('screenPronounce')">🗣️ TELAFUZ</div>
-    </div>
-    <div class="nav">
-        <div class="nav-item active" onclick="openScreen('screenHome')">🏠</div>
-        <div class="nav-item" onclick="openScreen('screenProfile')">👤</div>
-    </div>
-</div>
-
-<div id="screenProfile" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ Geri</span> <b>PROFİL</b></div>
-    <div style="text-align:center; padding:30px;">
-        <div class="avatar-container" style="width:120px; height:120px; margin:auto;">
-            <img id="pImg" src="[https://via.placeholder.com/100](https://via.placeholder.com/100)" style="width:80px; height:80px; border-radius:50%; object-fit:cover; position:absolute; z-index: 1;">
-            <img id="pFrame" src="[https://i.ibb.co/68vDqF6/transparent-Elite-V2.png](https://i.ibb.co/68vDqF6/transparent-Elite-V2.png)" style="width:150px; height:150px; position:absolute; z-index: 2; display:none; object-fit: contain;">
-        </div>
-        <h2 style="margin-top:20px;">Burak</h2>
-        <div style="margin-top:20px;">
-            <button class="btn-action" onclick="toggleFrame()">ÇERÇEVEYİ AKTİF ET</button>
-        </div>
-        <button class="btn-action" style="background:red; margin-top:50px;" onclick="location.reload()">GÜVENLİ ÇIKIŞ</button>
-    </div>
-</div>
-
-<div id="screenShop" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Market</b></div></div>
-<div id="screenPronounce" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Telaffuz</b></div><div style="text-align:center; padding:50px;"><h1 id="targetWord" style="font-size:45px; color:var(--accent);">AWESOME</h1><button onclick="startSpeech()">🎙️</button></div></div>
-<div id="screenGlobal" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b></div></div>
+<div id="screenGlobal" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Global Chat</b></div><div style="padding:20px;">Mesajlar yükleniyor...</div></div>
+<div id="screenMatch" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Matching</b></div><div style="padding:20px;">Uygun aday aranıyor...</div></div>
+<div id="screenTasks" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Görevler</b></div><div style="padding:20px;">Günlük görevler listesi...</div></div>
+<div id="screenSearch" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')">⬅️</span> <b>Üye Bul</b></div><div style="padding:15px;"><input type="text" placeholder="Kullanıcı ara..."></div></div>
 
 <script>
-    let userData = { frameOn: false };
+    let userData = { name: '', avatar: '', hasFrame: false, frameOn: false };
+
+    function previewFile(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = e => { document.getElementById('regPreview').src = e.target.result; userData.avatar = e.target.result; };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     function handleAuth() {
         const n = document.getElementById('regName').value.trim();
         const p = document.getElementById('regPass').value.trim();
-        if(!n || !p) return alert("Eksiksiz gir kanka!");
+        if(!n || !p) return alert("Bilgileri gir kanka!");
+        
+        userData.name = n + " (Developer)";
+        document.getElementById('uName').innerText = userData.name;
+        document.getElementById('pNameDisp').innerText = userData.name;
+        document.getElementById('uAvatar').src = userData.avatar || 'https://via.placeholder.com/100';
+        document.getElementById('pImg').src = userData.avatar || 'https://via.placeholder.com/100';
+        
         openScreen('screenHome');
     }
 
@@ -197,19 +166,41 @@ Hiçbir şeyi silmedim; şifreli kayıt, telaffuz testi ve dükkan sistemi aynen
         document.getElementById(id).classList.add('active');
     }
 
-    // --- ŞEFFAF ÇERÇEVE SİSTEMİ (NEXUS ELITE V2) ---
+    function buyFrame() {
+        userData.hasFrame = true;
+        document.getElementById('buyBtn').innerText = "SAHİPSİN";
+        document.getElementById('buyBtn').disabled = true;
+        document.getElementById('inventoryArea').style.display = "block";
+        alert("Elite Çerçeve Envanterine Eklendi!");
+    }
+
     function toggleFrame() {
         userData.frameOn = !userData.frameOn;
         const s = userData.frameOn ? 'block' : 'none';
-        
-        // Şeffaf çerçeve linki buraya eklendi (pinterest tabanlı)
-        document.getElementById('activeFrame').src = "[https://i.ibb.co/68vDqF6/transparent-Elite-V2.png](https://i.ibb.co/68vDqF6/transparent-Elite-V2.png)";
-        
         document.getElementById('activeFrame').style.display = s;
         document.getElementById('pFrame').style.display = s;
     }
 
-    function startSpeech() { alert("Telaffuz yakında aktif!"); }
+    function startSpeech() {
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(!Speech) return alert("Tarayıcı desteklemiyor!");
+        const rec = new Speech();
+        rec.lang = 'en-US';
+        document.getElementById('micBtn').classList.add('mic-active');
+        document.getElementById('pStatus').innerText = "Dinliyorum...";
+        rec.start();
+        rec.onresult = e => {
+            const res = e.results[0][0].transcript.toLowerCase();
+            document.getElementById('micBtn').classList.remove('mic-active');
+            document.getElementById('pResult').innerText = "Sen: " + res;
+            if(res.includes("awesome")) {
+                document.getElementById('pStatus').innerText = "TEBRİKLER! DOĞRU!";
+                setTimeout(() => openScreen('screenHome'), 1500);
+            } else {
+                document.getElementById('pStatus').innerText = "Hatalı, tekrar dene!";
+            }
+        };
+    }
 </script>
 </body>
 </html>
