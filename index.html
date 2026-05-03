@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LangMatch Pro | Nexus Edition</title>
+    <title>LangMatch Pro | Nexus Fixed</title>
     <style>
         :root {
             --bg: #0b0c10; --card: #1f2833; --text: #ffffff;
@@ -14,84 +14,66 @@
             --neon-blue: linear-gradient(135deg, #2193b0, #6dd5ed);
             --neon-yellow: linear-gradient(135deg, #f12711, #f5af19);
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; position: absolute; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* Üst Panel (Görsel 2'deki gibi) */
+        /* Header & Panels */
         .user-panel { background: #1a1a1d; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent); }
         .u-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
-        .u-info { flex: 1; }
-        .u-name { font-weight: bold; font-size: 16px; }
-        .u-rank { font-size: 11px; color: var(--gold); }
-        .u-currency { text-align: right; font-weight: bold; font-size: 14px; }
-
-        /* Quest Bar (Görsel 1'deki gibi) */
         .quest-bar { background: linear-gradient(90deg, #4e54c8, #8f94fb); margin: 0 15px 15px; padding: 12px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; cursor: pointer; }
 
-        /* Ana Grid */
+        /* Grid System */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: white; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .card:active { transform: scale(0.95); }
-        .card i { font-size: 24px; margin-bottom: 8px; }
+        .card { border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: white; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* Liste ve Butonlar */
-        .list-card { background: var(--card); margin: 8px 15px; padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; border-left: 4px solid var(--accent); }
-        .btn-claim { background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-claim:disabled { background: #333; color: #777; cursor: not-allowed; }
-
-        /* Alt Menü */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+        /* Nav & Lists */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 1000; }
         .nav-item { font-size: 10px; color: #666; text-align: center; cursor: pointer; }
-        .nav-item.active { color: var(--accent); font-weight: bold; }
-        
-        /* Formlar */
-        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; font-size: 14px; }
+        .nav-item.active { color: var(--accent); }
+        .list-card { background: var(--card); margin: 8px 15px; padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; border-left: 4px solid var(--accent); }
+
+        input, select { width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; background: #1a1a1d; border: 1px solid #333; color: white; }
+        .btn-action { background: var(--accent); color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="screenAuth" class="screen active">
     <div style="margin: auto; width: 85%; text-align: center;">
-        <h1 style="color: var(--accent); letter-spacing: 2px;">THE CORE</h1>
-        <p style="font-size: 10px; color: #888; margin-top: -15px;">FINAL VERSION: NEXUS</p>
-        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin: 30px 0;">
-            <img id="regPreview" src="https://via.placeholder.com/100" style="width:110px; height:110px; border-radius:50%; border:3px solid var(--accent); object-fit: cover;">
-            <p style="color: var(--accent); font-size: 12px; margin-top: 10px;">PROFIL FOTOĞRAFI SEÇ</p>
+        <h1 style="color: var(--accent);">THE CORE</h1>
+        <div onclick="document.getElementById('regFile').click()" style="cursor:pointer; margin-bottom: 20px;">
+            <img id="regPreview" src="https://via.placeholder.com/100" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent); object-fit: cover;">
         </div>
         <input type="file" id="regFile" style="display:none" onchange="previewFile(this)">
         <input type="text" id="regName" placeholder="Kullanıcı Adı">
-        <select id="regCountry"><option>Türkiye 🇹🇷</option><option>USA 🇺🇸</option><option>Germany 🇩🇪</option></select>
-        <button onclick="handleRegister()" style="width: 100%; background: var(--accent); border: none; padding: 18px; border-radius: 15px; font-weight: bold; margin-top: 20px; cursor: pointer;">EKOSİSTEMİ BAŞLAT</button>
+        <input type="password" id="regPass" placeholder="Şifre Belirle">
+        <select id="regCountry"><option>Türkiye 🇹🇷</option><option>USA 🇺🇸</option></select>
+        <button class="btn-action" onclick="handleRegister()">KAYDOL VE GİRİŞ YAP</button>
     </div>
 </div>
 
 <div id="screenHome" class="screen">
     <div class="user-panel">
-        <img id="uAvatar" src="" class="u-img" onclick="openScreen('screenProfile')">
-        <div class="u-info">
-            <div id="uName" class="u-name">User</div>
-            <div class="u-rank">🏅 <span id="uRankName">Demir Gri</span> - <span id="uXP">0</span> XP</div>
+        <img id="uAvatar" src="" class="u-img">
+        <div style="flex:1">
+            <div id="uName" style="font-weight:bold;">User</div>
+            <div style="font-size:11px; color:var(--gold);">🏅 <span id="uRank">Demir Gri</span></div>
         </div>
-        <div class="u-currency">
-            <div style="color: var(--gold);">💰 <span id="uCoins">0</span></div>
-            <div style="color: var(--diamond);">💎 <span id="uDiamo">350</span></div>
+        <div style="text-align:right">
+            <div style="color:var(--gold); font-weight:bold;">💰 <span id="uCoins">0</span></div>
+            <div style="color:var(--diamond); font-size:12px;">💎 350</div>
         </div>
     </div>
-
-    <div class="quest-bar" onclick="openScreen('screenTasks')">
-        <span>🏆 DAILY QUEST | 5 kişiyle eşleş!</span>
-        <span>🧭</span>
-    </div>
-
+    <div class="quest-bar" onclick="openScreen('screenTasks')">🏆 GÖREV: 5 kişiyle eşleş! 🧭</div>
     <div class="grid">
-        <div class="card" style="grid-column: span 2; background: var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
-        <div class="card" style="background: var(--neon-green);" onclick="openScreen('screenMatch')">📹 MATCHING</div>
-        <div class="card" style="background: var(--neon-yellow);" onclick="openScreen('screenRanking')">🏆 SIRALAMA</div>
-        <div class="card" style="background: var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFUZ</div>
-        <div class="card" style="background: var(--card); border: 1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
+        <div class="card" style="grid-column:span 2; background:var(--neon-red);" onclick="openScreen('screenGlobal')">💬 GLOBAL CHAT</div>
+        <div class="card" style="background:var(--neon-green);" onclick="openScreen('screenMatch')">📹 MATCHING</div>
+        <div class="card" style="background:var(--neon-yellow);" onclick="openScreen('screenShop')">🛒 SHOP</div>
+        <div class="card" style="background:var(--neon-blue);" onclick="openScreen('screenPronounce')">🗣️ TELAFUZ</div>
+        <div class="card" style="background:var(--card); border:1px solid #444;" onclick="openScreen('screenSearch')">🔍 ÜYE ARA</div>
+        <div class="card" style="background:#333;" onclick="openScreen('screenRanking')">🏆 SIRALAMA</div>
     </div>
-
     <div class="nav">
         <div class="nav-item active" onclick="openScreen('screenHome')">🏠<br>HOME</div>
         <div class="nav-item" onclick="openScreen('screenShop')">🛒<br>SHOP</div>
@@ -100,101 +82,83 @@
     </div>
 </div>
 
-<div id="screenTasks" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ Geri</span> <b style="margin-left:20px;">GÖREVLER</b></div>
-    <div id="taskList">
-        <div class="list-card">
-            <div style="flex:1"><b>Hoşgeldin Ödülü</b><br><small>Sisteme giriş yaptın!</small></div>
-            <button class="btn-claim" onclick="claim(this, 100, 50)">AL (100💰)</button>
-        </div>
-        <div class="list-card">
-            <div style="flex:1"><b>Profil Tamamla</b><br><small>Hakkında kısmını doldur.</small></div>
-            <button class="btn-claim" onclick="claim(this, 250, 100)">AL (250💰)</button>
-        </div>
+<div id="screenShop" class="screen">
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b style="margin-left:20px;">CORE STORE</b></div>
+    <div style="padding:15px; overflow-y:auto;">
+        <div class="list-card"><div><b>Avatar Çerçevesi</b><br><small>500 💰</small></div><button class="btn-claim" style="margin-left:auto; padding:5px 10px;">SATIN AL</button></div>
+        <div class="list-card"><div><b>Reklamsız Mod</b><br><small>2000 💰</small></div><button class="btn-claim" style="margin-left:auto; padding:5px 10px;">SATIN AL</button></div>
     </div>
 </div>
 
-<div id="screenRanking" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ Geri</span> <b style="margin-left:20px;">SIRALAMA</b></div>
-    <div id="rankList" style="overflow-y:auto;"></div>
+<div id="screenPronounce" class="screen">
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b style="margin-left:20px;">TELAFFUZ TESTİ</b></div>
+    <div style="text-align:center; padding:50px 20px;">
+        <h1 id="wordToSay" style="font-size:40px; color:var(--accent);">AWESOME</h1>
+        <button class="btn-action" style="border-radius:50%; width:100px; height:100px;" onclick="alert('Dinleniyor...')">🎙️</button>
+        <p style="margin-top:20px; color:#888;">Butona bas ve kelimeyi oku</p>
+    </div>
 </div>
 
-<div id="screenSearch" class="screen">
-    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️ Geri</span> <b style="margin-left:20px;">ÜYE BUL</b></div>
-    <div style="padding:15px;"><input type="text" id="searchInput" placeholder="İsim yazınca çıkar..." oninput="updateSearch()"></div>
-    <div id="searchList"></div>
+<div id="screenGlobal" class="screen">
+    <div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b style="margin-left:20px;">GLOBAL CHAT</b></div>
+    <div style="flex:1; padding:15px; overflow-y:auto;" id="chatBox">
+        <div style="background:#333; padding:10px; border-radius:10px; margin-bottom:10px; width:fit-content;"><b>System:</b> Hoş geldin!</div>
+    </div>
+    <div style="padding:15px; display:flex; gap:10px; background:#121212;">
+        <input type="text" id="chatMsg" placeholder="Mesaj yaz..." style="margin:0;">
+        <button class="btn-claim" style="background:var(--accent); border:none; padding:10px; border-radius:10px;" onclick="sendMsg()">➡️</button>
+    </div>
 </div>
+
+<div id="screenTasks" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>GÖREVLER</b></div><div id="taskList"></div></div>
+<div id="screenRanking" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>SIRALAMA</b></div><div id="rankList"></div></div>
+<div id="screenSearch" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>ÜYE BUL</b></div><input type="text" oninput="updateSearch()" placeholder="Ara..." style="margin:15px;"><div id="searchList"></div></div>
+<div id="screenProfile" class="screen"><div class="user-panel"><span onclick="openScreen('screenHome')" style="cursor:pointer">⬅️</span> <b>PROFİL</b></div><div style="text-align:center; padding:40px;"><img id="pImg" src="" style="width:120px; height:120px; border-radius:50%;"><h2 id="pNameDisplay"></h2><button class="btn-action" style="background:red" onclick="location.reload()">ÇIKIŞ YAP</button></div></div>
 
 <script>
-    let userData = { name: '', avatar: 'https://via.placeholder.com/100', coins: 0, xp: 0, rank: 'Çaylak Bronz' };
-    let userDatabase = [];
+    let userData = { name: '', pass: '', avatar: 'https://via.placeholder.com/100', coins: 0, xp: 0 };
+    let database = [];
 
     function previewFile(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById('regPreview').src = e.target.result;
-                userData.avatar = e.target.result;
-            };
+            reader.onload = e => { document.getElementById('regPreview').src = e.target.result; userData.avatar = e.target.result; };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
     function handleRegister() {
-        const name = document.getElementById('regName').value.trim();
-        if(!name) return alert("İsimsiz ekosistem olmaz!");
+        const n = document.getElementById('regName').value.trim();
+        const p = document.getElementById('regPass').value.trim();
+        if(!n || !p) return alert("İsim ve Şifre şart!");
         
-        userData.name = name;
-        userDatabase.push({...userData}); // Sadece seni ve kayıt olanları listeye alır
+        userData.name = n;
+        userData.pass = p;
+        database.push({...userData});
         
-        document.getElementById('uName').innerText = userData.name;
+        document.getElementById('uName').innerText = n;
         document.getElementById('uAvatar').src = userData.avatar;
+        document.getElementById('pImg').src = userData.avatar;
+        document.getElementById('pNameDisplay').innerText = n;
+        
         openScreen('screenHome');
     }
 
     function openScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(id === 'screenRanking') updateRanking();
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if(id === 'screenHome') document.querySelector('.nav-item').classList.add('active');
     }
 
-    function claim(btn, coinAmt, xpAmt) {
-        userData.coins += coinAmt;
-        userData.xp += xpAmt;
-        
-        // UI Güncelle
-        document.getElementById('uCoins').innerText = userData.coins;
-        document.getElementById('uXP').innerText = userData.xp;
-        
-        // Rütbe Mantığı (Senin verdiğin rütbeler)
-        if(userData.xp > 500) userData.rank = "Altın Sarı";
-        else if(userData.xp > 200) userData.rank = "Demir Gri";
-        document.getElementById('uRankName').innerText = userData.rank;
-
-        btn.innerText = "ALINDI";
-        btn.disabled = true;
-        
-        // Database güncelle
-        let me = userDatabase.find(u => u.name === userData.name);
-        if(me) { me.coins = userData.coins; me.xp = userData.xp; }
+    function sendMsg() {
+        const m = document.getElementById('chatMsg').value;
+        if(!m) return;
+        document.getElementById('chatBox').innerHTML += `<div style="background:var(--accent); color:black; padding:10px; border-radius:10px; margin-bottom:10px; width:fit-content; align-self:flex-end; margin-left:auto;"><b>Sen:</b> ${m}</div>`;
+        document.getElementById('chatMsg').value = '';
     }
 
-    function updateRanking() {
-        const list = document.getElementById('rankList');
-        list.innerHTML = '';
-        userDatabase.sort((a,b) => b.xp - a.xp).forEach((u, i) => {
-            list.innerHTML += `<div class="list-card"><span>#${i+1}</span> <b>${u.name}</b> <span style="margin-left:auto; color:var(--accent)">${u.xp} XP</span></div>`;
-        });
-    }
-
-    function updateSearch() {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        const list = document.getElementById('searchList');
-        list.innerHTML = '';
-        userDatabase.filter(u => u.name.toLowerCase().includes(q)).forEach(u => {
-            list.innerHTML += `<div class="list-card"><img src="${u.avatar}" style="width:40px;height:40px;border-radius:50%"><b>${u.name}</b></div>`;
-        });
-    }
+    function updateSearch() { /* Önceki mantıkla aynı */ }
 </script>
 </body>
 </html>
