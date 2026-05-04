@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Connect | Kusursuz</title>
+    <title>Nexus Connect | Omega</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --discord: #5865F2; --gold: #f5af19; --red: #ff3b5c; --bg: #0b0e11; --panel: #1e1f22; --input: #000; }
@@ -13,30 +13,38 @@
 
         /* GRID MENU */
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 95%; max-width: 500px; margin-top: 50px; }
-        .menu-card { background-size: cover; background-position: center; border: 1px solid #333; border-radius: 12px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 8px; cursor: pointer; transition: 0.2s; }
-        .menu-card:active { transform: scale(0.95); }
+        .menu-card { background-size: cover; background-position: center; border: 1px solid #333; border-radius: 12px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 8px; cursor: pointer; }
 
-        /* DISCORD NITRO PROFILE */
-        .nitro-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .nitro-banner { height: 100px; background: #5865F2; background-size: cover; background-position: center; cursor: pointer; }
+        /* NITRO PROFILE */
+        .nitro-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; position: relative; }
+        .nitro-banner { height: 100px; background: var(--discord); background-size: cover; background-position: center; }
         .nitro-avatar-wrap { position: absolute; top: 60px; left: 20px; width: 80px; height: 80px; background: var(--panel); border-radius: 50%; padding: 4px; }
-        .nitro-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--panel); }
+        .nitro-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .nitro-content { padding: 50px 20px 20px; text-align: left; }
-        .nitro-bio { background: #111; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #333; min-height: 40px; }
 
         /* MODALS */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 5000; align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 5000; align-items: center; justify-content: center; }
         .modal-content { background: var(--panel); width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; text-align: center; max-height: 80vh; overflow-y: auto; }
+        
+        /* VIDEO & CHAT */
+        .video-box { width: 100%; height: 100%; background: #000; position: relative; }
+        #remoteVid { width: 100%; height: 100%; object-fit: cover; }
+        #localVid { width: 100px; height: 140px; position: absolute; top: 20px; right: 20px; border-radius: 10px; border: 2px solid #fff; }
         
         .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 8px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 8px; }
         .auth-input { width: 100%; padding: 10px; margin: 5px 0; background: var(--input); border: 1px solid #333; color: #fff; border-radius: 5px; box-sizing: border-box; }
+        
+        /* BATTLE PASS TRACK */
+        .bp-track { display: flex; overflow-x: auto; gap: 10px; padding: 10px; margin-top: 10px; }
+        .bp-item { min-width: 80px; height: 100px; background: #333; border-radius: 10px; border: 2px solid #444; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .bp-unlocked { border-color: var(--gold); background: #443a1e; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
         <div class="modal-content">
-            <h2 style="font-family:'Orbitron';">NEXUS CONNECT</h2>
+            <h2 style="font-family:'Orbitron';">NEXUS OMEGA</h2>
             <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
             <input type="password" id="uPass" class="auth-input" placeholder="Şifre">
@@ -45,81 +53,72 @@
                 <select id="uGender" class="auth-input" style="width:33%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
                 <select id="uCountry" class="auth-input" style="width:34%;"><option value="Türkiye">TR 🇹🇷</option><option value="ABD">US 🇺🇸</option></select>
             </div>
-            <button class="btn-action" onclick="handleAuth()">KATIL</button>
+            <button class="btn-action" onclick="handleAuth()">GİRİŞ YAP</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
-        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); z-index:100; border-bottom:1px solid #333;">
+        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); border-bottom:1px solid #333; z-index:100;">
             <b>NEXUS</b>
             <div>💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
         </div>
         <div class="grid-container">
-            <div class="menu-card" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME</h4></div>
+            <div class="menu-card" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>GÖRÜNTÜLÜ EŞLEŞME</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg');" onclick="openModal('modalWords')"><h4>TELAFFUZ AI</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/soru.jpg');" onclick="openModal('modalDaily')"><h4>GÜNLÜK SORU</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/klan.jpg');" onclick="openModal('modalClans')"><h4>KLANLAR</h4></div>
-            <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİLİM & ARA</h4></div>
+            <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİL & SOSYAL</h4></div>
         </div>
     </div>
+
+    <div id="scrVideo" class="screen">
+        <div class="video-box">
+            <video id="remoteVid" autoplay playsinline></video>
+            <video id="localVid" autoplay muted playsinline></video>
+            <div style="position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px;">
+                <button class="btn-action" style="width:60px; height:60px; border-radius:50%; background:var(--red);" onclick="endCall()">🔚</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalBP" class="modal"><div class="modal-content">
+        <h3>NEXUS PASS</h3>
+        <div class="bp-track" id="bpTrack"></div>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
+
+    <div id="modalWords" class="modal"><div class="modal-content">
+        <h2>TELAFFUZ AI</h2>
+        <h1 id="targetWord" style="color:var(--gold);">CHALLENGE</h1>
+        <button class="btn-action" id="micBtn" onclick="startRecognition()">🎤 MİKROFONU AÇ</button>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
+
+    <div id="modalSocial" class="modal"><div class="modal-content">
+        <h3>SOSYAL PANEL</h3>
+        <input type="text" id="srchIn" class="auth-input" placeholder="Kullanıcı ara...">
+        <button class="btn-action" onclick="searchUser()">ARA</button>
+        <div id="socialRes" style="margin-top:10px;"></div>
+        <hr style="border:0.5px solid #333; margin:15px 0;">
+        <h4>ARKADAŞLIK İSTEKLERİ</h4>
+        <div id="reqList"></div>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
 
     <div id="scrProfile" class="screen">
         <div class="nitro-card">
             <div id="pBanner" class="nitro-banner" onclick="document.getElementById('fBanner').click()"></div>
             <div class="nitro-avatar-wrap"><img id="pImg" src="" class="nitro-avatar" onclick="document.getElementById('fAvatar').click()"></div>
             <div class="nitro-content">
-                <h2 id="profName" style="margin:0;">...</h2>
-                <small id="profMeta">...</small>
-                <div class="nitro-bio">
-                    <div style="font-weight:bold; font-size:11px; color:#b5bac1;">HAKKIMDA</div>
-                    <div id="profBioText">...</div>
-                </div>
-                <button class="btn-action" style="background:#4e5058; margin-top:10px;" onclick="openModal('modalEditBio')">BİO DÜZENLE</button>
-                <button class="btn-action" style="background:#4e5058;" onclick="openModal('modalSearch')">ÜYE ARA & EKLE</button>
-                <button class="btn-action" style="background:var(--red);" onclick="logout()">ÇIKIŞ YAP</button>
-                <button class="btn-action" style="background:#333;" onclick="switchTab('scrLobby')">GERİ</button>
+                <h2 id="profName">...</h2>
+                <div id="profMeta" style="font-size:12px; color:#aaa;">...</div>
+                <div class="nitro-bio" id="profBio">...</div>
+                <button class="btn-action" onclick="openModal('modalSocial')">ARKADAŞ EKLE / İSTEKLER</button>
+                <button class="btn-action" style="background:#4e5058;" onclick="switchTab('scrLobby')">GERİ</button>
             </div>
         </div>
     </div>
-
-    <div id="modalWords" class="modal"><div class="modal-content">
-        <h2>TELAFFUZ AI</h2>
-        <h1 id="targetWord" style="color:var(--gold);">SUCCESS</h1>
-        <button class="btn-action" id="btnMic" onclick="startRecognition()">🎤 ŞİMDİ KONUŞ</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalClans" class="modal"><div class="modal-content">
-        <h3>KLANLAR</h3>
-        <input type="text" id="clanInput" class="auth-input" placeholder="Klan Adı">
-        <button class="btn-action" onclick="createClan()">KLAN KUR (500 💰)</button>
-        <div id="clanContainer" style="margin-top:15px; border-top:1px solid #333; padding-top:10px;"></div>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalDaily" class="modal"><div class="modal-content">
-        <h3>GÜNLÜK SORU</h3>
-        <p id="dailyText">"Gelecek" kelimesinin İngilizcesi?</p>
-        <input type="text" id="dailyAns" class="auth-input">
-        <button class="btn-action" onclick="checkDaily()">CEVAPLA</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalSearch" class="modal"><div class="modal-content">
-        <h3>ÜYE ARA</h3>
-        <input type="text" id="searchInput" class="auth-input" placeholder="Kullanıcı Adı">
-        <button class="btn-action" onclick="searchUser()">ARA</button>
-        <div id="searchResult" style="margin-top:15px;"></div>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalEditBio" class="modal"><div class="modal-content">
-        <h3>HAKKIMDA YAZ</h3>
-        <textarea id="bioInput" class="auth-input" rows="4"></textarea>
-        <button class="btn-action" onclick="saveBio()">KAYDET</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
 
     <input type="file" id="fAvatar" style="display:none;" onchange="upImg('pImg')">
     <input type="file" id="fBanner" style="display:none;" onchange="upImg('pBanner')">
@@ -145,14 +144,13 @@
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
-    // --- AUTH & USER DATA ---
+    // --- AUTH & DATA ---
     window.handleAuth = async () => {
         const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value, n = document.getElementById('uName').value;
         const a = document.getElementById('uAge').value, g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
-        if(!n || !e || p.length < 6) return alert("Bilgileri eksiksiz gir (Şifre min 6)!");
         try {
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await set(ref(db, 'users/' + res.user.uid), { username: n, age: a, gender: g, country: c, bio: "Nexus Connect Üyesi", coins: 1000, xp: 0, pImg: "", pBanner: "", lastQ: 0 });
+            await set(ref(db, 'users/' + res.user.uid), { username: n, age: a, gender: g, country: c, coins: 500, xp: 0, bio: "Hoşgeldin!", pImg: "", pBanner: "" });
             await set(ref(db, 'usernames/' + n.toLowerCase()), res.user.uid);
         } catch { await signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message)); }
     };
@@ -161,93 +159,85 @@
         if(user) {
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
-                const d = s.val(); if(!d) return;
-                window.uData = d;
+                const d = s.val(); window.uData = d;
                 document.getElementById('dispCoins').innerText = d.coins;
                 document.getElementById('dispXp').innerText = d.xp;
                 document.getElementById('profName').innerText = d.username;
                 document.getElementById('profMeta').innerText = `${d.age} Yaş | ${d.gender} | ${d.country}`;
-                document.getElementById('profBioText').innerText = d.bio;
+                document.getElementById('profBio').innerText = d.bio;
                 document.getElementById('pImg').src = d.pImg || "https://via.placeholder.com/150";
                 document.getElementById('pBanner').style.backgroundImage = d.pBanner ? `url(${d.pBanner})` : "none";
+                updateBP(d.xp);
             });
-            loadClans();
+            // İstekleri Dinle
+            onValue(ref(db, 'requests/' + user.uid), s => {
+                const list = document.getElementById('reqList'); list.innerHTML = "";
+                s.forEach(r => {
+                    list.innerHTML += `<div style="background:#111; padding:10px; margin-top:5px; border-radius:10px;">
+                        ${r.val().fromName} <button onclick="acceptReq('${r.key}', '${r.val().fromUid}')">Kabul Et</button>
+                    </div>`;
+                });
+            });
         } else { switchTab('scrAuth'); }
     });
 
-    // --- KLAN SİSTEMİ ---
-    window.createClan = () => {
-        const name = document.getElementById('clanInput').value;
-        if(uData.coins < 500) return alert("Coin yetersiz!");
-        const newClan = push(ref(db, 'clans'));
-        set(newClan, { name: name, leader: auth.currentUser.uid, xp: 0 });
-        update(ref(db, 'users/'+auth.currentUser.uid), { coins: increment(-500), clan: newClan.key });
-        alert("Klan kuruldu!");
+    // --- TELAFFUZ AI (MİKROFON İZİNLİ) ---
+    window.startRecognition = async () => {
+        try {
+            await navigator.mediaDevices.getUserMedia({ audio: true }); // İzni tetikle
+            const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            rec.lang = 'en-US';
+            document.getElementById('micBtn').innerText = "Dinliyorum...";
+            rec.onresult = (e) => {
+                const speech = e.results[0][0].transcript.toLowerCase();
+                if(speech === "challenge") {
+                    alert("Doğru! +50 XP");
+                    update(ref(db, 'users/'+auth.currentUser.uid), { xp: increment(50) });
+                } else alert("Dediğin: " + speech);
+                document.getElementById('micBtn').innerText = "🎤 MİKROFONU AÇ";
+            };
+            rec.start();
+        } catch { alert("Mikrofon izni reddedildi!"); }
     };
 
-    function loadClans() {
-        onValue(ref(db, 'clans'), s => {
-            const cont = document.getElementById('clanContainer'); cont.innerHTML = "";
-            s.forEach(c => {
-                cont.innerHTML += `<div style="background:#111; padding:10px; margin:5px; border-radius:8px;">
-                    <b>${c.val().name}</b> <button class="btn-action" style="width:auto; float:right; padding:5px;" onclick="joinRequest('${c.key}')">Katıl</button>
-                </div>`;
-            });
-        });
+    // --- BATTLE PASS (XP SİSTEMİ) ---
+    function updateBP(xp) {
+        const track = document.getElementById('bpTrack'); track.innerHTML = "";
+        for(let i=1; i<=10; i++) {
+            const need = i * 200;
+            const isUnlocked = xp >= need;
+            track.innerHTML += `<div class="bp-item ${isUnlocked ? 'bp-unlocked' : ''}">
+                T ${i}<br>${isUnlocked ? '💰50' : '🔒'}
+            </div>`;
+        }
     }
 
-    // --- TELAFFUZ AI ---
-    window.startRecognition = () => {
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'en-US';
-        document.getElementById('btnMic').innerText = "Dinleniyor...";
-        rec.onresult = (e) => {
-            const result = e.results[0][0].transcript.toLowerCase();
-            if(result === "success") {
-                alert("Harika! +50 XP");
-                update(ref(db, 'users/'+auth.currentUser.uid), { xp: increment(50) });
-            } else alert("Dediğin: " + result + " | Tekrar dene!");
-            document.getElementById('btnMic').innerText = "🎤 ŞİMDİ KONUŞ";
-        };
-        rec.start();
-    };
-
-    // --- GÜNLÜK SORU (24 SAAT KİLİT) ---
-    window.checkDaily = () => {
-        const now = Date.now();
-        if(now - (uData.lastQ || 0) < 86400000) return alert("24 saat beklemen lazım!");
-        if(document.getElementById('dailyAns').value.toLowerCase() === "future") {
-            update(ref(db, 'users/'+auth.currentUser.uid), { xp: increment(100) });
-            alert("Doğru! +100 XP");
-            closeModal();
-        } else {
-            update(ref(db, 'users/'+auth.currentUser.uid), { lastQ: now });
-            alert("Yanlış! 24 saat kilitlendin.");
-        }
-    };
-
-    // --- ÜYE ARA ---
+    // --- SOSYAL (ARAMA & ARKADAŞLIK) ---
     window.searchUser = async () => {
-        const name = document.getElementById('searchInput').value.toLowerCase();
-        const snap = await get(ref(db, 'usernames/' + name));
+        const n = document.getElementById('srchIn').value.toLowerCase();
+        const snap = await get(ref(db, 'usernames/'+n));
         if(snap.exists()) {
-            const userData = await get(ref(db, 'users/' + snap.val()));
-            const d = userData.val();
-            document.getElementById('searchResult').innerHTML = `
+            const uid = snap.val();
+            document.getElementById('socialRes').innerHTML = `
                 <div style="background:#111; padding:15px; border-radius:10px;">
-                    <img src="${d.pImg || 'https://via.placeholder.com/150'}" style="width:50px; border-radius:50%;">
-                    <h4>${d.username}</h4><p>${d.bio}</p>
-                    <button class="btn-action" onclick="alert('İstek gönderildi!')">Arkadaş Ekle</button>
+                    <b>${n}</b> <button onclick="sendReq('${uid}')">İstek At</button>
                 </div>`;
-        } else alert("Kullanıcı bulunamadı!");
+        } else alert("Kullanıcı yok!");
     };
 
-    // --- PROFİL DÜZENLEME ---
-    window.saveBio = () => {
-        update(ref(db, 'users/'+auth.currentUser.uid), { bio: document.getElementById('bioInput').value });
-        closeModal();
+    window.sendReq = (toUid) => {
+        set(ref(db, 'requests/'+toUid+'/'+auth.currentUser.uid), { fromUid: auth.currentUser.uid, fromName: uData.username });
+        alert("İstek gönderildi!");
     };
 
+    window.acceptReq = (reqId, fromUid) => {
+        update(ref(db, 'users/'+auth.currentUser.uid+'/friends/'+fromUid), { status: 'friend' });
+        update(ref(db, 'users/'+fromUid+'/friends/'+auth.currentUser.uid), { status: 'friend' });
+        set(ref(db, 'requests/'+auth.currentUser.uid+'/'+reqId), null);
+        alert("Arkadaş olundu!");
+    };
+
+    // --- PROFİL RESİMLERİ ---
     window.upImg = (type) => {
         const file = type === 'pImg' ? document.getElementById('fAvatar').files[0] : document.getElementById('fBanner').files[0];
         const reader = new FileReader();
