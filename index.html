@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus | Pro Edition</title>
+    <title>Nexus Connect | Final Boss</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #5865F2; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: #1e1f22; --input: #111214; }
@@ -12,94 +12,111 @@
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
         .active-screen { display: flex !important; }
 
-        /* DISCORD PROFİL TASARIMI */
-        .profile-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .p-banner { height: 100px; background: linear-gradient(45deg, #5865F2, #eb459e); position: relative; }
-        .p-avatar-wrap { position: absolute; top: 60px; left: 20px; width: 90px; height: 90px; background: var(--panel); border-radius: 50%; padding: 5px; }
-        .p-avatar-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--panel); }
-        .p-content { padding: 65px 20px 20px; text-align: left; }
-        .p-name { font-family: 'Orbitron'; font-size: 20px; font-weight: bold; color: #fff; }
-        .p-bio-box { background: #111214; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; border: 1px solid #222; }
-        
-        /* GRID MENÜ */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 95%; max-width: 500px; margin-top: 60px; }
+        /* --- MENÜ KARTLARI (RESİMLİ) --- */
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 95%; max-width: 500px; margin-top: 60px; }
         .menu-card { 
             background-size: cover; background-position: center; border: 1px solid #333; 
-            border-radius: 12px; height: 105px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: flex-end; padding-bottom: 10px; cursor: pointer;
+            border-radius: 12px; height: 100px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: flex-end; padding-bottom: 8px; cursor: pointer;
         }
+        #btnMatch { background-image: url('https://i.ibb.co/zHQQpn06/match.jpg'); }
+        #btnWords { background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg'); }
+        #btnBP { background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg'); }
+        #btnDaily { background-image: url('https://i.ibb.co/zHQQpn06/soru.jpg'); }
+        #btnClans { background-image: url('https://i.ibb.co/zHQQpn06/klan.jpg'); }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--panel); width: 85%; max-width: 400px; border-radius: 16px; padding: 20px; position: relative; border: 1px solid #444; }
+        /* --- DISCORD PROFİL --- */
+        .profile-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; position: relative; }
+        .p-banner { height: 80px; background: linear-gradient(45deg, #5865F2, #eb459e); }
+        .p-avatar-wrap { position: absolute; top: 40px; left: 20px; width: 80px; height: 80px; background: var(--panel); border-radius: 50%; padding: 4px; }
+        .p-avatar-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .p-content { padding: 50px 20px 20px; text-align: left; }
+        .p-bio-box { background: #111214; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #222; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 5000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--panel); width: 90%; max-width: 400px; border-radius: 15px; padding: 20px; position: relative; max-height: 80vh; overflow-y: auto; }
         
-        .btn-action { background: #5865f2; border: none; padding: 12px; border-radius: 5px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .auth-input { width: 100%; padding: 12px; margin: 8px 0; background: var(--input); border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .btn-action { background: #5865f2; border: none; padding: 10px; border-radius: 5px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        .auth-input { width: 100%; padding: 10px; margin: 5px 0; background: var(--input); border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
-        <div class="profile-card" style="padding:25px; box-sizing:border-box;">
+        <div class="profile-card" style="padding:20px; box-sizing:border-box;">
             <h2 style="text-align:center; font-family:'Orbitron'; color:var(--neon);">NEXUS CONNECT</h2>
             <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
             <input type="password" id="uPass" class="auth-input" placeholder="Şifre (Min. 6 Karakter)">
-            <button class="btn-action" onclick="handleAuth()">KAYDOL VEYA GİRİŞ YAP</button>
+            <div style="display:flex; gap:5px;">
+                <select id="uGender" class="auth-input" style="width:50%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
+                <input type="number" id="uAge" class="auth-input" style="width:50%;" placeholder="Yaş">
+            </div>
+            <select id="uCountry" class="auth-input">
+                <option value="Türkiye">Türkiye 🇹🇷</option>
+                <option value="Almanya">Almanya 🇩🇪</option>
+                <option value="ABD">ABD 🇺🇸</option>
+                <option value="İngiltere">İngiltere 🇬🇧</option>
+            </select>
+            <button class="btn-action" onclick="handleAuth()">DEVAM ET</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
         <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); border-bottom:1px solid #333; box-sizing:border-box; z-index:100;">
             <b>NEXUS</b>
-            <div>💰 <span id="dispCoins">0</span></div>
+            <div>💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
         </div>
         <div class="grid-container">
-            <div class="menu-card" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
-            <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg');" onclick="openModal('modalWords')"><h4>TELAFFUZ AI</h4></div>
-            <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
-            <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
+            <div class="menu-card" id="btnMatch" style="grid-column: span 2;" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
+            <div class="menu-card" id="btnWords" onclick="startWordAI()"><h4>TELAFFUZ AI</h4></div>
+            <div class="menu-card" id="btnBP" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
+            <div class="menu-card" id="btnDaily" onclick="openDailyQuest()"><h4>GÜNLÜK SORU</h4></div>
+            <div class="menu-card" id="btnClans" onclick="openClans()"><h4>KLANLAR</h4></div>
+            <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİLİM & ARKADAŞLAR</h4></div>
         </div>
     </div>
 
     <div id="scrProfile" class="screen">
         <div class="profile-card">
             <div class="p-banner"></div>
-            <div class="p-avatar-wrap">
-                <img id="pImg" src="https://via.placeholder.com/90" class="p-avatar-main">
-            </div>
+            <div class="p-avatar-wrap"><img id="pImg" src="" class="p-avatar-main"></div>
             <div class="p-content">
                 <div class="p-name" id="profName">...</div>
-                <div style="color:#b5bac1; font-size:12px;">@<span id="profTag">...</span></div>
-                
                 <div class="p-bio-box">
-                    <div style="font-weight:bold; font-size:11px; color:#b5bac1; margin-bottom:5px;">HAKKIMDA</div>
-                    <div id="profBio" style="color:#fff;">(Düzenlemek için tıkla)</div>
-                    <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
-                    <div style="font-size:13px;">🌍 Ülke: <span id="profCountry">Belirtilmedi</span></div>
-                    <div style="font-size:13px;">🎂 Yaş: <span id="profAge">Belirtilmedi</span></div>
+                    <div id="profBio" style="margin-bottom:5px;">Hakkımda yükleniyor...</div>
+                    <small>🌍 <span id="profCountry">...</span> | 🎂 <span id="profAge">...</span> | 👤 <span id="profGender">...</span></small>
                 </div>
-
+                <button class="btn-action" style="background:#4e5058;" onclick="openModal('modalFriends')">👥 ARKADAŞLAR</button>
                 <button class="btn-action" style="background:#4e5058;" onclick="openModal('modalEditProfile')">PROFİLİ DÜZENLE</button>
-                <button class="btn-action" style="background:var(--red); margin-top:5px;" onclick="logout()">ÇIKIŞ YAP</button>
-                <button class="btn-action" style="background:#222;" onclick="switchTab('scrLobby')">GERİ DÖN</button>
+                <button class="btn-action" style="background:#333;" onclick="switchTab('scrLobby')">GERİ DÖN</button>
             </div>
         </div>
     </div>
 
-    <div id="modalEditProfile" class="modal"><div class="modal-content">
-        <h3>PROFİLİ GÜNCELLE</h3>
-        <input type="text" id="editBio" class="auth-input" placeholder="Hakkımda yazısı...">
-        <input type="text" id="editCountry" class="auth-input" placeholder="Ülke">
-        <input type="number" id="editAge" class="auth-input" placeholder="Yaş">
-        <input type="file" id="editImg" class="auth-input" accept="image/*">
-        <button class="btn-action" onclick="saveProfile()">KAYDET</button>
-        <button class="btn-action" style="background:#444" onclick="closeModal()">İPTAL</button>
+    <div id="modalFriends" class="modal"><div class="modal-content">
+        <h3>ARKADAŞLAR</h3>
+        <input type="text" id="addFriendName" class="auth-input" placeholder="Kullanıcı Adı ile Ekle...">
+        <button class="btn-action" onclick="addFriend()">EKLE</button>
+        <div id="friendsList" style="margin-top:15px; border-top:1px solid #333; padding-top:10px;"></div>
+        <button class="btn-action" style="background:#444" onclick="closeModal()">KAPAT</button>
+    </div></div>
+
+    <div id="modalClans" class="modal"><div class="modal-content">
+        <h3>KLANLAR</h3>
+        <div id="clanSetup">
+            <input type="text" id="newClanName" class="auth-input" placeholder="Klan Adı">
+            <button class="btn-action" onclick="createClan()">KLAN KUR (500 💰)</button>
+        </div>
+        <div id="allClansList" style="margin-top:15px;"></div>
+        <button class="btn-action" style="background:#444" onclick="closeModal()">KAPAT</button>
     </div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, set, push, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -117,35 +134,21 @@
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
-    // --- KAYIT & GİRİŞ TAMİR EDİLDİ ---
+    // --- GÜVENLİ KAYIT SİSTEMİ ---
     window.handleAuth = async () => {
-        const email = document.getElementById('uEmail').value;
-        const pass = document.getElementById('uPass').value;
-        const name = document.getElementById('uName').value;
-
-        if(!email || !pass) return alert("E-posta ve şifre boş olamaz!");
-
+        const email = document.getElementById('uEmail').value, pass = document.getElementById('uPass').value, name = document.getElementById('uName').value;
+        const gender = document.getElementById('uGender').value, age = document.getElementById('uAge').value, country = document.getElementById('uCountry').value;
+        if(!email || pass.length < 6) return alert("E-posta ve min. 6 karakterli şifre gir!");
         try {
-            // Önce kaydolmayı dene
             const res = await createUserWithEmailAndPassword(auth, email, pass);
             await set(ref(db, 'users/' + res.user.uid), {
-                username: name || email.split('@')[0],
-                bio: "", country: "", age: "", coins: 500, pImg: ""
+                username: name, gender: gender, age: age, country: country, coins: 1000, xp: 0, bio: "Selam! Ben Nexus kullanıyorum.", pImg: "https://via.placeholder.com/150"
             });
-            alert("Başarıyla kaydoldun!");
-        } catch (error) {
-            // Kayıtlıysa giriş yapmayı dene
-            if (error.code === 'auth/email-already-in-use') {
-                await signInWithEmailAndPassword(auth, email, pass)
-                    .then(() => alert("Giriş yapıldı!"))
-                    .catch(e => alert("Hata: " + e.message));
-            } else {
-                alert("Kayıt Hatası: " + error.message);
-            }
-        }
+            // Arama için kullanıcı adı tablosu
+            await set(ref(db, 'usernames/' + name.toLowerCase()), res.user.uid);
+        } catch { await signInWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message)); }
     };
 
-    // --- VERİLERİ ÇEK ---
     onAuthStateChanged(auth, user => {
         if(user) {
             switchTab('scrLobby');
@@ -153,39 +156,66 @@
                 const d = s.val(); if(!d) return;
                 window.uData = d;
                 document.getElementById('profName').innerText = d.username;
-                document.getElementById('profTag').innerText = d.username.toLowerCase();
-                document.getElementById('profBio').innerText = d.bio || "Henüz bir hakkımda yazısı yok.";
-                document.getElementById('profCountry').innerText = d.country || "Belirtilmedi";
-                document.getElementById('profAge').innerText = d.age || "Belirtilmedi";
-                document.getElementById('dispCoins').innerText = d.coins || 0;
-                document.getElementById('pImg').src = d.pImg || "https://via.placeholder.com/90";
+                document.getElementById('profBio').innerText = d.bio;
+                document.getElementById('profCountry').innerText = d.country;
+                document.getElementById('profAge').innerText = d.age;
+                document.getElementById('profGender').innerText = d.gender;
+                document.getElementById('dispCoins').innerText = d.coins;
+                document.getElementById('dispXp').innerText = d.xp;
+                document.getElementById('pImg').src = d.pImg;
             });
         } else { switchTab('scrAuth'); }
     });
 
-    // --- PROFİL KAYDET ---
-    window.saveProfile = () => {
-        const file = document.getElementById('editImg').files[0];
-        const updates = {
-            bio: document.getElementById('editBio').value,
-            country: document.getElementById('editCountry').value,
-            age: document.getElementById('editAge').value
-        };
-
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                updates.pImg = e.target.result;
-                update(ref(db, 'users/' + auth.currentUser.uid), updates);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            update(ref(db, 'users/' + auth.currentUser.uid), updates);
-        }
-        closeModal();
+    // --- ARKADAŞLIK SİSTEMİ ---
+    window.addFriend = async () => {
+        const targetName = document.getElementById('addFriendName').value.toLowerCase();
+        const targetIdS = await get(ref(db, 'usernames/' + targetName));
+        if(!targetIdS.exists()) return alert("Kullanıcı bulunamadı!");
+        const targetUid = targetIdS.val();
+        update(ref(db, `users/${auth.currentUser.uid}/friends/${targetUid}`), { status: "active" });
+        alert("Eklendi!");
     };
 
-    window.logout = () => signOut(auth);
+    // --- KLAN SİSTEMİ (XP TOPLAMI & BAŞVURU) ---
+    window.openClans = () => {
+        openModal('modalClans');
+        onValue(ref(db, 'clans'), s => {
+            const list = document.getElementById('allClansList');
+            list.innerHTML = "";
+            s.forEach(clan => {
+                const c = clan.val();
+                list.innerHTML += `<div style="background:#111; padding:10px; margin:5px; border-radius:8px;">
+                    <b>${c.name}</b> | Toplam XP: ${c.totalXp || 0}
+                    <button class="btn-action" onclick="applyToClan('${clan.key}')">Katılma İsteği</button>
+                </div>`;
+            });
+        });
+    };
+
+    window.createClan = () => {
+        const name = document.getElementById('newClanName').value;
+        if(uData.coins < 500) return alert("Yetersiz Coin!");
+        const cRef = push(ref(db, 'clans'));
+        set(cRef, { name: name, leader: auth.currentUser.uid, totalXp: uData.xp, members: [auth.currentUser.uid] });
+        update(ref(db, 'users/' + auth.currentUser.uid), { coins: uData.coins - 500, clan: cRef.key });
+    };
+
+    // --- TELAFFUZ AI & GÜNLÜK SORU ---
+    window.startWordAI = () => {
+        const word = ["Knowledge", "Universe", "Success", "Creative"][Math.floor(Math.random()*4)];
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'en-US';
+        alert(`Söylemen gereken kelime: ${word}`);
+        rec.onresult = (e) => {
+            if(e.results[0][0].transcript.toLowerCase() === word.toLowerCase()) {
+                alert("Doğru! +20 XP");
+                update(ref(db, 'users/' + auth.currentUser.uid), { xp: uData.xp + 20 });
+            } else alert("Yanlış telaffuz!");
+        };
+        rec.start();
+    };
+
 </script>
 </body>
 </html>
