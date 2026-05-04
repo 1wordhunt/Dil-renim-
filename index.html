@@ -3,109 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Connect | Pro Final</title>
+    <title>Nexus | Pro Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00d2ff; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: rgba(15, 25, 35, 0.98); }
-        body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #fff; height: 100vh; overflow: hidden; }
+        :root { --neon: #5865F2; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: #1e1f22; --input: #111214; }
+        body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #dbdee1; height: 100vh; overflow: hidden; }
         
+        /* EKRAN YÖNETİMİ */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
         .active-screen { display: flex !important; }
 
-        /* KART RESİMLERİ */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 95%; max-width: 500px; margin-top: 50px; }
+        /* DISCORD TARZI PROFİL (Resimdeki gibi) */
+        .profile-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .p-banner { height: 100px; background: linear-gradient(45deg, #5865F2, #eb459e); position: relative; }
+        .p-avatar-wrap { position: absolute; top: 60px; left: 20px; width: 90px; height: 90px; background: var(--panel); border-radius: 50%; padding: 5px; }
+        .p-avatar-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; cursor: pointer; }
+        .p-status-dot { width: 22px; height: 22px; background: #23a55a; border: 4px solid var(--panel); border-radius: 50%; position: absolute; bottom: 0; right: 5px; }
+        .p-content { padding: 65px 20px 20px; text-align: left; }
+        .p-name { font-family: 'Orbitron'; font-size: 20px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 5px; }
+        .p-badges { display: flex; gap: 5px; margin-top: 5px; }
+        .p-bio-box { background: #111214; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; }
+        
+        /* MENÜ KARTLARI (Kalıcı Resimler) */
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 95%; max-width: 500px; margin-top: 60px; }
         .menu-card { 
             background-size: cover; background-position: center; border: 1px solid #333; 
-            border-radius: 15px; height: 105px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: flex-end; padding-bottom: 8px;
-            cursor: pointer; transition: 0.3s; text-shadow: 2px 2px 4px #000;
+            border-radius: 12px; height: 110px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: flex-end; padding-bottom: 10px;
+            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
         }
-        #btnShop { background-image: url('https://i.ibb.co/zHQQpn06/dukkas.jpg'); }
-        #btnMatch { background-image: url('https://i.ibb.co/zHQQpn06/match.jpg'); }
-        #btnWords { background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg'); }
-        #btnBP { background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg'); }
-        #btnDaily { background-image: url('https://i.ibb.co/zHQQpn06/soru.jpg'); }
-        #btnClans { background-image: url('https://i.ibb.co/zHQQpn06/klan.jpg'); }
+        .menu-card:active { transform: scale(0.95); }
+        .menu-card h4 { margin: 0; font-family: 'Orbitron'; text-shadow: 2px 2px 5px #000; color: #fff; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--panel); border: 2px solid var(--neon); width: 90%; max-width: 450px; border-radius: 20px; padding: 20px; position: relative; text-align: center; max-height: 85vh; overflow-y: auto; }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--red); z-index: 3100; font-weight: bold; }
-        .btn-action { background: linear-gradient(90deg, #008cff, #00d2ff); border: none; padding: 12px; border-radius: 10px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Rajdhani'; }
+        /* MODALLAR */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--panel); width: 90%; max-width: 450px; border-radius: 16px; padding: 25px; position: relative; text-align: center; }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #b5bac1; }
         
-        .chat-box { height: 200px; background: #000; border-radius: 10px; overflow-y: auto; padding: 10px; text-align: left; font-size: 14px; margin-top: 10px; }
-        .p-frame-box { position: relative; width: 100px; height: 100px; margin: 0 auto; }
-        .p-img-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        /* GENEL BUTONLAR */
+        .btn-action { background: #5865f2; border: none; padding: 12px; border-radius: 5px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Rajdhani'; }
+        .btn-action:hover { background: #4752c4; }
+        .auth-input { width: 100%; padding: 12px; margin: 8px 0; background: var(--input); border: 1px solid #222; color: #fff; border-radius: 4px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
-        <div style="background:var(--panel); padding:25px; border-radius:20px; border:1px solid var(--neon); width:85%; max-width:380px;">
-            <h2 style="font-family:'Orbitron'; color:var(--neon);">GİRİŞ YAP</h2>
-            <input type="email" id="uEmail" class="btn-action" style="background:#000; text-align:left;" placeholder="E-posta">
-            <input type="password" id="uPass" class="btn-action" style="background:#000; text-align:left;" placeholder="Şifre">
-            <button class="btn-action" onclick="handleAuth()">DEVAM ET</button>
+        <div class="profile-card" style="padding:25px; box-sizing:border-box;">
+            <h2 style="text-align:center; font-family:'Orbitron'; color:var(--neon);">NEXUS'A KATIL</h2>
+            <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
+            <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
+            <input type="password" id="uPass" class="auth-input" placeholder="Şifre">
+            <div style="display:flex; gap:10px;">
+                <select id="uGender" class="auth-input" style="width:50%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
+                <input type="number" id="uAge" class="auth-input" style="width:50%;" placeholder="Yaş">
+            </div>
+            <input type="text" id="uCountry" class="auth-input" placeholder="Ülke">
+            <button class="btn-action" onclick="handleAuth()">BAŞLAT</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
-        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:rgba(0,0,0,0.8); z-index:100; box-sizing:border-box;">
-            <div><b id="dispName">...</b><br><small style="color:var(--neon)">developer</small></div>
-            <div>💰 <span id="dispCoins">0</span></div>
+        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); z-index:100; box-sizing:border-box; border-bottom:1px solid #333;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:35px; height:35px; background:#5865F2; border-radius:50%; text-align:center; line-height:35px; font-weight:bold;">N</div>
+                <div><b>Lobi</b></div>
+            </div>
+            <div>💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
         </div>
+
         <div class="grid-container">
-            <div id="btnShop" class="menu-card" style="grid-column: span 2;" onclick="openModal('modalShop')"><h4>DÜKKAN</h4></div>
-            <div id="btnMatch" class="menu-card" style="grid-column: span 2;" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
-            <div id="btnWords" class="menu-card" onclick="openModal('modalWords')"><h4>TELAFFUZ AI</h4></div>
-            <div id="btnBP" class="menu-card" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
-            <div id="btnDaily" class="menu-card" onclick="openModal('modalDaily')"><h4>GÜNLÜK SORU</h4></div>
-            <div id="btnClans" class="menu-card" onclick="openModal('modalClans')"><h4>KLANLAR</h4></div>
-            <div class="menu-card" style="grid-column: span 2; background-color:#111;" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
+            <div class="menu-card" id="btnMatch" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
+            <div class="menu-card" id="btnWords" style="background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg');" onclick="startWordAI()"><h4>TELAFFUZ AI</h4></div>
+            <div class="menu-card" id="btnBP" style="background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
+            <div class="menu-card" id="btnDaily" style="background-image: url('https://i.ibb.co/zHQQpn06/soru.jpg');" onclick="openDailyQuest()"><h4>GÜNLÜK SORU</h4></div>
+            <div class="menu-card" id="btnClans" style="background-image: url('https://i.ibb.co/zHQQpn06/klan.jpg');" onclick="openClans()"><h4>KLANLAR</h4></div>
+            <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
         </div>
     </div>
-
-    <div id="modalBP" class="modal"><div class="modal-content">
-        <span class="close-x" onclick="closeModal()">×</span>
-        <h2 style="color:var(--gold);">BRAWL PASS ÖDÜLLERİ</h2>
-        <div style="display:flex; overflow-x:auto; gap:10px; padding:10px;">
-            <div style="min-width:100px; background:#222; padding:10px; border-radius:10px;">Tier 1<br>🎁 50 Altın</div>
-            <div style="min-width:100px; background:#222; padding:10px; border-radius:10px;">Tier 2<br>💎 10 Elmas</div>
-            <div style="min-width:100px; background:#222; padding:10px; border-radius:10px;">Tier 3<br>🌟 Mega Kutu</div>
-        </div>
-    </div></div>
-
-    <div id="modalClans" class="modal"><div class="modal-content">
-        <span class="close-x" onclick="closeModal()">×</span>
-        <div id="clanMain">
-            <h2>KLANLAR</h2>
-            <input type="text" id="cName" class="btn-action" style="background:#000" placeholder="Klan Adı">
-            <button class="btn-action" onclick="createClan()">KLAN KUR</button>
-            <div id="clanList" style="margin-top:10px;"></div>
-        </div>
-        <div id="clanChat" style="display:none;">
-            <h3 id="curClanName">Klan</h3>
-            <div id="chatArea" class="chat-box"></div>
-            <input type="text" id="chatMsg" class="btn-action" style="background:#000" placeholder="Mesaj yaz...">
-            <button class="btn-action" onclick="sendMsg()">GÖNDER</button>
-            <button class="btn-action" style="background:var(--red)" onclick="exitClanChat()">GERİ</button>
-        </div>
-    </div></div>
-
-    <div id="modalShop" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModal()">×</span><h2>DÜKKAN</h2><button class="btn-action">Efsanevi Çerçeve Satın Al</button></div></div>
-    <div id="modalWords" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModal()">×</span><h2>TELAFFUZ AI</h2><p>Söyle: "SUCCESS"</p><button class="btn-action" onclick="alert('Dinleniyor...')">MİKROFONU AÇ</button></div></div>
-    <div id="modalDaily" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModal()">×</span><h2>GÜNLÜK SORU</h2><p>Hangi dil daha zor?</p><button class="btn-action">İngilizce</button><button class="btn-action">Çince</button></div></div>
-    <div id="modalMatchPref" class="modal"><div class="modal-content"><span class="close-x" onclick="closeModal()">×</span><h2>EŞLEŞME</h2><button class="btn-action">Eşleşme Bul</button></div></div>
 
     <div id="scrProfile" class="screen">
-        <div class="modal-content">
-            <span class="close-x" onclick="switchTab('scrLobby')">×</span>
-            <div class="p-frame-box"><img id="pImg" src="" class="p-img-main"></div>
-            <h2 id="profName">...</h2>
-            <input type="file" id="fIn" accept="image/*" style="display:none;" onchange="upImg(this)">
-            <button class="btn-action" onclick="document.getElementById('fIn').click()">RESİM DEĞİŞTİR</button>
-            <button class="btn-action" onclick="signOut(auth)">ÇIKIŞ</button>
+        <div class="profile-card">
+            <div class="close-x" style="top:10px; right:10px; z-index:10;" onclick="switchTab('scrLobby')">×</div>
+            <div class="p-banner"></div>
+            <div class="p-avatar-wrap">
+                <img id="pImg" src="https://via.placeholder.com/90" class="p-avatar-main" onclick="document.getElementById('fIn').click()">
+                <div class="p-status-dot"></div>
+            </div>
+            <div class="p-content">
+                <div class="p-name"><span id="profName">User</span> <span style="color:#5865F2; font-size:16px;">✔️</span></div>
+                <div style="color:#b5bac1; font-size:12px;">@<span id="profTag">user</span></div>
+                <div class="p-badges">🏆 💎 🔥</div>
+                <div class="p-bio-box">
+                    <div style="font-weight:bold; font-size:11px; color:#b5bac1; margin-bottom:5px;">HAKKIMDA</div>
+                    <div id="profBio">Yazılımcı | Oyuncu | Gezgin</div>
+                    <div style="margin-top:10px; font-weight:bold; font-size:11px; color:#b5bac1;">ÜYE OLMA TARİHİ</div>
+                    <div>May 2026</div>
+                </div>
+                <input type="file" id="fIn" style="display:none;" onchange="upImg(this)">
+                <button class="btn-action" style="background:#4e5058;" onclick="logout()">ÇIKIŞ YAP</button>
+            </div>
         </div>
     </div>
+
+    <div id="modalWords" class="modal"><div class="modal-content">
+        <span class="close-x" onclick="closeModal()">×</span>
+        <h2 id="wordToSay">Loading...</h2>
+        <p>Lütfen yukarıdaki kelimeyi telaffuz edin</p>
+        <button class="btn-action" onclick="checkVoice()">MİKROFONU AÇ</button>
+    </div></div>
+
+    <div id="modalMatch" class="modal"><div class="modal-content">
+        <h2 id="matchStatus">ARANIYOR...</h2>
+        <div id="matchFound" style="display:none;">
+            <img id="oppImg" src="" style="width:80px; border-radius:50%;">
+            <h3 id="oppName">Rakip</h3>
+            <div id="oppInfo">...</div>
+            <button class="btn-action" onclick="alert('Kamera Açılıyor...')">GÖRÜNTÜLÜ KONUŞ</button>
+            <button class="btn-action" style="background:#444" onclick="closeModal()">AYRIL</button>
+        </div>
+    </div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -124,66 +141,85 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    // --- BUTON BAĞLANTILARI ---
+    // --- TEMEL UI ---
     window.openModal = (id) => document.getElementById(id).style.display = 'flex';
-    window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    window.closeModal = () => { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); };
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
-    // --- KLAN & CHAT FONKSİYONLARI ---
-    let currentClanId = null;
-    window.createClan = () => {
-        const name = document.getElementById('cName').value;
-        if(!name) return;
-        const newClan = push(ref(db, 'clans'));
-        set(newClan, { name: name, leader: auth.currentUser.uid });
-        joinClan(newClan.key, name);
+    // --- TELAFFUZ AI (100 KELİME) ---
+    const words = ["Success", "Experience", "Development", "Creative", "Universe", "Typography", "Challenge", "Nexus", "Algorithm", "Knowledge"]; // 100'e tamamlanabilir
+    window.startWordAI = () => {
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        document.getElementById('wordToSay').innerText = randomWord;
+        openModal('modalWords');
     };
 
-    window.joinClan = (id, name) => {
-        currentClanId = id;
-        document.getElementById('clanMain').style.display = 'none';
-        document.getElementById('clanChat').style.display = 'block';
-        document.getElementById('curClanName').innerText = name;
-        
-        // Katılma Mesajı
-        push(ref(db, `clans/${id}/messages`), { text: `${window.uData.username} katıldı!`, system: true });
-        
-        onValue(ref(db, `clans/${id}/messages`), s => {
-            const area = document.getElementById('chatArea');
-            area.innerHTML = "";
-            s.forEach(m => {
-                const d = m.val();
-                area.innerHTML += `<div style="color:${d.system ? 'var(--gold)' : '#fff'}"><b>${d.sender || ''}:</b> ${d.text}</div>`;
+    window.checkVoice = () => {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.onresult = (event) => {
+            const result = event.results[0][0].transcript.toLowerCase();
+            const target = document.getElementById('wordToSay').innerText.toLowerCase();
+            if(result === target) {
+                alert("Mükemmel! +50 XP");
+                update(ref(db, 'users/' + auth.currentUser.uid), { xp: (window.uData.xp || 0) + 50 });
+                closeModal();
+            } else { alert("Hatalı: " + result); }
+        };
+        recognition.start();
+    };
+
+    // --- EŞLEŞME (GERÇEK ZAMANLI) ---
+    window.startMatching = (pref) => {
+        openModal('modalMatch');
+        const mRef = ref(db, 'matchmaking/' + auth.currentUser.uid);
+        set(mRef, { username: window.uData.username, gender: window.uData.gender, pref: pref, pImg: window.uData.pImg || "" });
+
+        onValue(ref(db, 'matchmaking'), (snapshot) => {
+            snapshot.forEach((child) => {
+                if(child.key !== auth.currentUser.uid) {
+                    const data = child.val();
+                    if(pref === 'Hepsi' || data.gender === pref) {
+                        document.getElementById('matchStatus').innerText = "EŞLEŞME BULUNDU!";
+                        document.getElementById('matchFound').style.display = 'block';
+                        document.getElementById('oppImg').src = data.pImg || "https://via.placeholder.com/80";
+                        document.getElementById('oppName').innerText = data.username;
+                        document.getElementById('oppInfo').innerText = `${data.gender} | ${data.age || '?'}`;
+                    }
+                }
             });
-            area.scrollTop = area.scrollHeight;
         });
     };
 
-    window.sendMsg = () => {
-        const txt = document.getElementById('chatMsg').value;
-        if(!txt) return;
-        push(ref(db, `clans/${currentClanId}/messages`), { sender: window.uData.username, text: txt });
-        document.getElementById('chatMsg').value = "";
+    // --- GÜNLÜK SORU (24 SAAT SİSTEMİ) ---
+    window.openDailyQuest = () => {
+        const lastTime = window.uData.lastQuest || 0;
+        const now = Date.now();
+        if(now - lastTime < 86400000) {
+            const remaining = Math.ceil((86400000 - (now - lastTime)) / 3600000);
+            alert(`Soru için beklemelisin: ${remaining} saat kaldı.`);
+        } else {
+            const ans = prompt("İngilizce'de 'Başarı' ne demek?");
+            if(ans.toLowerCase() === 'success') {
+                update(ref(db, 'users/' + auth.currentUser.uid), { lastQuest: now, xp: (window.uData.xp || 0) + 100 });
+                alert("Doğru! +100 XP");
+            }
+        }
     };
-
-    window.exitClanChat = () => {
-        document.getElementById('clanMain').style.display = 'block';
-        document.getElementById('clanChat').style.display = 'none';
-    };
-
-    onValue(ref(db, 'clans'), s => {
-        const list = document.getElementById('clanList');
-        list.innerHTML = "";
-        s.forEach(c => {
-            list.innerHTML += `<div class="btn-action" style="background:#111" onclick="joinClan('${c.key}', '${c.val().name}')">${c.val().name} (Katıl)</div>`;
-        });
-    });
 
     // --- AUTH & DATA ---
     window.handleAuth = async () => {
-        const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value;
-        try { await createUserWithEmailAndPassword(auth, e, p).then(r => set(ref(db, 'users/' + r.user.uid), { username: e.split('@')[0], coins: 500 })); }
-        catch { await signInWithEmailAndPassword(auth, e, p); }
+        const email = document.getElementById('uEmail').value, pass = document.getElementById('uPass').value;
+        try {
+            const res = await createUserWithEmailAndPassword(auth, email, pass);
+            await set(ref(db, 'users/' + res.user.uid), {
+                username: document.getElementById('uName').value,
+                gender: document.getElementById('uGender').value,
+                age: document.getElementById('uAge').value,
+                country: document.getElementById('uCountry').value,
+                xp: 0, coins: 500, pImg: "", lastQuest: 0
+            });
+        } catch { await signInWithEmailAndPassword(auth, email, pass); }
     };
 
     onAuthStateChanged(auth, user => {
@@ -191,21 +227,22 @@
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
                 window.uData = s.val();
-                document.getElementById('dispName').innerText = window.uData.username;
-                document.getElementById('profName').innerText = window.uData.username;
-                document.getElementById('dispCoins').innerText = window.uData.coins;
-                document.getElementById('pImg').src = window.uData.pImg || "https://via.placeholder.com/100";
+                document.getElementById('dispName').innerText = uData.username;
+                document.getElementById('profName').innerText = uData.username;
+                document.getElementById('profTag').innerText = uData.username.toLowerCase();
+                document.getElementById('dispXp').innerText = uData.xp || 0;
+                document.getElementById('pImg').src = uData.pImg || "https://via.placeholder.com/90";
+                document.getElementById('profBio').innerText = `${uData.gender} | ${uData.age} | ${uData.country}`;
             });
         } else { switchTab('scrAuth'); }
     });
 
-    window.upImg = (i) => {
-        const r = new FileReader();
-        r.onload = (e) => update(ref(db, 'users/' + auth.currentUser.uid), { pImg: e.target.result });
-        r.readAsDataURL(i.files[0]);
+    window.upImg = (input) => {
+        const reader = new FileReader();
+        reader.onload = (e) => update(ref(db, 'users/' + auth.currentUser.uid), { pImg: e.target.result });
+        reader.readAsDataURL(input.files[0]);
     };
-    window.signOut = signOut;
+    window.logout = () => signOut(auth);
 </script>
 </body>
-  </html>
-  
+</html>
