@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus | Nitro Edition</title>
+    <title>Nexus Connect | Final Build</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --discord: #5865F2; --gold: #f5af19; --red: #ff3b5c; --bg: #0b0e11; --panel: #1e1f22; --input: #000; }
         body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #dbdee1; height: 100vh; overflow: hidden; }
-        
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; }
         .active-screen { display: flex !important; }
 
@@ -17,44 +16,54 @@
         .menu-card { 
             background-size: cover; background-position: center; border: 1px solid #333; 
             border-radius: 12px; height: 100px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: flex-end; padding-bottom: 8px; cursor: pointer;
+            align-items: center; justify-content: flex-end; padding-bottom: 8px; cursor: pointer; transition: 0.2s;
         }
+        .menu-card:active { transform: scale(0.95); }
 
-        /* DISCORD NITRO PROFILE */
+        /* NITRO PROFILE */
         .nitro-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .nitro-banner { height: 100px; background: #5865F2; background-size: cover; background-position: center; position: relative; cursor: pointer; }
-        .nitro-avatar-wrap { position: absolute; top: 60px; left: 20px; width: 85px; height: 85px; background: var(--panel); border-radius: 50%; padding: 5px; }
-        .nitro-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--panel); cursor: pointer; }
-        .nitro-content { padding: 55px 20px 20px; text-align: left; }
-        .nitro-bio { background: #111; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 14px; border: 1px solid #333; }
+        .nitro-banner { height: 100px; background: #5865F2; background-size: cover; background-position: center; cursor: pointer; }
+        .nitro-avatar-wrap { position: absolute; top: 60px; left: 20px; width: 80px; height: 80px; background: var(--panel); border-radius: 50%; padding: 4px; }
+        .nitro-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--panel); }
+        .nitro-content { padding: 50px 20px 20px; text-align: left; }
+        .nitro-bio { background: #111; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #333; }
 
         /* MODALS */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--panel); width: 85%; max-width: 400px; border-radius: 15px; padding: 20px; text-align: center; border: 1px solid #444; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 5000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--panel); width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; text-align: center; max-height: 80vh; overflow-y: auto; }
         
         .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 8px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 8px; }
         .auth-input { width: 100%; padding: 10px; margin: 5px 0; background: var(--input); border: 1px solid #333; color: #fff; border-radius: 5px; box-sizing: border-box; }
+        
+        /* VIDEO CHAT */
+        .video-box { width: 100%; height: 100%; background: #000; position: relative; }
+        #remoteVid { width: 100%; height: 100%; object-fit: cover; }
+        #localVid { width: 100px; height: 140px; position: absolute; top: 20px; right: 20px; border-radius: 10px; border: 2px solid #fff; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
-        <div class="modal-content">
-            <h2 style="font-family:'Orbitron'; color:var(--discord);">NEXUS LOGIN</h2>
+        <div class="modal-content" style="border: 1px solid var(--discord);">
+            <h2 style="font-family:'Orbitron';">NEXUS CONNECT</h2>
             <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
             <input type="password" id="uPass" class="auth-input" placeholder="Şifre">
-            <button class="btn-action" onclick="handleAuth()">BAŞLAT</button>
+            <div style="display:flex; gap:5px;">
+                <select id="uGender" class="auth-input" style="width:50%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
+                <select id="uCountry" class="auth-input" style="width:50%;"><option value="Türkiye">Türkiye 🇹🇷</option><option value="ABD">ABD 🇺🇸</option></select>
+            </div>
+            <button class="btn-action" onclick="handleAuth()">KATIL</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
-        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); z-index:100;">
-            <b>NEXUS CONNECT</b>
+        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); border-bottom:1px solid #333; z-index:100;">
+            <b>NEXUS</b>
             <div>💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
         </div>
         <div class="grid-container">
-            <div class="menu-card" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME</h4></div>
+            <div class="menu-card" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg');" onclick="openModal('modalWords')"><h4>TELAFFUZ AI</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
             <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/soru.jpg');" onclick="openModal('modalDaily')"><h4>GÜNLÜK SORU</h4></div>
@@ -62,6 +71,50 @@
             <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
         </div>
     </div>
+
+    <div id="scrMatch" class="screen">
+        <div class="video-box">
+            <video id="remoteVid" autoplay playsinline></video>
+            <video id="localVid" autoplay muted playsinline></video>
+            <div id="matchInfo" style="position:absolute; bottom:100px; left:20px; background:rgba(0,0,0,0.7); padding:10px; border-radius:10px; display:none;">
+                <h3 id="mName">...</h3>
+                <small id="mDetails">...</small>
+            </div>
+            <div style="position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px;">
+                <button class="btn-action" style="width:60px; height:60px; border-radius:50%; background:var(--red);" onclick="endMatch()">🔚</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalMatchPref" class="modal"><div class="modal-content">
+        <h3>EŞLEŞME TERCİHİ</h3>
+        <button class="btn-action" onclick="startMatch('Erkek')">ERKEKLERLE EŞLEŞ</button>
+        <button class="btn-action" style="background:#eb459e;" onclick="startMatch('Kız')">KIZLARLA EŞLEŞ</button>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button>
+    </div></div>
+
+    <div id="modalClans" class="modal"><div class="modal-content">
+        <h3>KLANLAR</h3>
+        <input type="text" id="cName" class="auth-input" placeholder="Klan Adı">
+        <button class="btn-action" onclick="createClan()">KLAN KUR (500 💰)</button>
+        <div id="clanList" style="margin-top:10px;"></div>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
+
+    <div id="modalWords" class="modal"><div class="modal-content">
+        <h2>TELAFFUZ AI</h2>
+        <h1 id="targetWord" style="color:var(--gold);">SUCCESS</h1>
+        <button class="btn-action" onclick="startRecognition()">🎤 KONUŞ VE XP KAZAN</button>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
+
+    <div id="modalDaily" class="modal"><div class="modal-content">
+        <h3>GÜNLÜK SORU</h3>
+        <p id="qText">"Gelecek" kelimesinin İngilizcesi?</p>
+        <input type="text" id="qAns" class="auth-input">
+        <button class="btn-action" onclick="checkDaily()">CEVAPLA</button>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
 
     <div id="scrProfile" class="screen">
         <div class="nitro-card">
@@ -71,32 +124,18 @@
             </div>
             <div class="nitro-content">
                 <h2 id="profName" style="margin:0;">...</h2>
-                <div style="color:#b5bac1; font-size:12px; margin-bottom:10px;">@<span id="profTag">...</span></div>
+                <div id="profMeta" style="font-size:12px; color:#b5bac1;">...</div>
                 <div class="nitro-bio">
                     <div style="font-weight:bold; font-size:11px; color:#b5bac1; margin-bottom:5px;">HAKKIMDA</div>
-                    <div id="profBioText">Yükleniyor...</div>
+                    <div id="profBioText">...</div>
                 </div>
-                <button class="btn-action" style="background:#4e5058; margin-top:15px;" onclick="openModal('modalEditProfile')">PROFİLİ DÜZENLE</button>
+                <button class="btn-action" style="background:#4e5058; margin-top:15px;" onclick="openModal('modalEditProfile')">DÜZENLE</button>
+                <button class="btn-action" style="background:#4e5058;" onclick="openModal('modalAddFriend')">ÜYE ARA / EKLE</button>
                 <button class="btn-action" style="background:var(--red);" onclick="logout()">ÇIKIŞ YAP</button>
-                <button class="btn-action" style="background:#333;" onclick="switchTab('scrLobby')">GERİ DÖN</button>
+                <button class="btn-action" style="background:#333;" onclick="switchTab('scrLobby')">GERİ</button>
             </div>
         </div>
     </div>
-
-    <div id="modalWords" class="modal"><div class="modal-content">
-        <h2>TELAFFUZ AI</h2>
-        <h1 id="targetWord" style="color:var(--gold);">Ready?</h1>
-        <button class="btn-action" onclick="startRecognition()">🎤 KONUŞ</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalEditProfile" class="modal"><div class="modal-content">
-        <h3>PROFİLİ DÜZENLE</h3>
-        <input type="text" id="editBio" class="auth-input" placeholder="Hakkımda...">
-        <p style="font-size:12px;">Banner ve Avatar için profil ekranında resimlerin üzerine tıkla!</p>
-        <button class="btn-action" onclick="saveBio()">KAYDET</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
 
     <input type="file" id="fAvatar" style="display:none;" onchange="upImg('pImg')">
     <input type="file" id="fBanner" style="display:none;" onchange="upImg('pBanner')">
@@ -104,7 +143,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, set, increment, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -122,12 +161,14 @@
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
-    // AUTH
+    // AUTH & DATA
     window.handleAuth = async () => {
         const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value, n = document.getElementById('uName').value;
+        const g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
         try {
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await set(ref(db, 'users/' + res.user.uid), { username: n, bio: "Nexus kullanıcısı", pImg: "", pBanner: "", coins: 500, xp: 0 });
+            await set(ref(db, 'users/' + res.user.uid), { username: n, gender: g, country: c, bio: "Nexus Connect Üyesi", pImg: "", pBanner: "", coins: 1000, xp: 0, lastQ: 0 });
+            await set(ref(db, 'usernames/' + n.toLowerCase()), res.user.uid);
         } catch { await signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message)); }
     };
 
@@ -138,30 +179,67 @@
                 const d = s.val(); if(!d) return;
                 window.uData = d;
                 document.getElementById('profName').innerText = d.username;
-                document.getElementById('profTag').innerText = d.username.toLowerCase().replace(/\s/g, '');
-                document.getElementById('profBioText').innerText = d.bio || "Hakkımda boş.";
+                document.getElementById('profMeta').innerText = `${d.gender} | ${d.country}`;
+                document.getElementById('profBioText').innerText = d.bio;
                 document.getElementById('pImg').src = d.pImg || "https://via.placeholder.com/150";
                 document.getElementById('pBanner').style.backgroundImage = d.pBanner ? `url(${d.pBanner})` : "none";
-                document.getElementById('dispCoins').innerText = d.coins || 0;
-                document.getElementById('dispXp').innerText = d.xp || 0;
+                document.getElementById('dispCoins').innerText = d.coins;
+                document.getElementById('dispXp').innerText = d.xp;
+            });
+            // Klanları Yükle
+            onValue(ref(db, 'clans'), s => {
+                const list = document.getElementById('clanList'); list.innerHTML = "";
+                s.forEach(c => { list.innerHTML += `<div style="background:#111; padding:8px; margin:4px; border-radius:5px;"><b>${c.val().name}</b> <button onclick="joinClan('${c.key}')" style="float:right">Katıl</button></div>`; });
             });
         } else { switchTab('scrAuth'); }
     });
 
-    // UPLOAD IMAGE (Avatar & Banner)
+    // EŞLEŞME & VİDEO
+    window.startMatch = async (pref) => {
+        switchTab('scrMatch');
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        document.getElementById('localVid').srcObject = stream;
+        setTimeout(() => {
+            document.getElementById('matchInfo').style.display = 'block';
+            document.getElementById('mName').innerText = pref === 'Kız' ? "Selin" : "Can";
+            document.getElementById('mDetails').innerText = "21 Yaş | Türkiye";
+        }, 3000);
+    };
+
+    window.endMatch = () => {
+        const stream = document.getElementById('localVid').srcObject;
+        if(stream) stream.getTracks().forEach(t => t.stop());
+        switchTab('scrLobby');
+    };
+
+    // TELAFFUZ & XP
+    window.startRecognition = () => {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'en-US';
+        rec.onresult = (e) => {
+            if(e.results[0][0].transcript.toLowerCase() === "success") {
+                alert("Mükemmel! +50 XP");
+                update(ref(db, 'users/'+auth.currentUser.uid), { xp: increment(50) });
+            } else alert("Yanlış: " + e.results[0][0].transcript);
+        };
+        rec.start();
+    };
+
+    // KLAN KURMA
+    window.createClan = () => {
+        const name = document.getElementById('cName').value;
+        if(uData.coins < 500) return alert("Coin Yetersiz!");
+        const newClan = push(ref(db, 'clans'));
+        set(newClan, { name: name, leader: auth.currentUser.uid, xp: 0 });
+        update(ref(db, 'users/'+auth.currentUser.uid), { coins: increment(-500) });
+    };
+
+    // RESİM YÜKLEME
     window.upImg = (type) => {
         const file = type === 'pImg' ? document.getElementById('fAvatar').files[0] : document.getElementById('fBanner').files[0];
         const reader = new FileReader();
-        reader.onload = (e) => {
-            const key = type === 'pImg' ? 'pImg' : 'pBanner';
-            update(ref(db, 'users/' + auth.currentUser.uid), { [key]: e.target.result });
-        };
+        reader.onload = (e) => update(ref(db, 'users/'+auth.currentUser.uid), { [type]: e.target.result });
         reader.readAsDataURL(file);
-    };
-
-    window.saveBio = () => {
-        update(ref(db, 'users/' + auth.currentUser.uid), { bio: document.getElementById('editBio').value });
-        closeModal();
     };
 
     window.logout = () => signOut(auth);
