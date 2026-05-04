@@ -9,125 +9,97 @@
         :root { --neon: #5865F2; --gold: #f5af19; --red: #ff3b5c; --bg: #050a0f; --panel: #1e1f22; --input: #111214; }
         body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #dbdee1; height: 100vh; overflow: hidden; }
         
-        /* EKRAN YÖNETİMİ */
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
         .active-screen { display: flex !important; }
 
-        /* DISCORD TARZI PROFİL (Resimdeki gibi) */
+        /* DISCORD PROFİL TASARIMI */
         .profile-card { background: var(--panel); width: 90%; max-width: 380px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         .p-banner { height: 100px; background: linear-gradient(45deg, #5865F2, #eb459e); position: relative; }
         .p-avatar-wrap { position: absolute; top: 60px; left: 20px; width: 90px; height: 90px; background: var(--panel); border-radius: 50%; padding: 5px; }
-        .p-avatar-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; cursor: pointer; }
-        .p-status-dot { width: 22px; height: 22px; background: #23a55a; border: 4px solid var(--panel); border-radius: 50%; position: absolute; bottom: 0; right: 5px; }
+        .p-avatar-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--panel); }
         .p-content { padding: 65px 20px 20px; text-align: left; }
-        .p-name { font-family: 'Orbitron'; font-size: 20px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 5px; }
-        .p-badges { display: flex; gap: 5px; margin-top: 5px; }
-        .p-bio-box { background: #111214; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; }
+        .p-name { font-family: 'Orbitron'; font-size: 20px; font-weight: bold; color: #fff; }
+        .p-bio-box { background: #111214; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; border: 1px solid #222; }
         
-        /* MENÜ KARTLARI (Kalıcı Resimler) */
+        /* GRID MENÜ */
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 95%; max-width: 500px; margin-top: 60px; }
         .menu-card { 
             background-size: cover; background-position: center; border: 1px solid #333; 
-            border-radius: 12px; height: 110px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: flex-end; padding-bottom: 10px;
-            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+            border-radius: 12px; height: 105px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: flex-end; padding-bottom: 10px; cursor: pointer;
         }
-        .menu-card:active { transform: scale(0.95); }
-        .menu-card h4 { margin: 0; font-family: 'Orbitron'; text-shadow: 2px 2px 5px #000; color: #fff; }
 
-        /* MODALLAR */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--panel); width: 90%; max-width: 450px; border-radius: 16px; padding: 25px; position: relative; text-align: center; }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #b5bac1; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--panel); width: 85%; max-width: 400px; border-radius: 16px; padding: 20px; position: relative; border: 1px solid #444; }
         
-        /* GENEL BUTONLAR */
-        .btn-action { background: #5865f2; border: none; padding: 12px; border-radius: 5px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Rajdhani'; }
-        .btn-action:hover { background: #4752c4; }
-        .auth-input { width: 100%; padding: 12px; margin: 8px 0; background: var(--input); border: 1px solid #222; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .btn-action { background: #5865f2; border: none; padding: 12px; border-radius: 5px; width: 100%; color: #fff; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .auth-input { width: 100%; padding: 12px; margin: 8px 0; background: var(--input); border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
         <div class="profile-card" style="padding:25px; box-sizing:border-box;">
-            <h2 style="text-align:center; font-family:'Orbitron'; color:var(--neon);">NEXUS'A KATIL</h2>
+            <h2 style="text-align:center; font-family:'Orbitron'; color:var(--neon);">NEXUS CONNECT</h2>
             <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
-            <input type="password" id="uPass" class="auth-input" placeholder="Şifre">
-            <div style="display:flex; gap:10px;">
-                <select id="uGender" class="auth-input" style="width:50%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
-                <input type="number" id="uAge" class="auth-input" style="width:50%;" placeholder="Yaş">
-            </div>
-            <input type="text" id="uCountry" class="auth-input" placeholder="Ülke">
-            <button class="btn-action" onclick="handleAuth()">BAŞLAT</button>
+            <input type="password" id="uPass" class="auth-input" placeholder="Şifre (Min. 6 Karakter)">
+            <button class="btn-action" onclick="handleAuth()">KAYDOL VEYA GİRİŞ YAP</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
-        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); z-index:100; box-sizing:border-box; border-bottom:1px solid #333;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:35px; height:35px; background:#5865F2; border-radius:50%; text-align:center; line-height:35px; font-weight:bold;">N</div>
-                <div><b>Lobi</b></div>
-            </div>
-            <div>💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
+        <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); border-bottom:1px solid #333; box-sizing:border-box; z-index:100;">
+            <b>NEXUS</b>
+            <div>💰 <span id="dispCoins">0</span></div>
         </div>
-
         <div class="grid-container">
-            <div class="menu-card" id="btnMatch" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
-            <div class="menu-card" id="btnWords" style="background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg');" onclick="startWordAI()"><h4>TELAFFUZ AI</h4></div>
-            <div class="menu-card" id="btnBP" style="background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
-            <div class="menu-card" id="btnDaily" style="background-image: url('https://i.ibb.co/zHQQpn06/soru.jpg');" onclick="openDailyQuest()"><h4>GÜNLÜK SORU</h4></div>
-            <div class="menu-card" id="btnClans" style="background-image: url('https://i.ibb.co/zHQQpn06/klan.jpg');" onclick="openClans()"><h4>KLANLAR</h4></div>
+            <div class="menu-card" style="grid-column: span 2; background-image: url('https://i.ibb.co/zHQQpn06/match.jpg');" onclick="openModal('modalMatchPref')"><h4>EŞLEŞME BAŞLAT</h4></div>
+            <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/telaffuz.jpg');" onclick="openModal('modalWords')"><h4>TELAFFUZ AI</h4></div>
+            <div class="menu-card" style="background-image: url('https://i.ibb.co/zHQQpn06/1777825427839-2.jpg');" onclick="openModal('modalBP')"><h4>BATTLE PASS</h4></div>
             <div class="menu-card" style="grid-column: span 2; background:#2b2d31;" onclick="switchTab('scrProfile')"><h4>PROFİLİM</h4></div>
         </div>
     </div>
 
     <div id="scrProfile" class="screen">
         <div class="profile-card">
-            <div class="close-x" style="top:10px; right:10px; z-index:10;" onclick="switchTab('scrLobby')">×</div>
             <div class="p-banner"></div>
             <div class="p-avatar-wrap">
-                <img id="pImg" src="https://via.placeholder.com/90" class="p-avatar-main" onclick="document.getElementById('fIn').click()">
-                <div class="p-status-dot"></div>
+                <img id="pImg" src="https://via.placeholder.com/90" class="p-avatar-main">
             </div>
             <div class="p-content">
-                <div class="p-name"><span id="profName">User</span> <span style="color:#5865F2; font-size:16px;">✔️</span></div>
-                <div style="color:#b5bac1; font-size:12px;">@<span id="profTag">user</span></div>
-                <div class="p-badges">🏆 💎 🔥</div>
+                <div class="p-name" id="profName">...</div>
+                <div style="color:#b5bac1; font-size:12px;">@<span id="profTag">...</span></div>
+                
                 <div class="p-bio-box">
                     <div style="font-weight:bold; font-size:11px; color:#b5bac1; margin-bottom:5px;">HAKKIMDA</div>
-                    <div id="profBio">Yazılımcı | Oyuncu | Gezgin</div>
-                    <div style="margin-top:10px; font-weight:bold; font-size:11px; color:#b5bac1;">ÜYE OLMA TARİHİ</div>
-                    <div>May 2026</div>
+                    <div id="profBio" style="color:#fff;">(Düzenlemek için tıkla)</div>
+                    <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
+                    <div style="font-size:13px;">🌍 Ülke: <span id="profCountry">Belirtilmedi</span></div>
+                    <div style="font-size:13px;">🎂 Yaş: <span id="profAge">Belirtilmedi</span></div>
                 </div>
-                <input type="file" id="fIn" style="display:none;" onchange="upImg(this)">
-                <button class="btn-action" style="background:#4e5058;" onclick="logout()">ÇIKIŞ YAP</button>
+
+                <button class="btn-action" style="background:#4e5058;" onclick="openModal('modalEditProfile')">PROFİLİ DÜZENLE</button>
+                <button class="btn-action" style="background:var(--red); margin-top:5px;" onclick="logout()">ÇIKIŞ YAP</button>
+                <button class="btn-action" style="background:#222;" onclick="switchTab('scrLobby')">GERİ DÖN</button>
             </div>
         </div>
     </div>
 
-    <div id="modalWords" class="modal"><div class="modal-content">
-        <span class="close-x" onclick="closeModal()">×</span>
-        <h2 id="wordToSay">Loading...</h2>
-        <p>Lütfen yukarıdaki kelimeyi telaffuz edin</p>
-        <button class="btn-action" onclick="checkVoice()">MİKROFONU AÇ</button>
-    </div></div>
-
-    <div id="modalMatch" class="modal"><div class="modal-content">
-        <h2 id="matchStatus">ARANIYOR...</h2>
-        <div id="matchFound" style="display:none;">
-            <img id="oppImg" src="" style="width:80px; border-radius:50%;">
-            <h3 id="oppName">Rakip</h3>
-            <div id="oppInfo">...</div>
-            <button class="btn-action" onclick="alert('Kamera Açılıyor...')">GÖRÜNTÜLÜ KONUŞ</button>
-            <button class="btn-action" style="background:#444" onclick="closeModal()">AYRIL</button>
-        </div>
+    <div id="modalEditProfile" class="modal"><div class="modal-content">
+        <h3>PROFİLİ GÜNCELLE</h3>
+        <input type="text" id="editBio" class="auth-input" placeholder="Hakkımda yazısı...">
+        <input type="text" id="editCountry" class="auth-input" placeholder="Ülke">
+        <input type="number" id="editAge" class="auth-input" placeholder="Yaş">
+        <input type="file" id="editImg" class="auth-input" accept="image/*">
+        <button class="btn-action" onclick="saveProfile()">KAYDET</button>
+        <button class="btn-action" style="background:#444" onclick="closeModal()">İPTAL</button>
     </div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -141,107 +113,78 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    // --- TEMEL UI ---
     window.openModal = (id) => document.getElementById(id).style.display = 'flex';
-    window.closeModal = () => { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); };
+    window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
 
-    // --- TELAFFUZ AI (100 KELİME) ---
-    const words = ["Success", "Experience", "Development", "Creative", "Universe", "Typography", "Challenge", "Nexus", "Algorithm", "Knowledge"]; // 100'e tamamlanabilir
-    window.startWordAI = () => {
-        const randomWord = words[Math.floor(Math.random() * words.length)];
-        document.getElementById('wordToSay').innerText = randomWord;
-        openModal('modalWords');
-    };
+    // --- KAYIT & GİRİŞ TAMİR EDİLDİ ---
+    window.handleAuth = async () => {
+        const email = document.getElementById('uEmail').value;
+        const pass = document.getElementById('uPass').value;
+        const name = document.getElementById('uName').value;
 
-    window.checkVoice = () => {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'en-US';
-        recognition.onresult = (event) => {
-            const result = event.results[0][0].transcript.toLowerCase();
-            const target = document.getElementById('wordToSay').innerText.toLowerCase();
-            if(result === target) {
-                alert("Mükemmel! +50 XP");
-                update(ref(db, 'users/' + auth.currentUser.uid), { xp: (window.uData.xp || 0) + 50 });
-                closeModal();
-            } else { alert("Hatalı: " + result); }
-        };
-        recognition.start();
-    };
+        if(!email || !pass) return alert("E-posta ve şifre boş olamaz!");
 
-    // --- EŞLEŞME (GERÇEK ZAMANLI) ---
-    window.startMatching = (pref) => {
-        openModal('modalMatch');
-        const mRef = ref(db, 'matchmaking/' + auth.currentUser.uid);
-        set(mRef, { username: window.uData.username, gender: window.uData.gender, pref: pref, pImg: window.uData.pImg || "" });
-
-        onValue(ref(db, 'matchmaking'), (snapshot) => {
-            snapshot.forEach((child) => {
-                if(child.key !== auth.currentUser.uid) {
-                    const data = child.val();
-                    if(pref === 'Hepsi' || data.gender === pref) {
-                        document.getElementById('matchStatus').innerText = "EŞLEŞME BULUNDU!";
-                        document.getElementById('matchFound').style.display = 'block';
-                        document.getElementById('oppImg').src = data.pImg || "https://via.placeholder.com/80";
-                        document.getElementById('oppName').innerText = data.username;
-                        document.getElementById('oppInfo').innerText = `${data.gender} | ${data.age || '?'}`;
-                    }
-                }
+        try {
+            // Önce kaydolmayı dene
+            const res = await createUserWithEmailAndPassword(auth, email, pass);
+            await set(ref(db, 'users/' + res.user.uid), {
+                username: name || email.split('@')[0],
+                bio: "", country: "", age: "", coins: 500, pImg: ""
             });
-        });
-    };
-
-    // --- GÜNLÜK SORU (24 SAAT SİSTEMİ) ---
-    window.openDailyQuest = () => {
-        const lastTime = window.uData.lastQuest || 0;
-        const now = Date.now();
-        if(now - lastTime < 86400000) {
-            const remaining = Math.ceil((86400000 - (now - lastTime)) / 3600000);
-            alert(`Soru için beklemelisin: ${remaining} saat kaldı.`);
-        } else {
-            const ans = prompt("İngilizce'de 'Başarı' ne demek?");
-            if(ans.toLowerCase() === 'success') {
-                update(ref(db, 'users/' + auth.currentUser.uid), { lastQuest: now, xp: (window.uData.xp || 0) + 100 });
-                alert("Doğru! +100 XP");
+            alert("Başarıyla kaydoldun!");
+        } catch (error) {
+            // Kayıtlıysa giriş yapmayı dene
+            if (error.code === 'auth/email-already-in-use') {
+                await signInWithEmailAndPassword(auth, email, pass)
+                    .then(() => alert("Giriş yapıldı!"))
+                    .catch(e => alert("Hata: " + e.message));
+            } else {
+                alert("Kayıt Hatası: " + error.message);
             }
         }
     };
 
-    // --- AUTH & DATA ---
-    window.handleAuth = async () => {
-        const email = document.getElementById('uEmail').value, pass = document.getElementById('uPass').value;
-        try {
-            const res = await createUserWithEmailAndPassword(auth, email, pass);
-            await set(ref(db, 'users/' + res.user.uid), {
-                username: document.getElementById('uName').value,
-                gender: document.getElementById('uGender').value,
-                age: document.getElementById('uAge').value,
-                country: document.getElementById('uCountry').value,
-                xp: 0, coins: 500, pImg: "", lastQuest: 0
-            });
-        } catch { await signInWithEmailAndPassword(auth, email, pass); }
-    };
-
+    // --- VERİLERİ ÇEK ---
     onAuthStateChanged(auth, user => {
         if(user) {
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
-                window.uData = s.val();
-                document.getElementById('dispName').innerText = uData.username;
-                document.getElementById('profName').innerText = uData.username;
-                document.getElementById('profTag').innerText = uData.username.toLowerCase();
-                document.getElementById('dispXp').innerText = uData.xp || 0;
-                document.getElementById('pImg').src = uData.pImg || "https://via.placeholder.com/90";
-                document.getElementById('profBio').innerText = `${uData.gender} | ${uData.age} | ${uData.country}`;
+                const d = s.val(); if(!d) return;
+                window.uData = d;
+                document.getElementById('profName').innerText = d.username;
+                document.getElementById('profTag').innerText = d.username.toLowerCase();
+                document.getElementById('profBio').innerText = d.bio || "Henüz bir hakkımda yazısı yok.";
+                document.getElementById('profCountry').innerText = d.country || "Belirtilmedi";
+                document.getElementById('profAge').innerText = d.age || "Belirtilmedi";
+                document.getElementById('dispCoins').innerText = d.coins || 0;
+                document.getElementById('pImg').src = d.pImg || "https://via.placeholder.com/90";
             });
         } else { switchTab('scrAuth'); }
     });
 
-    window.upImg = (input) => {
-        const reader = new FileReader();
-        reader.onload = (e) => update(ref(db, 'users/' + auth.currentUser.uid), { pImg: e.target.result });
-        reader.readAsDataURL(input.files[0]);
+    // --- PROFİL KAYDET ---
+    window.saveProfile = () => {
+        const file = document.getElementById('editImg').files[0];
+        const updates = {
+            bio: document.getElementById('editBio').value,
+            country: document.getElementById('editCountry').value,
+            age: document.getElementById('editAge').value
+        };
+
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                updates.pImg = e.target.result;
+                update(ref(db, 'users/' + auth.currentUser.uid), updates);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            update(ref(db, 'users/' + auth.currentUser.uid), updates);
+        }
+        closeModal();
     };
+
     window.logout = () => signOut(auth);
 </script>
 </body>
