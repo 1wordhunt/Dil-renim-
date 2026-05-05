@@ -16,8 +16,9 @@
         .category-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; filter: brightness(0.4); }
         .category-card span { position: relative; z-index: 2; font-weight: bold; font-family: 'Orbitron'; font-size: 13px; text-shadow: 0 0 5px #000; }
 
+        /* PROFİL TASARIMI */
         .profile-card { width: 92%; max-width: 400px; background: var(--panel); border-radius: 15px; overflow: hidden; margin-top: 60px; border: 1px solid #333; }
-        .banner { height: 100px; background: linear-gradient(45deg, #bc13fe, #00f3ff); }
+        .banner { height: 100px; background: linear-gradient(45deg, #bc13fe, #00f3ff); background-size: cover; background-position: center; position: relative; }
         .avatar-wrap { position: relative; width: 80px; height: 80px; margin-left: 20px; margin-top: -40px; }
         .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--panel); background: #000; object-fit: cover; }
         .avatar-frame { position: absolute; top: -18px; left: -18px; width: 115px; height: 115px; pointer-events: none; z-index: 3; }
@@ -30,6 +31,7 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; }
         .modal-content { background: var(--panel); width: 85%; max-width: 380px; border-radius: 20px; padding: 25px; border: 1px solid var(--neon); text-align: center; }
         .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn-small { padding: 5px 10px; font-size: 11px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon); color: white; border-radius: 5px; cursor: pointer; }
         .auth-input { width: 100%; padding: 12px; margin: 6px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
@@ -62,30 +64,34 @@
             <div class="category-card" onclick="openModal('modalWords')">
                 <img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span>
             </div>
-            <div class="category-card" onclick="alert('Klanlar Sistemi Yakında!')">
+            <div class="category-card" onclick="alert('Yakında!')">
                 <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span>
             </div>
-            <div class="category-card" onclick="alert('Battle Pass Çok Yakında!')">
+            <div class="category-card" onclick="alert('Yakında!')">
                 <img src="https://i.ibb.co/zHQQpn06/1777825427839-2.jpg"><span>BATTLE PASS</span>
             </div>
-            <div class="category-card" style="grid-column:span 2;" onclick="alert('Günlük Soru Yarın Aktif!')">
-                <img src="https://i.ibb.co/zHQQpn06/soru.jpg"><span>GÜNLÜK SORU</span>
-            </div>
-            <button class="btn-action" style="grid-column:span 2;" onclick="switchTab('scrProfile')">PROFİLİMİ AÇ</button>
+            <button class="btn-action" style="grid-column:span 2;" onclick="switchTab('scrProfile')">PROFİLİM</button>
         </div>
     </div>
 
     <div id="scrProfile" class="screen">
         <div class="profile-card">
-            <div class="banner"></div>
+            <div id="profBanner" class="banner">
+                <button class="btn-small" style="position:absolute; bottom:5px; right:5px;" onclick="updateVisual('banner')">Banner Değiştir</button>
+            </div>
             <div class="avatar-wrap">
                 <img src="1000008715.png" class="avatar-frame">
-                <img id="pImg" src="https://via.placeholder.com/150" class="avatar-img">
+                <img id="profAvatar" src="https://via.placeholder.com/150" class="avatar-img">
+                <button class="btn-small" style="position:absolute; bottom:-10px; right:-10px;" onclick="updateVisual('avatar')">Düzenle</button>
             </div>
             <div style="padding:15px;">
-                <h2 id="profName" style="margin:0; font-family:'Orbitron';">...</h2>
-                <div class="prof-box"><b>Bilgiler:</b> <br> Yaş: <span id="profAge">?</span> | Ülke: <span id="profCoun">?</span> | Cinsiyet: <span id="profGen">?</span></div>
-                <button class="btn-action" onclick="switchTab('scrLobby')">LOBİYE DÖN</button>
+                <h2 id="profName" style="margin:0; font-family:'Orbitron';">Yükleniyor...</h2>
+                <div class="prof-box">
+                    Yaş: <span id="profAge">?</span><br>
+                    Ülke: <span id="profCoun">?</span><br>
+                    Cinsiyet: <span id="profGen">?</span>
+                </div>
+                <button class="btn-action" onclick="switchTab('scrLobby')">GERİ DÖN</button>
             </div>
         </div>
     </div>
@@ -98,14 +104,13 @@
             </div>
             <div class="video-box">
                 <video id="localVid" autoplay muted playsinline></video>
-                <button class="btn-action" style="position:absolute; bottom:10px; right:10px; width:100px; background:var(--red);" onclick="stopMatch()">AYRIL</button>
+                <button class="btn-action" style="position:absolute; bottom:15px; left:50%; transform:translateX(-50%); width:150px; background:var(--red);" onclick="stopMatch()">BAĞLANTIYI KES</button>
             </div>
         </div>
     </div>
 
     <div id="modalMatchPref" class="modal"><div class="modal-content"><h3>CİNSİYET SEÇ</h3><button class="btn-action" onclick="startFinding('Kız')">KIZLARLA EŞLEŞ</button><button class="btn-action" onclick="startFinding('Erkek')">ERKEKLERLE EŞLEŞ</button><button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button></div></div>
-
-    <div id="modalWords" class="modal"><div class="modal-content"><h3>TELAFFUZ AI</h3><p>Şu kelimeyi oku:</p><h1 style="color:var(--neon);">SUCCESS</h1><button class="btn-action" onclick="startSpeech()">🎤 MİKROFONU AÇ & OKU</button><button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button></div></div>
+    <div id="modalWords" class="modal"><div class="modal-content"><h3>TELAFFUZ AI</h3><p>Success</p><button class="btn-action" onclick="startSpeech()">🎤 OKU</button><button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -135,28 +140,25 @@
         if(user) {
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
-                const d = s.val(); window.uData = d;
+                const d = s.val() || {};
                 document.getElementById('dispCoins').innerText = d.coins || 0;
                 document.getElementById('dispXp').innerText = d.xp || 0;
-                document.getElementById('profName').innerText = d.username || "İsimsiz";
+                document.getElementById('profName').innerText = d.username || "Yeni Üye";
                 document.getElementById('profAge').innerText = d.age || "-";
                 document.getElementById('profGen').innerText = d.gender || "-";
                 document.getElementById('profCoun').innerText = d.country || "-";
+                document.getElementById('profAvatar').src = d.avatar || "https://via.placeholder.com/150";
+                document.getElementById('profBanner').style.backgroundImage = d.banner ? `url(${d.banner})` : "linear-gradient(45deg, #bc13fe, #00f3ff)";
             });
         } else { switchTab('scrAuth'); }
     });
 
-    window.startSpeech = () => {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'en-US';
-        recognition.start();
-        recognition.onresult = (event) => {
-            const speechToText = event.results[0][0].transcript;
-            if(speechToText.toLowerCase().includes("success")) {
-                alert("Harika Telaffuz! +50 XP");
-                update(ref(db, 'users/'+auth.currentUser.uid), { xp: increment(50) });
-            } else { alert("Tekrar dene: " + speechToText); }
-        };
+    window.updateVisual = async (type) => {
+        const link = prompt(`${type === 'avatar' ? 'Profil resmi' : 'Banner'} için görsel linki girin:`);
+        if(link) {
+            const updates = {}; updates[type] = link;
+            await update(ref(db, 'users/' + auth.currentUser.uid), updates);
+        }
     };
 
     window.startFinding = async (pref) => {
@@ -166,8 +168,8 @@
         const snap = await get(ref(db, 'queue'));
         let foundUser = null;
         snap.forEach(c => { if(c.val().gender === pref && c.key !== auth.currentUser.uid) foundUser = c.key; });
-        if(foundUser) { currentRoomId = foundUser; await joinRoom(foundUser); remove(ref(db, `queue/${foundUser}`)); } 
-        else { currentRoomId = auth.currentUser.uid; await createRoom(auth.currentUser.uid); set(ref(db, `queue/${auth.currentUser.uid}`), { gender: uData.gender }); onDisconnect(ref(db, `queue/${auth.currentUser.uid}`)).remove(); }
+        if(foundUser) { currentRoomId = foundUser; await joinRoom(foundUser); remove(ref(db, `queue/${foundUser}`)); }
+        else { currentRoomId = auth.currentUser.uid; await createRoom(auth.currentUser.uid); set(ref(db, `queue/${auth.currentUser.uid}`), { gender: (window.uData?.gender || 'Erkek') }); onDisconnect(ref(db, `queue/${auth.currentUser.uid}`)).remove(); }
     };
 
     async function createRoom(roomId) {
@@ -179,20 +181,17 @@
         await pc.setLocalDescription(offer);
         await set(ref(db, `rooms/${roomId}`), { offer: { type: offer.type, sdp: offer.sdp } });
         onValue(ref(db, `rooms/${roomId}`), async s => { const d = s.val(); if(!pc.currentRemoteDescription && d?.answer) await pc.setRemoteDescription(new RTCSessionDescription(d.answer)); });
-        onValue(ref(db, `rooms/${roomId}/calleeCandidates`), s => { s.exists() && s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val()))); });
     }
 
     async function joinRoom(roomId) {
         pc = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
         pc.ontrack = e => { document.getElementById('remoteVid').srcObject = e.streams[0]; document.getElementById('searchingText').style.display='none'; };
-        pc.onicecandidate = e => e.candidate && push(ref(db, `rooms/${roomId}/calleeCandidates`), e.candidate.toJSON());
         const roomSnap = await get(ref(db, `rooms/${roomId}`));
         await pc.setRemoteDescription(new RTCSessionDescription(roomSnap.val().offer));
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         await update(ref(db, `rooms/${roomId}`), { answer: { type: answer.type, sdp: answer.sdp } });
-        onValue(ref(db, `rooms/${roomId}/callerCandidates`), s => { s.exists() && s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val()))); });
     }
 
     window.stopMatch = () => {
@@ -207,11 +206,10 @@
         const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value;
         const n = document.getElementById('uName').value, a = document.getElementById('uAge').value;
         const g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
-        if(!e || !p) return alert("Bilgileri gir kanka!");
         try {
             const res = await createUserWithEmailAndPassword(auth, e, p);
             await set(ref(db, 'users/' + res.user.uid), { username: n, age: a, gender: g, country: c, coins: 500, xp: 0 });
-        } catch { try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert(err.message); } }
+        } catch { try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert("Hata oluştu!"); } }
     };
 </script>
 </body>
