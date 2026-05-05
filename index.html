@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Connect | Real-Time Edition</title>
+    <title>Nexus Connect | Real-Time Peer-to-Peer</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --discord: #5865F2; --neon: #00f3ff; --gold: #f5af19; --bg: #0b0e11; --panel: #1e1f22; --red: #ff4757; }
@@ -26,8 +26,6 @@
         .modal-content { background: var(--panel); width: 85%; max-width: 380px; border-radius: 20px; padding: 25px; border: 1px solid var(--neon); text-align: center; }
         .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         .auth-input { width: 100%; padding: 12px; margin: 6px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; }
-        .bp-bar-bg { width: 100%; height: 12px; background: #222; border-radius: 6px; margin: 10px 0; overflow: hidden; }
-        .bp-bar-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.5s; }
     </style>
 </head>
 <body>
@@ -43,7 +41,7 @@
                 <select id="uGender" class="auth-input" style="width:33%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
                 <select id="uCountry" class="auth-input" style="width:34%;"><option value="Türkiye">TR 🇹🇷</option><option value="ABD">US 🇺🇸</option></select>
             </div>
-            <button class="btn-action" onclick="handleAuth()">SİSTEME KATIL</button>
+            <button class="btn-action" onclick="handleAuth()">KATIL</button>
         </div>
     </div>
 
@@ -54,13 +52,13 @@
         </div>
         <div class="grid-menu">
             <div class="category-card" style="grid-column:span 2; border-color:var(--neon);" onclick="openModal('modalMatchPref')">
-                <img src="https://i.ibb.co/zHQQpn06/match.jpg"><span>GERÇEK ZAMANLI EŞLEŞ</span>
+                <img src="https://i.ibb.co/zHQQpn06/match.jpg"><span>GÖRÜNTÜLÜ EŞLEŞ</span>
             </div>
             <div class="category-card" onclick="openModal('modalWords')">
                 <img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span>
             </div>
             <div class="category-card" onclick="openModal('modalClans')">
-                <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN SOHBETİ</span>
+                <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span>
             </div>
             <div class="category-card" onclick="openModal('modalBP')">
                 <img src="https://i.ibb.co/zHQQpn06/1777825427839-2.jpg"><span>BATTLE PASS</span>
@@ -73,12 +71,12 @@
     </div>
 
     <div id="scrMatch" class="screen">
-        <div class="timer-badge" id="matchTimer">BEKLENİYOR...</div>
+        <div class="timer-badge" id="matchTimer">ARANIYOR...</div>
         <button id="extendBtn" class="extend-btn" onclick="extendMatch()">⏱ +30 SN UZAT (100 💰)</button>
         <div class="match-grid">
             <div class="video-box">
                 <video id="remoteVid" autoplay playsinline></video>
-                <div id="searchingText" style="position:absolute;">Uygun bir eş aranıyor...</div>
+                <div id="searchingText" style="position:absolute; color:var(--neon);">Hücresel Veri/WiFi üzerinden gerçek eş aranıyor...</div>
             </div>
             <div class="video-box">
                 <video id="localVid" autoplay muted playsinline></video>
@@ -87,23 +85,13 @@
         </div>
     </div>
 
-    <div id="modalBP" class="modal"><div class="modal-content">
-        <h2 style="color:var(--gold);">NEXUS PASS</h2>
-        <div style="text-align:left;">
-            Ödüle Kalan: <span id="bpNextXp" style="color:var(--neon);">200</span> XP
-            <div class="bp-bar-bg"><div class="bp-bar-fill" id="bpBar"></div></div>
-        </div>
-        <div id="bpTrack" style="display:flex; gap:8px; overflow-x:auto; padding:10px 0;"></div>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalClans" class="modal"><div class="modal-content"><h3>KLAN CHAT</h3><div id="chatBox" style="height:150px; overflow-y:auto; background:#111; margin:10px 0; border-radius:8px; text-align:left; padding:10px;"></div><input type="text" id="cIn" class="auth-input" placeholder="Mesaj..."><button class="btn-action" onclick="sendClanMsg()">GÖNDER</button><button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button></div></div>
-    <div id="modalMatchPref" class="modal"><div class="modal-content"><h3>EŞLEŞME TERCİHİ</h3><button class="btn-action" style="background:var(--red);" onclick="findPartner('Kız')">KIZLARLA EŞLEŞ</button><button class="btn-action" onclick="findPartner('Erkek')">ERKEKLERLE EŞLEŞ</button><label style="display:block; margin-top:10px; cursor:pointer;"><input type="checkbox" id="camOn" checked> Kamera Açık</label><button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button></div></div>
+    <div id="modalMatchPref" class="modal"><div class="modal-content"><h3>TERCİH YAP</h3><button class="btn-action" style="background:var(--red);" onclick="startFinding('Kız')">KIZLARLA EŞLEŞ</button><button class="btn-action" onclick="startFinding('Erkek')">ERKEKLERLE EŞLEŞ</button><button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button></div></div>
+    <div id="modalBP" class="modal"><div class="modal-content"><h2>NEXUS PASS</h2><div id="bpTrack" style="display:flex; gap:8px; overflow-x:auto;"></div><button class="btn-action" onclick="closeModal()">KAPAT</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set, increment, push, get, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, onValue, update, set, increment, push, remove, onDisconnect, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -117,6 +105,9 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
+    let pc, localStream, timer, timeLeft = 30, currentRoomId = null;
+    const servers = { iceServers: [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] }] };
+
     window.openModal = (id) => document.getElementById(id).style.display = 'flex';
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
@@ -128,47 +119,98 @@
                 const d = s.val(); window.uData = d;
                 document.getElementById('dispCoins').innerText = d.coins;
                 document.getElementById('dispXp').innerText = d.xp;
-                renderBP(d.xp);
             });
         } else { switchTab('scrAuth'); }
     });
 
-    // --- GERÇEK ZAMANLI EŞLEŞME (POOL SİSTEMİ) ---
-    let timer, timeLeft = 30;
-    window.findPartner = async (pref) => {
-        const cam = document.getElementById('camOn').checked;
+    // --- GERÇEK ZAMANLI WEB-RTC & FIREBASE SIGNALING ---
+    window.startFinding = async (pref) => {
         closeModal(); switchTab('scrMatch');
-        
-        // Kamera/Ses Hazırlığı
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({video: cam, audio: true});
-            document.getElementById('localVid').srcObject = stream;
-            window.localStream = stream;
-        } catch(e) { alert("İzin verilmedi!"); return stopMatch(); }
+        localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        document.getElementById('localVid').srcObject = localStream;
 
-        // Kuyruğa Gir
-        const queueRef = ref(db, 'queue/' + auth.currentUser.uid);
-        await set(queueRef, { username: uData.username, gender: uData.gender, pref: pref, timestamp: Date.now() });
-        onDisconnect(queueRef).remove();
+        const queueRef = ref(db, 'queue');
+        const snap = await get(queueRef);
+        let foundUser = null;
 
-        // Eşleşme Kontrolü (Seni bekleyen biri var mı?)
-        onValue(ref(db, 'queue'), snap => {
-            snap.forEach(child => {
-                if(child.key !== auth.currentUser.uid && child.val().gender === pref) {
-                    // EŞLEŞME OLDU! (Basit mantık: Karşılıklı oda kurma buraya gelir)
-                    document.getElementById('searchingText').style.display = 'none';
-                    startTimer();
-                }
-            });
+        snap.forEach(child => {
+            if(child.val().gender === pref && child.key !== auth.currentUser.uid) {
+                foundUser = child.key;
+            }
         });
+
+        if(foundUser) {
+            // EŞLEŞEN VAR -> ODAYA KATIL (ANSWER)
+            currentRoomId = foundUser; 
+            await joinRoom(foundUser);
+            remove(ref(db, `queue/${foundUser}`));
+        } else {
+            // EŞLEŞEN YOK -> KUYRUKTA BEKLE (OFFER)
+            currentRoomId = auth.currentUser.uid;
+            await createRoom(auth.currentUser.uid);
+            set(ref(db, `queue/${auth.currentUser.uid}`), { gender: uData.gender, timestamp: Date.now() });
+            onDisconnect(ref(db, `queue/${auth.currentUser.uid}`)).remove();
+        }
     };
 
+    async function createRoom(roomId) {
+        pc = new RTCPeerConnection(servers);
+        localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+        pc.ontrack = e => document.getElementById('remoteVid').srcObject = e.streams[0];
+
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        
+        const roomRef = ref(db, `rooms/${roomId}`);
+        await set(roomRef, { offer: { type: offer.type, sdp: offer.sdp } });
+
+        // Buz adaylarını topla
+        pc.onicecandidate = e => { if(e.candidate) push(ref(db, `rooms/${roomId}/callerCandidates`), e.candidate.toJSON()); };
+
+        // Yanıt bekle
+        onValue(roomRef, async s => {
+            const data = s.val();
+            if(!pc.currentRemoteDescription && data?.answer) {
+                await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+                document.getElementById('searchingText').style.display = 'none';
+                startTimer();
+            }
+        });
+
+        onValue(ref(db, `rooms/${roomId}/calleeCandidates`), s => {
+            s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
+        });
+    }
+
+    async function joinRoom(roomId) {
+        pc = new RTCPeerConnection(servers);
+        localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+        pc.ontrack = e => document.getElementById('remoteVid').srcObject = e.streams[0];
+
+        const roomRef = ref(db, `rooms/${roomId}`);
+        const roomSnap = await get(roomRef);
+        const data = roomSnap.val();
+
+        await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        await update(roomRef, { answer: { type: answer.type, sdp: answer.sdp } });
+
+        pc.onicecandidate = e => { if(e.candidate) push(ref(db, `rooms/${roomId}/calleeCandidates`), e.candidate.toJSON()); };
+
+        onValue(ref(db, `rooms/${roomId}/callerCandidates`), s => {
+            s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
+        });
+
+        document.getElementById('searchingText').style.display = 'none';
+        startTimer();
+    }
+
     function startTimer() {
-        timeLeft = 30;
-        clearInterval(timer);
+        timeLeft = 30; clearInterval(timer);
         timer = setInterval(() => {
             timeLeft--;
-            document.getElementById('matchTimer').innerText = `00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
+            document.getElementById('matchTimer').innerText = `Kalan: 00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
             if(timeLeft <= 10) document.getElementById('extendBtn').style.display = 'block';
             if(timeLeft <= 0) { stopMatch(); alert("Süre doldu!"); }
         }, 1000);
@@ -177,49 +219,28 @@
     window.extendMatch = () => {
         if(uData.coins < 100) return alert("Coin yetersiz!");
         update(ref(db, 'users/'+auth.currentUser.uid), { coins: increment(-100) });
-        timeLeft += 30;
-        document.getElementById('extendBtn').style.display = 'none';
+        timeLeft += 30; document.getElementById('extendBtn').style.display = 'none';
     };
 
     window.stopMatch = () => {
         clearInterval(timer);
-        remove(ref(db, 'queue/' + auth.currentUser.uid));
-        if(window.localStream) window.localStream.getTracks().forEach(t => t.stop());
+        if(pc) pc.close();
+        if(currentRoomId) remove(ref(db, `rooms/${currentRoomId}`));
+        remove(ref(db, `queue/${auth.currentUser.uid}`));
+        if(localStream) localStream.getTracks().forEach(t => t.stop());
         switchTab('scrLobby');
     };
 
-    // --- KAYIT SİSTEMİ (FULL FIX) ---
+    // --- KAYIT (FIXED) ---
     window.handleAuth = async () => {
         const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value, n = document.getElementById('uName').value;
         const a = document.getElementById('uAge').value, g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
-        
-        if(!e || !p || !n || !a) return alert("Eksik bilgi!");
-
+        if(!e || !p || !n || !a) return alert("Doldur kanka!");
         try {
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await set(ref(db, 'users/' + res.user.uid), { 
-                username: n, age: a, gender: g, country: c, coins: 500, xp: 0, pImg: ""
-            });
-        } catch {
-            try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert(err.message); }
-        }
+            await set(ref(db, 'users/' + res.user.uid), { username: n, age: a, gender: g, country: c, coins: 500, xp: 0 });
+        } catch { try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert(err.message); } }
     };
-
-    // --- BATTLE PASS ---
-    function renderBP(xp) {
-        const next = 200 - (xp % 200);
-        const progress = ((xp % 200) / 200) * 100;
-        document.getElementById('bpBar').style.width = progress + "%";
-        document.getElementById('bpNextXp').innerText = next;
-        
-        const track = document.getElementById('bpTrack'); track.innerHTML = "";
-        for(let i=1; i<=10; i++) {
-            const active = xp >= (i*200);
-            track.innerHTML += `<div style="min-width:60px; height:80px; background:${active?'#1a3333':'#222'}; border:1px solid ${active?'var(--neon)':'#444'}; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                <small>LVL ${i}</small><b>${i%2==0?'💰':'💎'}</b>
-            </div>`;
-        }
-    }
 </script>
 </body>
 </html>
