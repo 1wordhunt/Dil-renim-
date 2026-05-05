@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Connect | Real-Time Peer-to-Peer</title>
+    <title>Nexus Connect | Final Competition Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --discord: #5865F2; --neon: #00f3ff; --gold: #f5af19; --bg: #0b0e11; --panel: #1e1f22; --red: #ff4757; }
         body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #dbdee1; height: 100vh; overflow: hidden; }
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; position: absolute; overflow-y: auto; padding-bottom: 30px; }
         .active-screen { display: flex !important; }
+        
+        /* LOBİ & MENÜ */
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 92%; margin-top: 70px; }
-        .category-card { position: relative; height: 115px; border-radius: 15px; overflow: hidden; border: 2px solid #333; cursor: pointer; display: flex; align-items: flex-end; padding: 12px; }
+        .category-card { position: relative; height: 110px; border-radius: 15px; overflow: hidden; border: 2px solid #333; cursor: pointer; display: flex; align-items: flex-end; padding: 12px; }
         .category-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; filter: brightness(0.4); }
         .category-card span { position: relative; z-index: 2; font-weight: bold; font-family: 'Orbitron'; font-size: 13px; text-shadow: 0 0 5px #000; }
-        .avatar-wrap { position: relative; width: 85px; height: 85px; margin-left: 20px; margin-top: -40px; z-index: 2; }
+
+        /* PROFİL TASARIMI */
+        .profile-card { width: 92%; max-width: 400px; background: var(--panel); border-radius: 15px; overflow: hidden; margin-top: 60px; border: 1px solid #333; }
+        .banner { height: 100px; background: linear-gradient(45deg, #bc13fe, #00f3ff); }
+        .avatar-wrap { position: relative; width: 80px; height: 80px; margin-left: 20px; margin-top: -40px; }
         .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--panel); background: #000; object-fit: cover; }
-        .avatar-frame { position: absolute; top: -18px; left: -18px; width: 120px; height: 120px; pointer-events: none; z-index: 3; }
+        .avatar-frame { position: absolute; top: -18px; left: -18px; width: 115px; height: 115px; pointer-events: none; z-index: 3; }
+        .prof-box { background: #111; border-radius: 8px; padding: 12px; margin-top: 10px; border: 1px solid #222; }
+
+        /* VİDEO ALANI */
         .match-grid { display: grid; grid-template-rows: 1fr 1fr; height: 100vh; width: 100vw; background: #000; }
-        .video-box { position: relative; width: 100%; height: 100%; border-bottom: 2px solid var(--neon); background: #111; display: flex; align-items: center; justify-content: center; }
+        .video-box { position: relative; width: 100%; height: 100%; border-bottom: 2px solid var(--neon); background: #111; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .timer-badge { position: absolute; top: 20px; background: rgba(0,0,0,0.8); padding: 8px 20px; border-radius: 20px; border: 1px solid var(--neon); z-index: 10; font-family: 'Orbitron'; }
-        .extend-btn { position: absolute; bottom: 100px; background: var(--gold); color: #000; padding: 12px 25px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; display: none; z-index: 20; box-shadow: 0 0 20px var(--gold); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; }
         .modal-content { background: var(--panel); width: 85%; max-width: 380px; border-radius: 20px; padding: 25px; border: 1px solid var(--neon); text-align: center; }
         .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         .auth-input { width: 100%; padding: 12px; margin: 6px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; }
@@ -31,17 +39,17 @@
 <body>
 
     <div id="scrAuth" class="screen active-screen">
-        <div style="margin-top:50px; width:85%; text-align: center;">
+        <div style="margin-top:60px; width:85%; text-align: center;">
             <h1 style="color:var(--neon); font-family:'Orbitron';">NEXUS CONNECT</h1>
-            <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
             <input type="password" id="uPass" class="auth-input" placeholder="Şifre">
+            <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <div style="display:flex; gap:5px;">
                 <input type="number" id="uAge" class="auth-input" style="width:33%;" placeholder="Yaş">
                 <select id="uGender" class="auth-input" style="width:33%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
-                <select id="uCountry" class="auth-input" style="width:34%;"><option value="Türkiye">TR 🇹🇷</option><option value="ABD">US 🇺🇸</option></select>
+                <select id="uCountry" class="auth-input" style="width:34%;"><option value="Türkiye">TR 🇹🇷</option></select>
             </div>
-            <button class="btn-action" onclick="handleAuth()">KATIL</button>
+            <button class="btn-action" onclick="handleAuth()">GİRİŞ / KAYIT</button>
         </div>
     </div>
 
@@ -54,44 +62,46 @@
             <div class="category-card" style="grid-column:span 2; border-color:var(--neon);" onclick="openModal('modalMatchPref')">
                 <img src="https://i.ibb.co/zHQQpn06/match.jpg"><span>GÖRÜNTÜLÜ EŞLEŞ</span>
             </div>
-            <div class="category-card" onclick="openModal('modalWords')">
-                <img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span>
+            <div class="category-card" onclick="alert('Yakında!')"><img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span></div>
+            <div class="category-card" onclick="alert('Yakında!')"><img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span></div>
+            <button class="btn-action" style="grid-column:span 2;" onclick="switchTab('scrProfile')">PROFİLİMİ AÇ</button>
+        </div>
+    </div>
+
+    <div id="scrProfile" class="screen">
+        <div class="profile-card">
+            <div class="banner"></div>
+            <div class="avatar-wrap">
+                <img src="1000008715.png" class="avatar-frame">
+                <img id="pImg" src="https://via.placeholder.com/150" class="avatar-img">
             </div>
-            <div class="category-card" onclick="openModal('modalClans')">
-                <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span>
+            <div style="padding:15px;">
+                <h2 id="profName" style="margin:0; font-family:'Orbitron';">Yükleniyor...</h2>
+                <div class="prof-box"><b>Bilgiler:</b> <br> Yaş: <span id="profAge">?</span> | Ülke: <span id="profCoun">?</span> | Cinsiyet: <span id="profGen">?</span></div>
+                <button class="btn-action" onclick="switchTab('scrLobby')">LOBİYE DÖN</button>
             </div>
-            <div class="category-card" onclick="openModal('modalBP')">
-                <img src="https://i.ibb.co/zHQQpn06/1777825427839-2.jpg"><span>BATTLE PASS</span>
-            </div>
-            <div class="category-card" onclick="openModal('modalDaily')">
-                <img src="https://i.ibb.co/zHQQpn06/soru.jpg"><span>GÜNLÜK SORU</span>
-            </div>
-            <button class="btn-action" style="grid-column:span 2; background:#222;" onclick="switchTab('scrProfile')">PROFİLİM</button>
         </div>
     </div>
 
     <div id="scrMatch" class="screen">
-        <div class="timer-badge" id="matchTimer">ARANIYOR...</div>
-        <button id="extendBtn" class="extend-btn" onclick="extendMatch()">⏱ +30 SN UZAT (100 💰)</button>
         <div class="match-grid">
             <div class="video-box">
                 <video id="remoteVid" autoplay playsinline></video>
-                <div id="searchingText" style="position:absolute; color:var(--neon);">Hücresel Veri/WiFi üzerinden gerçek eş aranıyor...</div>
+                <div id="searchingText" style="position:absolute; top:45%; width:100%; text-align:center; color:var(--neon);">EŞLEŞME ARANIYOR...</div>
             </div>
             <div class="video-box">
                 <video id="localVid" autoplay muted playsinline></video>
-                <button class="btn-action" style="position:absolute; bottom:15px; width:120px; background:var(--red);" onclick="stopMatch()">AYRIL</button>
+                <button class="btn-action" style="position:absolute; bottom:10px; right:10px; width:100px; background:var(--red);" onclick="stopMatch()">AYRIL</button>
             </div>
         </div>
     </div>
 
-    <div id="modalMatchPref" class="modal"><div class="modal-content"><h3>TERCİH YAP</h3><button class="btn-action" style="background:var(--red);" onclick="startFinding('Kız')">KIZLARLA EŞLEŞ</button><button class="btn-action" onclick="startFinding('Erkek')">ERKEKLERLE EŞLEŞ</button><button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button></div></div>
-    <div id="modalBP" class="modal"><div class="modal-content"><h2>NEXUS PASS</h2><div id="bpTrack" style="display:flex; gap:8px; overflow-x:auto;"></div><button class="btn-action" onclick="closeModal()">KAPAT</button></div></div>
+    <div id="modalMatchPref" class="modal"><div class="modal-content"><h3>CİNSİYET SEÇ</h3><button class="btn-action" onclick="startFinding('Kız')">KIZLARLA EŞLEŞ</button><button class="btn-action" onclick="startFinding('Erkek')">ERKEKLERLE EŞLEŞ</button><button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set, increment, push, remove, onDisconnect, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, set, push, remove, onDisconnect, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -105,25 +115,33 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    let pc, localStream, timer, timeLeft = 30, currentRoomId = null;
+    let pc, localStream, currentRoomId = null;
     const servers = { iceServers: [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] }] };
 
     window.openModal = (id) => document.getElementById(id).style.display = 'flex';
     window.closeModal = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-    window.switchTab = (id) => { closeModal(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); };
+    window.switchTab = (id) => { 
+        closeModal(); 
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); 
+        document.getElementById(id).classList.add('active-screen'); 
+    };
 
     onAuthStateChanged(auth, user => {
         if(user) {
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
                 const d = s.val(); window.uData = d;
-                document.getElementById('dispCoins').innerText = d.coins;
-                document.getElementById('dispXp').innerText = d.xp;
+                document.getElementById('dispCoins').innerText = d.coins || 0;
+                document.getElementById('dispXp').innerText = d.xp || 0;
+                // Profil Doldur
+                document.getElementById('profName').innerText = d.username;
+                document.getElementById('profAge').innerText = d.age;
+                document.getElementById('profGen').innerText = d.gender;
+                document.getElementById('profCoun').innerText = d.country;
             });
         } else { switchTab('scrAuth'); }
     });
 
-    // --- GERÇEK ZAMANLI WEB-RTC & FIREBASE SIGNALING ---
     window.startFinding = async (pref) => {
         closeModal(); switchTab('scrMatch');
         localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
@@ -132,23 +150,16 @@
         const queueRef = ref(db, 'queue');
         const snap = await get(queueRef);
         let foundUser = null;
-
-        snap.forEach(child => {
-            if(child.val().gender === pref && child.key !== auth.currentUser.uid) {
-                foundUser = child.key;
-            }
-        });
+        snap.forEach(c => { if(c.val().gender === pref && c.key !== auth.currentUser.uid) foundUser = c.key; });
 
         if(foundUser) {
-            // EŞLEŞEN VAR -> ODAYA KATIL (ANSWER)
-            currentRoomId = foundUser; 
+            currentRoomId = foundUser;
             await joinRoom(foundUser);
             remove(ref(db, `queue/${foundUser}`));
         } else {
-            // EŞLEŞEN YOK -> KUYRUKTA BEKLE (OFFER)
             currentRoomId = auth.currentUser.uid;
             await createRoom(auth.currentUser.uid);
-            set(ref(db, `queue/${auth.currentUser.uid}`), { gender: uData.gender, timestamp: Date.now() });
+            set(ref(db, `queue/${auth.currentUser.uid}`), { gender: uData.gender });
             onDisconnect(ref(db, `queue/${auth.currentUser.uid}`)).remove();
         }
     };
@@ -156,86 +167,52 @@
     async function createRoom(roomId) {
         pc = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
-        pc.ontrack = e => document.getElementById('remoteVid').srcObject = e.streams[0];
+        pc.ontrack = e => { document.getElementById('remoteVid').srcObject = e.streams[0]; document.getElementById('searchingText').style.display='none'; };
+        pc.onicecandidate = e => e.candidate && push(ref(db, `rooms/${roomId}/callerCandidates`), e.candidate.toJSON());
 
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
-        
-        const roomRef = ref(db, `rooms/${roomId}`);
-        await set(roomRef, { offer: { type: offer.type, sdp: offer.sdp } });
+        await set(ref(db, `rooms/${roomId}`), { offer: { type: offer.type, sdp: offer.sdp } });
 
-        // Buz adaylarını topla
-        pc.onicecandidate = e => { if(e.candidate) push(ref(db, `rooms/${roomId}/callerCandidates`), e.candidate.toJSON()); };
-
-        // Yanıt bekle
-        onValue(roomRef, async s => {
+        onValue(ref(db, `rooms/${roomId}`), async s => {
             const data = s.val();
-            if(!pc.currentRemoteDescription && data?.answer) {
-                await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
-                document.getElementById('searchingText').style.display = 'none';
-                startTimer();
-            }
+            if(!pc.currentRemoteDescription && data?.answer) await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
         });
-
         onValue(ref(db, `rooms/${roomId}/calleeCandidates`), s => {
-            s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
+            s.exists() && s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
         });
     }
 
     async function joinRoom(roomId) {
         pc = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
-        pc.ontrack = e => document.getElementById('remoteVid').srcObject = e.streams[0];
+        pc.ontrack = e => { document.getElementById('remoteVid').srcObject = e.streams[0]; document.getElementById('searchingText').style.display='none'; };
+        pc.onicecandidate = e => e.candidate && push(ref(db, `rooms/${roomId}/calleeCandidates`), e.candidate.toJSON());
 
-        const roomRef = ref(db, `rooms/${roomId}`);
-        const roomSnap = await get(roomRef);
-        const data = roomSnap.val();
-
-        await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+        const roomSnap = await get(ref(db, `rooms/${roomId}`));
+        await pc.setRemoteDescription(new RTCSessionDescription(roomSnap.val().offer));
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
-        await update(roomRef, { answer: { type: answer.type, sdp: answer.sdp } });
-
-        pc.onicecandidate = e => { if(e.candidate) push(ref(db, `rooms/${roomId}/calleeCandidates`), e.candidate.toJSON()); };
+        await update(ref(db, `rooms/${roomId}`), { answer: { type: answer.type, sdp: answer.sdp } });
 
         onValue(ref(db, `rooms/${roomId}/callerCandidates`), s => {
-            s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
+            s.exists() && s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
         });
-
-        document.getElementById('searchingText').style.display = 'none';
-        startTimer();
     }
-
-    function startTimer() {
-        timeLeft = 30; clearInterval(timer);
-        timer = setInterval(() => {
-            timeLeft--;
-            document.getElementById('matchTimer').innerText = `Kalan: 00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
-            if(timeLeft <= 10) document.getElementById('extendBtn').style.display = 'block';
-            if(timeLeft <= 0) { stopMatch(); alert("Süre doldu!"); }
-        }, 1000);
-    }
-
-    window.extendMatch = () => {
-        if(uData.coins < 100) return alert("Coin yetersiz!");
-        update(ref(db, 'users/'+auth.currentUser.uid), { coins: increment(-100) });
-        timeLeft += 30; document.getElementById('extendBtn').style.display = 'none';
-    };
 
     window.stopMatch = () => {
-        clearInterval(timer);
         if(pc) pc.close();
-        if(currentRoomId) remove(ref(db, `rooms/${currentRoomId}`));
-        remove(ref(db, `queue/${auth.currentUser.uid}`));
         if(localStream) localStream.getTracks().forEach(t => t.stop());
+        remove(ref(db, `queue/${auth.currentUser.uid}`));
+        if(currentRoomId) remove(ref(db, `rooms/${currentRoomId}`));
         switchTab('scrLobby');
     };
 
-    // --- KAYIT (FIXED) ---
     window.handleAuth = async () => {
-        const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value, n = document.getElementById('uName').value;
-        const a = document.getElementById('uAge').value, g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
-        if(!e || !p || !n || !a) return alert("Doldur kanka!");
+        const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value;
+        const n = document.getElementById('uName').value, a = document.getElementById('uAge').value;
+        const g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
+        if(!e || !p) return alert("E-posta ve şifre gir kanka!");
         try {
             const res = await createUserWithEmailAndPassword(auth, e, p);
             await set(ref(db, 'users/' + res.user.uid), { username: n, age: a, gender: g, country: c, coins: 500, xp: 0 });
