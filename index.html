@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Connect | Final Competition Edition</title>
+    <title>Nexus</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --discord: #5865F2; --neon: #00f3ff; --gold: #f5af19; --bg: #0b0e11; --panel: #1e1f22; --red: #ff4757; }
@@ -63,19 +63,19 @@
         </div>
         <div class="grid-menu">
             <div class="category-card" style="grid-column:span 2; border-color:var(--neon);" onclick="openModal('modalMatchPref')">
-                <img src="https://i.ibb.co/zHQQpn06/match.jpg"><span>GÖRÜNTÜLÜ EŞLEŞ</span>
+                <img src="https://i.ibb.co/0jdXCxd3/1777969901679.png"><span>MATCHING</span>
             </div>
             <div class="category-card" onclick="openModal('modalWords')">
-                <img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span>
+                <img src="https://i.ibb.co/ynsvnJ4B/1777970154666.png"><span>TELAFFUZ</span>
             </div>
             <div class="category-card" onclick="alert('Yakında!')">
-                <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span>
+                <img src="https://i.ibb.co/QvGMbszY/1777970248904.png"><span>CLAN'S</span>
             </div>
             <div class="category-card" onclick="alert('Yakında!')">
-                <img src="https://i.ibb.co/zHQQpn06/1777825427839-2.jpg"><span>BATTLE PASS</span>
+                <img src=""><span>BATTLE PASS</span>
             </div>
             <div class="category-card" style="grid-column:span 2;" onclick="alert('Yakında!')">
-                <img src="https://i.ibb.co/zHQQpn06/soru.jpg"><span>GÜNLÜK SORU</span>
+                <img src=""><span>DAILY QUESTION</span>
             </div>
             <button class="btn-action" style="grid-column:span 2;" onclick="switchTab('scrProfile')">PROFİLİMİ AÇ</button>
         </div>
@@ -159,7 +159,7 @@
         } else { switchTab('scrAuth'); }
     });
 
-    // DOSYA SEÇME
+    
     const uploadFile = (e, type) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -172,7 +172,7 @@
     document.getElementById('fileAvatar').onchange = (e) => uploadFile(e, 'pImg');
     document.getElementById('fileBanner').onchange = (e) => uploadFile(e, 'pBanner');
 
-    // TELAFFUZ
+    
     window.startSpeech = () => {
         const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         rec.lang = 'en-US';
@@ -186,7 +186,7 @@
         };
     };
 
-    // EŞLEŞME MANTIĞI (FİKSE EDİLDİ)
+    
     window.startFinding = async (pref) => {
         currentPref = pref;
         closeModal(); switchTab('scrMatch');
