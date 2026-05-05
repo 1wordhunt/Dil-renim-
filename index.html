@@ -68,13 +68,13 @@
             <div class="category-card" onclick="openModal('modalWords')">
                 <img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span>
             </div>
-            <div class="category-card" onclick="alert('Klanlar Sistemi Yakında!')">
+            <div class="category-card" onclick="alert('Yakında!')">
                 <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span>
             </div>
-            <div class="category-card" onclick="alert('Battle Pass Çok Yakında!')">
+            <div class="category-card" onclick="alert('Yakında!')">
                 <img src="https://i.ibb.co/zHQQpn06/1777825427839-2.jpg"><span>BATTLE PASS</span>
             </div>
-            <div class="category-card" style="grid-column:span 2;" onclick="alert('Günlük Soru Yarın Aktif!')">
+            <div class="category-card" style="grid-column:span 2;" onclick="alert('Yakında!')">
                 <img src="https://i.ibb.co/zHQQpn06/soru.jpg"><span>GÜNLÜK SORU</span>
             </div>
             <button class="btn-action" style="grid-column:span 2;" onclick="switchTab('scrProfile')">PROFİLİMİ AÇ</button>
@@ -115,12 +115,13 @@
     </div>
 
     <div id="modalMatchPref" class="modal"><div class="modal-content"><h3>CİNSİYET SEÇ</h3><button class="btn-action" onclick="startFinding('Kız')">KIZLARLA EŞLEŞ</button><button class="btn-action" onclick="startFinding('Erkek')">ERKEKLERLE EŞLEŞ</button><button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button></div></div>
-    <div id="modalWords" class="modal"><div class="modal-content"><h3>TELAFFUZ AI</h3><p>Şu kelimeyi oku:</p><h1 style="color:var(--neon);">SUCCESS</h1><button class="btn-action" onclick="startSpeech()">🎤 MİKROFONU AÇ & OKU</button><button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button></div></div>
+    
+    <div id="modalWords" class="modal"><div class="modal-content"><h3>TELAFFUZ AI</h3><p>Şu kelimeyi oku:</p><h1 style="color:var(--neon);">HELLO</h1><button class="btn-action" onclick="startSpeech()">🎤 MİKROFONU AÇ & OKU</button><button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set, push, remove, onDisconnect, get, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, set, push, remove, onDisconnect, get, increment, off } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -145,7 +146,7 @@
         if(user) {
             switchTab('scrLobby');
             onValue(ref(db, 'users/' + user.uid), s => {
-                const d = s.val(); window.uData = d;
+                const d = s.val() || {}; window.uData = d;
                 document.getElementById('dispCoins').innerText = d.coins || 0;
                 document.getElementById('dispXp').innerText = d.xp || 0;
                 document.getElementById('profName').innerText = d.username || "İsimsiz";
@@ -158,96 +159,127 @@
         } else { switchTab('scrAuth'); }
     });
 
-    // GALERİDEN SEÇME SİSTEMİ
-    const handleFile = (e, type) => {
+    // DOSYA SEÇME
+    const uploadFile = (e, type) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
-            const updates = {};
-            updates[type] = reader.result;
-            update(ref(db, 'users/' + auth.currentUser.uid), updates);
+            let updateObj = {}; updateObj[type] = reader.result;
+            update(ref(db, 'users/' + auth.currentUser.uid), updateObj);
         };
         if(file) reader.readAsDataURL(file);
     };
-    document.getElementById('fileAvatar').onchange = (e) => handleFile(e, 'pImg');
-    document.getElementById('fileBanner').onchange = (e) => handleFile(e, 'pBanner');
+    document.getElementById('fileAvatar').onchange = (e) => uploadFile(e, 'pImg');
+    document.getElementById('fileBanner').onchange = (e) => uploadFile(e, 'pBanner');
 
+    // TELAFFUZ
     window.startSpeech = () => {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'en-US';
-        recognition.start();
-        recognition.onresult = (event) => {
-            const speechToText = event.results[0][0].transcript;
-            if(speechToText.toLowerCase().includes("success")) {
-                alert("Harika Telaffuz! +50 XP");
-                update(ref(db, 'users/'+auth.currentUser.uid), { xp: increment(50) });
-            } else { alert("Tekrar dene: " + speechToText); }
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'en-US';
+        rec.start();
+        rec.onresult = (e) => {
+            const word = e.results[0][0].transcript.toLowerCase();
+            if(word.includes("hello")) {
+                alert("Mükemmel! +50 XP");
+                update(ref(db, 'users/' + auth.currentUser.uid), { xp: increment(50) });
+            } else { alert("Duyulan: " + word + ". Tekrar dene!"); }
         };
     };
 
+    // EŞLEŞME MANTIĞI (FİKSE EDİLDİ)
     window.startFinding = async (pref) => {
         currentPref = pref;
         closeModal(); switchTab('scrMatch');
         if(!localStream) localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
         document.getElementById('localVid').srcObject = localStream;
-        const snap = await get(ref(db, 'queue'));
-        let foundUser = null;
-        snap.forEach(c => { if(c.val().gender === pref && c.key !== auth.currentUser.uid) foundUser = c.key; });
-        if(foundUser) { currentRoomId = foundUser; await joinRoom(foundUser); remove(ref(db, `queue/${foundUser}`)); } 
-        else { currentRoomId = auth.currentUser.uid; await createRoom(auth.currentUser.uid); set(ref(db, `queue/${auth.currentUser.uid}`), { gender: uData.gender }); onDisconnect(ref(db, `queue/${auth.currentUser.uid}`)).remove(); }
+
+        const queueSnap = await get(ref(db, 'queue'));
+        let partnerId = null;
+        queueSnap.forEach(snap => {
+            if(snap.val().gender === pref && snap.key !== auth.currentUser.uid) partnerId = snap.key;
+        });
+
+        if(partnerId) {
+            currentRoomId = partnerId;
+            await joinRoom(partnerId);
+            remove(ref(db, `queue/${partnerId}`));
+        } else {
+            currentRoomId = auth.currentUser.uid;
+            await createRoom(auth.currentUser.uid);
+            set(ref(db, `queue/${auth.currentUser.uid}`), { gender: uData.gender });
+            onDisconnect(ref(db, `queue/${auth.currentUser.uid}`)).remove();
+        }
     };
 
     async function createRoom(roomId) {
         if(pc) pc.close();
         pc = new RTCPeerConnection(servers);
-        localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
-        pc.ontrack = e => { document.getElementById('remoteVid').srcObject = e.streams[0]; document.getElementById('searchingText').style.display='none'; };
+        localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
         pc.onicecandidate = e => e.candidate && push(ref(db, `rooms/${roomId}/callerCandidates`), e.candidate.toJSON());
+        pc.ontrack = e => { document.getElementById('remoteVid').srcObject = e.streams[0]; document.getElementById('searchingText').style.display='none'; };
+
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
         await set(ref(db, `rooms/${roomId}`), { offer: { type: offer.type, sdp: offer.sdp } });
-        onValue(ref(db, `rooms/${roomId}`), async s => { const d = s.val(); if(!pc.currentRemoteDescription && d?.answer) await pc.setRemoteDescription(new RTCSessionDescription(d.answer)); });
+
+        onValue(ref(db, `rooms/${roomId}/answer`), async s => {
+            if(s.exists() && !pc.currentRemoteDescription) await pc.setRemoteDescription(new RTCSessionDescription(s.val()));
+        });
+
+        onValue(ref(db, `rooms/${roomId}/calleeCandidates`), s => {
+            if(s.exists()) s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
+        });
     }
 
     async function joinRoom(roomId) {
         if(pc) pc.close();
         pc = new RTCPeerConnection(servers);
-        localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+        localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+        pc.onicecandidate = e => e.candidate && push(ref(db, `rooms/${roomId}/calleeCandidates`), e.candidate.toJSON());
         pc.ontrack = e => { document.getElementById('remoteVid').srcObject = e.streams[0]; document.getElementById('searchingText').style.display='none'; };
-        const roomSnap = await get(ref(db, `rooms/${roomId}`));
-        await pc.setRemoteDescription(new RTCSessionDescription(roomSnap.val().offer));
+
+        const roomData = (await get(ref(db, `rooms/${roomId}`))).val();
+        await pc.setRemoteDescription(new RTCSessionDescription(roomData.offer));
+
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         await update(ref(db, `rooms/${roomId}`), { answer: { type: answer.type, sdp: answer.sdp } });
+
+        onValue(ref(db, `rooms/${roomId}/callerCandidates`), s => {
+            if(s.exists()) s.forEach(c => pc.addIceCandidate(new RTCIceCandidate(c.val())));
+        });
     }
 
     window.nextPerson = () => {
-        if(pc) pc.close();
-        document.getElementById('remoteVid').srcObject = null;
-        document.getElementById('searchingText').style.display = 'block';
-        if(currentRoomId) remove(ref(db, `rooms/${currentRoomId}`));
-        remove(ref(db, `queue/${auth.currentUser.uid}`));
+        stopMatch(false);
         startFinding(currentPref);
     };
 
-    window.stopMatch = () => {
+    window.stopMatch = (goToLobby = true) => {
         if(pc) pc.close();
-        if(localStream) localStream.getTracks().forEach(t => t.stop());
-        localStream = null;
-        remove(ref(db, `queue/${auth.currentUser.uid}`));
+        off(ref(db, `rooms/${currentRoomId}`));
         if(currentRoomId) remove(ref(db, `rooms/${currentRoomId}`));
-        switchTab('scrLobby');
+        remove(ref(db, `queue/${auth.currentUser.uid}`));
+        document.getElementById('remoteVid').srcObject = null;
+        document.getElementById('searchingText').style.display = 'block';
+        if(goToLobby) {
+            if(localStream) localStream.getTracks().forEach(t => t.stop());
+            localStream = null;
+            switchTab('scrLobby');
+        }
     };
 
     window.handleAuth = async () => {
         const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value;
         const n = document.getElementById('uName').value, a = document.getElementById('uAge').value;
         const g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
-        if(!e || !p) return alert("Bilgileri gir kanka!");
+        if(!e || !p) return alert("Boş bırakma!");
         try {
             const res = await createUserWithEmailAndPassword(auth, e, p);
             await set(ref(db, 'users/' + res.user.uid), { username: n, age: a, gender: g, country: c, coins: 500, xp: 0 });
-        } catch { try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert(err.message); } }
+        } catch { try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert("Hata!"); } }
     };
 </script>
 </body>
