@@ -3,65 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Connect | Perfect Edition</title>
+    <title>Nexus Connect | God Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --discord: #5865F2; --neon: #00f3ff; --gold: #f5af19; --bg: #0b0e11; --panel: #1e1f22; --red: #ff4757; --bp-bg: #2b2d31; }
+        :root { --discord: #5865F2; --neon: #00f3ff; --gold: #f5af19; --bg: #0b0e11; --panel: #1e1f22; --red: #ff4757; }
         body { font-family: 'Rajdhani', sans-serif; margin: 0; background: var(--bg); color: #dbdee1; height: 100vh; overflow: hidden; }
         
         .screen { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; position: absolute; overflow-y: auto; padding-bottom: 30px; }
         .active-screen { display: flex !important; }
 
-        /* KATEGORİ MENÜSÜ */
+        /* GRID MENU */
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 92%; margin-top: 70px; }
         .category-card { 
             position: relative; height: 115px; border-radius: 15px; overflow: hidden; 
             border: 2px solid #333; cursor: pointer; display: flex; align-items: flex-end; padding: 12px;
         }
-        .category-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; filter: brightness(0.5); }
+        .category-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; filter: brightness(0.4); }
         .category-card span { position: relative; z-index: 2; font-weight: bold; font-family: 'Orbitron'; font-size: 14px; text-shadow: 0 0 5px #000; }
 
-        /* AVATAR & ÇERÇEVE SİSTEMİ (SENİN ATTIGIN ÇERÇEVE) */
+        /* AVATAR & FRAME (1000008715.png) */
         .avatar-wrap { position: relative; width: 85px; height: 85px; margin-left: 20px; margin-top: -40px; z-index: 2; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--panel); background: #000; object-fit: cover; cursor: pointer; }
-        .avatar-frame { position: absolute; top: -20px; left: -20px; width: 125px; height: 125px; pointer-events: none; z-index: 3; } /* Çerçeve tam üstüne oturur */
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--panel); background: #000; object-fit: cover; }
+        .avatar-frame { position: absolute; top: -18px; left: -18px; width: 120px; height: 120px; pointer-events: none; z-index: 3; }
 
-        /* PROFİL EKRANI (DISCORD TARZI) */
-        .profile-card { width: 92%; max-width: 400px; background: var(--panel); border-radius: 15px; overflow: hidden; margin-top: 20px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .banner { height: 120px; background: linear-gradient(45deg, #bc13fe, #00f3ff); background-size: cover; background-position: center; cursor: pointer; }
-        .prof-info { padding: 10px 20px 20px; }
-        .prof-box { background: #111; border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 14px; border: 1px solid #222; }
-
-        /* BATTLE PASS BAR */
-        .bp-progress-bg { width: 100%; height: 15px; background: #222; border-radius: 10px; margin-top: 10px; overflow: hidden; border: 1px solid #444; }
-        .bp-progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.5s; }
-        .bp-track { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0; }
-        .bp-box { min-width: 70px; height: 90px; background: #1a1a1a; border: 2px solid #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .bp-ok { border-color: var(--neon); box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); background: #112222; }
-
-        /* EŞLEŞME / KAMERA */
+        /* MATCHING UI */
         .match-grid { display: grid; grid-template-rows: 1fr 1fr; height: 100vh; width: 100vw; background: #000; }
-        .video-box { position: relative; width: 100%; height: 100%; border-bottom: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; background: #111; }
+        .video-box { position: relative; width: 100%; height: 100%; border-bottom: 2px solid var(--neon); background: #111; overflow: hidden; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .no-cam-text { position: absolute; color: #666; font-family: 'Orbitron'; }
+        .timer-ui { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 8px 20px; border-radius: 20px; border: 1px solid var(--neon); font-family: 'Orbitron'; z-index: 10; }
+        .extend-btn { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; display: none; z-index: 11; }
 
-        /* KLAN CHAT */
-        .chat-box { height: 150px; background: #0b0e11; border-radius: 8px; overflow-y: auto; padding: 10px; margin: 10px 0; border: 1px solid #333; text-align: left; }
-        .chat-msg { margin-bottom: 5px; font-size: 14px; }
+        /* BP PROGRESS */
+        .bp-progress { width: 100%; height: 12px; background: #222; border-radius: 6px; margin: 10px 0; overflow: hidden; }
+        .bp-bar { height: 100%; background: var(--gold); transition: 0.3s; }
 
-        /* MODALLAR */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--panel); width: 85%; max-width: 380px; border-radius: 20px; padding: 25px; border: 1px solid var(--neon); text-align: center; max-height: 85vh; overflow-y: auto; }
+        /* MODALS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--panel); width: 85%; max-width: 380px; border-radius: 20px; padding: 25px; border: 1px solid var(--neon); text-align: center; }
         
-        .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; font-size: 15px; }
+        .btn-action { background: var(--discord); border: none; padding: 12px; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         .auth-input { width: 100%; padding: 12px; margin: 6px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        .chat-box { height: 120px; background: #0b0e11; border-radius: 8px; overflow-y: auto; padding: 10px; margin: 10px 0; border: 1px solid #333; text-align: left; }
     </style>
 </head>
 <body>
 
     <div id="scrAuth" class="screen active-screen">
         <div style="margin-top:60px; width:85%; text-align: center;">
-            <h1 style="color:var(--neon); font-family:'Orbitron'; font-size: 32px;">NEXUS</h1>
+            <h1 style="color:var(--neon); font-family:'Orbitron';">NEXUS OMEGA</h1>
             <input type="text" id="uName" class="auth-input" placeholder="Kullanıcı Adı">
             <input type="email" id="uEmail" class="auth-input" placeholder="E-posta">
             <input type="password" id="uPass" class="auth-input" placeholder="Şifre">
@@ -70,24 +59,24 @@
                 <select id="uGender" class="auth-input" style="width:33%;"><option value="Erkek">Erkek</option><option value="Kız">Kız</option></select>
                 <select id="uCountry" class="auth-input" style="width:34%;"><option value="Türkiye">TR 🇹🇷</option><option value="ABD">US 🇺🇸</option></select>
             </div>
-            <button class="btn-action" onclick="handleAuth()">GİRİŞ YAP (+500 💰)</button>
+            <button class="btn-action" onclick="handleAuth()">SİSTEMİ BAŞLAT</button>
         </div>
     </div>
 
     <div id="scrLobby" class="screen">
         <div style="position:fixed; top:0; width:100%; padding:15px; display:flex; justify-content:space-between; background:var(--panel); z-index:100; border-bottom: 1px solid #333;">
             <b style="color:var(--neon); font-family:'Orbitron';">NEXUS</b>
-            <div style="font-weight:bold;">💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
+            <div>💰 <span id="dispCoins">0</span> | XP: <span id="dispXp">0</span></div>
         </div>
         <div class="grid-menu">
             <div class="category-card" style="grid-column:span 2; border-color:var(--neon);" onclick="openModal('modalMatchPref')">
-                <img src="https://i.ibb.co/zHQQpn06/match.jpg"><span>GÖRÜNTÜLÜ EŞLEŞME</span>
+                <img src="https://i.ibb.co/zHQQpn06/match.jpg"><span>EŞLEŞME (YENİ)</span>
             </div>
             <div class="category-card" onclick="openModal('modalWords')">
                 <img src="https://i.ibb.co/zHQQpn06/telaffuz.jpg"><span>TELAFFUZ AI</span>
             </div>
             <div class="category-card" onclick="openModal('modalClans')">
-                <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLANLAR & SOHBET</span>
+                <img src="https://i.ibb.co/zHQQpn06/klan.jpg"><span>KLAN CHAT</span>
             </div>
             <div class="category-card" onclick="openModal('modalBP')">
                 <img src="https://i.ibb.co/zHQQpn06/1777825427839-2.jpg"><span>BATTLE PASS</span>
@@ -95,150 +84,73 @@
             <div class="category-card" onclick="openModal('modalDaily')">
                 <img src="https://i.ibb.co/zHQQpn06/soru.jpg"><span>GÜNLÜK SORU</span>
             </div>
-            <button class="btn-action" style="grid-column:span 2; background:#2b2d31; padding:15px;" onclick="switchTab('scrProfile')">PROFİLİM VE ARKADAŞLAR</button>
+            <button class="btn-action" style="grid-column:span 2; background:#2b2d31;" onclick="switchTab('scrProfile')">PROFİL & ÜYE ARA</button>
         </div>
     </div>
 
     <div id="scrProfile" class="screen">
-        <div class="profile-card">
-            <div id="pBanner" class="banner" onclick="document.getElementById('fBanner').click()"></div>
+        <div class="profile-card" style="width:92%; background:var(--panel); border-radius:15px; overflow:hidden; margin-top:20px; border:1px solid #333;">
+            <div id="pBanner" style="height:110px; background:linear-gradient(45deg, #bc13fe, #00f3ff); cursor:pointer;" onclick="document.getElementById('fBanner').click()"></div>
             <div class="avatar-wrap">
-                <img src="1000008715.png" class="avatar-frame"> 
+                <img src="1000008715.png" class="avatar-frame">
                 <img id="pImg" src="https://via.placeholder.com/150" class="avatar-img" onclick="document.getElementById('fAvatar').click()">
             </div>
-            <div class="prof-info">
-                <h2 style="margin:0; font-family:'Orbitron';">
-                    <span id="profName">...</span> 
-                    <span id="devBadge" style="font-size:12px; color:var(--gold); display:none;">[developer]</span>
-                </h2>
-                
-                <div class="prof-box">
-                    <b style="color:#aaa; font-size:12px;">HAKKIMDA</b>
-                    <div id="profBio" style="margin-top:5px;">Uzay kaşifi ve yazılımcı. | "Karmaşıklık, sadeliği gizler."</div>
-                </div>
-
-                <div class="prof-box" style="display:flex; justify-content:space-between;">
-                    <span><b>Yaş:</b> <span id="profAge">...</span></span>
-                    <span><b>Cinsiyet:</b> <span id="profGen">...</span></span>
-                    <span><b>Ülke:</b> <span id="profCoun">...</span></span>
-                </div>
-                
-                <button class="btn-action" style="margin-top:20px;" onclick="openModal('modalSearch')">🔎 ÜYE ARA & PROFİLİNE BAK</button>
-                <button class="btn-action" style="background:var(--red);" onclick="logout()">ÇIKIŞ YAP</button>
-                <button class="btn-action" style="background:#444;" onclick="switchTab('scrLobby')">LOBİYE DÖN</button>
+            <div style="padding:50px 20px 20px;">
+                <h2 style="margin:0;"><span id="profName">...</span> <span id="devBadge" style="font-size:12px; color:var(--gold); display:none;">[developer]</span></h2>
+                <div style="background:#111; padding:10px; border-radius:8px; margin-top:10px; font-size:14px;" id="profBio">Henüz bir bio eklenmemiş.</div>
+                <button class="btn-action" style="margin-top:15px;" onclick="openModal('modalSearch')">🔎 ÜYE ARA</button>
+                <button class="btn-action" style="background:#444;" onclick="switchTab('scrLobby')">GERİ</button>
             </div>
         </div>
     </div>
 
-    <div id="modalSearch" class="modal"><div class="modal-content">
-        <h3>ÜYE ARA</h3>
-        <input type="text" id="searchIn" class="auth-input" placeholder="Tam kullanıcı adını yaz...">
-        <button class="btn-action" onclick="searchUser()">PROFİLİ BUL</button>
-        
-        <div id="searchResult" style="display:none; margin-top:15px; text-align:left; border:1px solid #444; border-radius:10px; overflow:hidden;">
-            <div id="vBanner" style="height:60px; background:#5865F2; background-size:cover;"></div>
-            <div style="position:relative; height:30px;">
-                <img id="vImg" src="https://via.placeholder.com/150" style="position:absolute; bottom:0; left:10px; width:60px; height:60px; border-radius:50%; border:3px solid var(--panel); background:#000; object-fit:cover;">
-                <img src="1000008715.png" style="position:absolute; bottom:-12px; left:-2px; width:85px; height:85px; pointer-events:none;">
-            </div>
-            <div style="padding:15px 10px 10px;">
-                <h3 id="vName" style="margin:0;">...</h3>
-                <div class="prof-box" style="margin-top:10px;"><b style="color:#aaa; font-size:12px;">HAKKIMDA</b><div id="vBio">...</div></div>
-                <button class="btn-action" style="padding:8px; margin-top:10px;" onclick="alert('Arkadaşlık isteği gönderildi!')">ARKADAŞ EKLE</button>
-            </div>
+    <div id="scrMatch" class="screen">
+        <div class="timer-ui" id="matchTimer">00:30</div>
+        <button id="extendBtn" class="extend-btn" onclick="extendTime()">⏱ +30 SN UZAT (100 💰)</button>
+        <div class="match-grid">
+            <div class="video-box"><video id="remoteVid" autoplay playsinline></video></div>
+            <div class="video-box"><video id="localVid" autoplay muted playsinline></video></div>
+        </div>
+        <button class="btn-action" style="position:fixed; bottom:20px; width:80%; background:var(--red);" onclick="stopMatching()">SOHBETİ BİTİR</button>
+    </div>
+
+    <div id="modalBP" class="modal"><div class="modal-content">
+        <h2 style="color:var(--gold);">NEXUS PASS</h2>
+        <div style="text-align:left; font-size:14px;">
+            Sıradaki Ödül: <span id="bpNextText">200 XP</span>
+            <div class="bp-progress"><div class="bp-bar" id="bpBar"></div></div>
+        </div>
+        <div style="display:flex; gap:10px; overflow-x:auto; padding:10px 0;" id="bpTrack"></div>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
+    </div></div>
+
+    <div id="modalClans" class="modal"><div class="modal-content">
+        <h3 id="cTitle">KLAN SOHBETİ</h3>
+        <div id="chatBox" class="chat-box"></div>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="cMsg" class="auth-input" placeholder="Mesaj...">
+            <button class="btn-action" style="width:70px;" onclick="sendChat()">YAZ</button>
         </div>
         <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
     </div></div>
 
     <div id="modalMatchPref" class="modal"><div class="modal-content">
-        <h3 style="color:var(--neon);">EŞLEŞME BAŞLAT</h3>
-        <p>Kiminle eşleşmek istersin?</p>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <button class="btn-action" style="background:#ff4757;" onclick="startMatching('Kız')">KIZLAR</button>
-            <button class="btn-action" style="background:#5865F2;" onclick="startMatching('Erkek')">ERKEKLER</button>
-        </div>
-        <div style="margin-top:15px; text-align:left; background:#111; padding:10px; border-radius:8px;">
-            <label style="cursor:pointer; display:flex; align-items:center; gap:10px;">
-                <input type="checkbox" id="camToggle" style="width:20px; height:20px;" checked>
-                <b>Kameramı Aç (Görüntülü)</b>
-            </label>
-            <small style="color:#aaa;">Kapatırsan sadece sesin gider ve siyah ekran olursun.</small>
-        </div>
-        <button class="btn-action" style="background:#444; margin-top:15px;" onclick="closeModal()">İPTAL</button>
+        <h3>EŞLEŞME AYARI</h3>
+        <button class="btn-action" style="background:var(--red);" onclick="startMatch('Kız')">KIZLARLA EŞLEŞ</button>
+        <button class="btn-action" onclick="startMatch('Erkek')">ERKEKLERLE EŞLEŞ</button>
+        <label style="display:flex; align-items:center; gap:10px; margin-top:15px; cursor:pointer;">
+            <input type="checkbox" id="camCheck" checked> <b>Kameram Açık Olsun</b>
+        </label>
+        <button class="btn-action" style="background:#444;" onclick="closeModal()">İPTAL</button>
     </div></div>
 
-    <div id="scrMatch" class="screen">
-        <div class="match-grid">
-            <div class="video-box">
-                <span class="no-cam-text" id="remoteNoCam" style="display:none;">KARŞI TARAF KAMERASIZ</span>
-                <video id="remoteVid" autoplay playsinline></video>
-                <div style="position:absolute; bottom:15px; left:15px; background:rgba(0,0,0,0.7); padding:5px 12px; border-radius:8px;">Rakip Aranıyor...</div>
-            </div>
-            <div class="video-box">
-                <span class="no-cam-text" id="localNoCam" style="display:none;">KAMERAN KAPALI (SADECE SES)</span>
-                <video id="localVid" autoplay muted playsinline></video>
-                <div style="position:absolute; bottom:15px; left:15px; background:rgba(0,243,255,0.2); color:var(--neon); padding:5px 12px; border-radius:8px;">Sen</div>
-                <button class="btn-action" style="position:absolute; top:15px; right:15px; width:auto; padding:8px 15px; background:var(--red);" onclick="stopMatching()">ÇIK</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalClans" class="modal"><div class="modal-content">
-        <h3 style="color:var(--gold);">KLAN MERKEZİ</h3>
-        
-        <div id="noClanArea">
-            <input type="text" id="clanIn" class="auth-input" placeholder="Yeni Klan Adı">
-            <button class="btn-action" onclick="createClan()">KLAN KUR (590 💰)</button>
-            <hr style="border:0.5px solid #333; margin:15px 0;">
-            <div id="clanList" style="max-height:100px; overflow-y:auto;"></div>
-        </div>
-
-        <div id="myClanArea" style="display:none;">
-            <h2 id="cNameDisplay" style="color:var(--neon); margin:0;">KLAN ADI</h2>
-            <div class="chat-box" id="clanChatBox">
-                </div>
-            <div style="display:flex; gap:5px;">
-                <input type="text" id="cMsgIn" class="auth-input" placeholder="Mesaj yaz...">
-                <button class="btn-action" style="width:60px; margin-top:6px;" onclick="sendClanMsg()">GÖNDER</button>
-            </div>
-            <button class="btn-action" style="background:var(--red); margin-top:10px;" onclick="leaveClan()">KLANDAN AYRIL</button>
-        </div>
-
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalBP" class="modal"><div class="modal-content">
-        <h2 style="color:var(--gold); font-family:'Orbitron';">NEXUS PASS</h2>
-        
-        <div style="background:#111; padding:10px; border-radius:8px; text-align:left;">
-            <b>Seviye: <span id="bpLvlText" style="color:var(--neon);">1</span></b>
-            <div class="bp-progress-bg"><div class="bp-progress-fill" id="bpBar"></div></div>
-            <small style="color:#aaa;" id="bpNextXp">Sonraki Ödüle: 200 XP Kaldı</small>
-        </div>
-
-        <div class="bp-track" id="bpTrack"></div>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <div id="modalWords" class="modal"><div class="modal-content">
-        <h3>TELAFFUZ AI</h3><h1 style="color:var(--neon);">SUCCESS</h1>
-        <button class="btn-action" id="micBtn" onclick="startSpeech()">🎤 MİKROFONU AÇ & OKU</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-    <div id="modalDaily" class="modal"><div class="modal-content">
-        <h3>GÜNLÜK SORU</h3><p>"Success" kelimesinin Türkçesi?</p>
-        <input type="text" id="qAns" class="auth-input" placeholder="Cevabın...">
-        <button class="btn-action" onclick="checkDaily()">CEVAPLA</button>
-        <button class="btn-action" style="background:#444;" onclick="closeModal()">KAPAT</button>
-    </div></div>
-
-    <input type="file" id="fAvatar" style="display:none;" accept="image/png, image/jpeg, image/gif" onchange="upImg('pImg')">
-    <input type="file" id="fBanner" style="display:none;" accept="image/png, image/jpeg, image/gif" onchange="upImg('pBanner')">
+    <input type="file" id="fAvatar" style="display:none;" accept="image/*" onchange="upImg('pImg')">
+    <input type="file" id="fBanner" style="display:none;" accept="image/*" onchange="upImg('pBanner')">
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, set, increment, push, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, set, increment, push, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOMFetzbB5EPLxd0UFwGvrrXKuLNcbqTY",
@@ -263,46 +175,122 @@
                 const d = s.val(); window.uData = d;
                 document.getElementById('dispCoins').innerText = d.coins;
                 document.getElementById('dispXp').innerText = d.xp;
-                
-                // Profil Doldurma
                 document.getElementById('profName').innerText = d.username;
-                document.getElementById('profAge').innerText = d.age;
-                document.getElementById('profGen').innerText = d.gender;
-                document.getElementById('profCoun').innerText = d.country;
-                if(d.bio) document.getElementById('profBio').innerText = d.bio;
-                
-                // Geliştirici Etiketi Mantığı (Buradaki SENIN_ADIN kısmını değiştir kanka)
-                if(d.username.toLowerCase() === "deniz_yüksel" || d.username.toLowerCase() === "admin") {
-                    document.getElementById('devBadge').style.display = "inline-block";
-                } else {
-                    document.getElementById('devBadge').style.display = "none";
-                }
-
-                // Resimler (GIF destekli)
                 if(d.pImg) document.getElementById('pImg').src = d.pImg;
                 if(d.pBanner) document.getElementById('pBanner').style.backgroundImage = `url(${d.pBanner})`;
                 
+                // Dev badge kontrolü (Senin adını buraya yaz kanka)
+                document.getElementById('devBadge').style.display = (d.username === "Deniz" || d.username === "admin") ? "inline" : "none";
+                
                 renderBP(d.xp);
-                checkClanStatus(d.clanId);
+                if(d.clanId) listenChat(d.clanId);
             });
         } else { switchTab('scrAuth'); }
     });
 
-    // --- ÜYE ARAMA VE GÖRÜNTÜLEME SİSTEMİ ---
-    window.searchUser = async () => {
-        const q = document.getElementById('searchIn').value.toLowerCase();
-        if(!q) return;
-        // Kullanıcı adından UID bulmak için usernames düğümü gerekir, basit arama simülasyonu:
-        const usersSnap = await get(ref(db, 'users'));
-        let found = null;
-        usersSnap.forEach(child => { if(child.val().username.toLowerCase() === q) found = child.val(); });
+    // --- SÜRE UZATMALI EŞLEŞME SİSTEMİ ---
+    let matchTime = 30;
+    let timerInt;
+    window.startMatch = async (pref) => {
+        const cam = document.getElementById('camCheck').checked;
+        closeModal(); switchTab('scrMatch');
+        matchTime = 30;
+        document.getElementById('extendBtn').style.display = 'none';
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({video: cam, audio: true});
+            document.getElementById('localVid').srcObject = stream;
+            window.myStream = stream;
+            
+            timerInt = setInterval(() => {
+                matchTime--;
+                document.getElementById('matchTimer').innerText = `00:${matchTime < 10 ? '0'+matchTime : matchTime}`;
+                
+                if(matchTime <= 10) document.getElementById('extendBtn').style.display = 'block';
+                
+                if(matchTime <= 0) {
+                    clearInterval(timerInt);
+                    stopMatching();
+                    alert("Süre bitti!");
+                }
+            }, 1000);
+        } catch { alert("İzin gerekli!"); switchTab('scrLobby'); }
+    };
+
+    window.extendTime = () => {
+        if(uData.coins < 100) return alert("Yetersiz Coin!");
+        update(ref(db, 'users/'+auth.currentUser.uid), { coins: increment(-100) });
+        matchTime += 30;
+        document.getElementById('extendBtn').style.display = 'none';
+        alert("+30 Saniye Eklendi!");
+    };
+
+    window.stopMatching = () => {
+        clearInterval(timerInt);
+        if(window.myStream) window.myStream.getTracks().forEach(t => t.stop());
+        switchTab('scrLobby');
+    };
+
+    // --- KAYIT SİSTEMİ (BOZULMAYAN) ---
+    window.handleAuth = async () => {
+        const e = document.getElementById('uEmail').value, p = document.getElementById('uPass').value, n = document.getElementById('uName').value;
+        const a = document.getElementById('uAge').value, g = document.getElementById('uGender').value, c = document.getElementById('uCountry').value;
         
-        if(found) {
-            document.getElementById('searchResult').style.display = 'block';
-            document.getElementById('vName').innerText = found.username;
-            document.getElementById('vBio').innerText = found.bio || "Hakkında bilgisi yok.";
-            if(found.pImg) document.getElementById('vImg').src = found.pImg;
-            if(found.pBanner) document.getElementById('vBanner').style.backgroundImage = `url(${found.pBanner})`;
-        } else {
-            alert("Kullanıcı bulunamadı!");
-            document.getElementById('searchResult').style.display = 'none'
+        if(!e || !p || !n || !a) return alert("Tüm alanları doldur kanka!");
+
+        try {
+            const res = await createUserWithEmailAndPassword(auth, e, p);
+            await set(ref(db, 'users/' + res.user.uid), { 
+                username: n, email: e, age: a, gender: g, country: c, 
+                coins: 500, xp: 0, bio: "Nexus kullanıcısı", clanId: null 
+            });
+        } catch (err) {
+            try { await signInWithEmailAndPassword(auth, e, p); } catch { alert("Hata: " + err.message); }
+        }
+    };
+
+    // --- BATTLE PASS SİSTEMİ ---
+    function renderBP(xp) {
+        const nextXp = 200 - (xp % 200);
+        const progress = ((xp % 200) / 200) * 100;
+        document.getElementById('bpBar').style.width = progress + "%";
+        document.getElementById('bpNextText').innerText = nextXp + " XP";
+
+        const track = document.getElementById('bpTrack'); track.innerHTML = "";
+        for(let i=1; i<=10; i++){
+            const isOk = xp >= (i*200);
+            track.innerHTML += `<div style="min-width:60px; height:80px; background:${isOk?'#1a3333':'#222'}; border:2px solid ${isOk?var(--neon):'#444'}; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <small>LVL ${i}</small><b>${i%2==0?'💰':'💎'}</b>
+            </div>`;
+        }
+    }
+
+    // --- KLAN CHAT SİSTEMİ ---
+    function listenChat(cid) {
+        onValue(ref(db, `clans/${cid}/msgs`), s => {
+            const box = document.getElementById('chatBox'); box.innerHTML = "";
+            s.forEach(m => {
+                box.innerHTML += `<div style="margin-bottom:5px;"><b>${m.val().u}:</b> ${m.val().t}</div>`;
+            });
+            box.scrollTop = box.scrollHeight;
+        });
+    }
+
+    window.sendChat = () => {
+        const t = document.getElementById('cMsg').value;
+        if(t && uData.clanId) {
+            push(ref(db, `clans/${uData.clanId}/msgs`), { u: uData.username, t: t });
+            document.getElementById('cMsg').value = "";
+        }
+    };
+
+    window.upImg = (type) => {
+        const file = document.getElementById(type === 'pImg' ? 'fAvatar' : 'fBanner').files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => update(ref(db, 'users/'+auth.currentUser.uid), { [type]: e.target.result });
+        reader.readAsDataURL(file);
+    };
+
+</script>
+</body>
+</html>
